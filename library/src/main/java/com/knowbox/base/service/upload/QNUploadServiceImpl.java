@@ -1,14 +1,5 @@
 package com.knowbox.base.service.upload;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Locale;
-
-import org.apache.http.HttpStatus;
-import org.json.JSONObject;
-
 import android.text.TextUtils;
 
 import com.hyena.framework.clientlog.LogUtil;
@@ -25,6 +16,15 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * 七牛云上传服务
@@ -59,6 +59,24 @@ public abstract class QNUploadServiceImpl implements UploadService {
      * @return
      */
     public abstract String getRecordTokenUrl();
+
+    /**
+     * 获取上传信息
+     */
+    public OnlineUploadInfo fetchUploadInfo(UploadTask task){
+        String tokenUrl;
+        if(task.getType() == UploadTask.TYPE_PICTURE){
+            tokenUrl = getPicTokenUrl();
+        } else if(task.getType() == UploadTask.TYPE_RECORDER){
+            tokenUrl = getRecordTokenUrl();
+        } else {
+            tokenUrl = getPicTokenUrl();
+        }
+
+        OnlineUploadInfo result =
+                new DataAcquirer<OnlineUploadInfo>().get(tokenUrl, new OnlineUploadInfo());
+        return result;
+    }
     
     @Override
     public void upload(final UploadTask uploadTask, final UploadListener listener) {
@@ -257,17 +275,18 @@ public abstract class QNUploadServiceImpl implements UploadService {
                     || expiration <= (System.currentTimeMillis() / 1000) ||
                     TextUtils.isEmpty(domain)) {
 
-                String tokenUrl;
-                if(uploadTask.getType() == UploadTask.TYPE_PICTURE){
-                    tokenUrl = getPicTokenUrl();
-                } else if(uploadTask.getType() == UploadTask.TYPE_RECORDER){
-                    tokenUrl = getRecordTokenUrl();
-                } else {
-                    tokenUrl = getPicTokenUrl();
-                }
-
-                OnlineUploadInfo result =
-                        new DataAcquirer<OnlineUploadInfo>().get(tokenUrl, new OnlineUploadInfo());
+//                String tokenUrl;
+//                if(uploadTask.getType() == UploadTask.TYPE_PICTURE){
+//                    tokenUrl = getPicTokenUrl();
+//                } else if(uploadTask.getType() == UploadTask.TYPE_RECORDER){
+//                    tokenUrl = getRecordTokenUrl();
+//                } else {
+//                    tokenUrl = getPicTokenUrl();
+//                }
+//
+//                OnlineUploadInfo result =
+//                        new DataAcquirer<OnlineUploadInfo>().get(tokenUrl, new OnlineUploadInfo());
+                OnlineUploadInfo result = fetchUploadInfo(uploadTask);
                 if (result.isAvailable()) {
                     AppPreferences.setStringValue(UPLOAD_TOKEN, result.mToken);
                     AppPreferences.setLongValue(TOKEN_EXPIRED, result.mExpiredTime);
