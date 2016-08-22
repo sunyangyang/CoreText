@@ -20,7 +20,6 @@ import com.qiniu.android.storage.UploadOptions;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -388,7 +387,8 @@ public abstract class QNUploadServiceImpl implements UploadService {
 
             UploadOptions options = new UploadOptions(null, null, false, progress, signal);
             if (uploadTask.buf == null) {
-                String key = getDate() + "/" + new File(uploadTask.filePath).getName();
+//                String key = getDate() + "/" + new File(uploadTask.filePath).getName();
+                String key = getDate() + "/" + MD5Util.encode(System.currentTimeMillis() + "");
                 manager.put(uploadTask.filePath, key, token, handler, options);
             } else {
                 String key = getDate() + "/" + MD5Util.encode(System.currentTimeMillis() + "");
