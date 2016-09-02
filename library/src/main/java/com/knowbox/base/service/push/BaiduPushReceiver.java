@@ -66,6 +66,8 @@ public class BaiduPushReceiver extends PushMessageReceiver {
                 "onBind errorCode=" + errorCode + " appid=" + appid + " userId=" + userId +
                         " channelId=" + channelId + " requestId=" + requestId;
         Log.d(TAG, responseString);
+        if (errorCode != 0)
+            return;
 
         try {
             PushService pushService = (PushService) BaseApp.getAppContext()

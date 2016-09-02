@@ -46,7 +46,7 @@ public class EMChatServiceImpl implements EMChatService {
 		// 设置沙箱模式 慎用
 //		EMChat.getInstance().setEnv(EMEnvMode.EMSandboxMode);
 		// 开始Debug模式
-		EMChat.getInstance().setDebugMode(true);
+		EMChat.getInstance().setDebugMode(LogUtil.isDebug());
 //		EMChat.getInstance().setAutoLogin(false);
 		// 获取到EMChatOptions对象
 		EMChatOptions options = EMChatManager.getInstance().getChatOptions();
