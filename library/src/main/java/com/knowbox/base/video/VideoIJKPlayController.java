@@ -14,6 +14,7 @@ public class VideoIJKPlayController extends VideoPlayController {
 
     public VideoIJKPlayController(IjkVideoView videoView) {
         this.mVideoView = videoView;
+        mVideoView.setDrawingCacheEnabled(true);
         mVideoView.setOnInfoListener(mOnInfoListener);
         mVideoView.setOnBufferingListener(mBufferingUpdateListener);
         mVideoView.setOnPreparedListener(mPreparedListener);
@@ -41,6 +42,7 @@ public class VideoIJKPlayController extends VideoPlayController {
     @Override
     public void resume() {
         mVideoView.start();
+        setPlayStatus(PlayStatusChangeListener.STATUS_PLAYING);
     }
 
     @Override

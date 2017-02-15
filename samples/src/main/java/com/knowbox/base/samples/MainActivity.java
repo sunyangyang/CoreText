@@ -2,11 +2,9 @@ package com.knowbox.base.samples;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 
-import com.knowbox.base.video.VideoIJKPlayController;
-import com.knowbox.base.video.VideoPlayController;
-import com.knowbox.base.video.ijkplayer.IRenderView;
-import com.knowbox.base.video.ijkplayer.IjkVideoView;
+import com.knowbox.base.samples.fragments.QuestionListFragment;
 
 public class MainActivity extends FragmentActivity {
 
@@ -14,11 +12,10 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        IjkVideoView view = (IjkVideoView) findViewById(R.id.video_view);
-        view.setAspectRatio(IRenderView.AR_ASPECT_FILL_PARENT);
-        VideoPlayController controller = new VideoIJKPlayController(view);
-        controller.setVideoPath("http://7xlbxm.com1.z0.glb.clouddn.com/map_videos/01_xxcy/02/102.flv");
-        controller.start();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.main, new SamplesVideoFragment());
+        ft.replace(R.id.main, new QuestionListFragment());
+        ft.commitAllowingStateLoss();
     }
+
 }

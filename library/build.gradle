@@ -27,7 +27,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':ijkplayer-java')
     compile 'com.github.yangzc:AndroidSupport:v1.2.0'
     provided files('extlibs/easemobchat_2.2.3.jar')
+    compile project(':coretext')
 }
