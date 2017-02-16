@@ -62,8 +62,7 @@ public class BlankBlock extends CYEditBlock {
     private void updateSize() {
         int textHeight = getTextHeight(getTextEnv().getPaint());
         if (!getTextEnv().isEditable()) {
-            int width = (int) getTextEnv().getPaint()
-                    .measureText(getEditFace().getText());
+            int width = (int) getTextEnv().getPaint().measureText(getEditFace().getText());
             this.mWidth = width + UIUtils.dip2px(10);
             this.mHeight = textHeight;
         } else {

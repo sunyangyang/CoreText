@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.framework.utils.UIUtils;
 
 /**
  * Created by yangzc on 17/2/14.
@@ -65,22 +66,37 @@ public class EditFace extends CYEditFace {
             return;
 
         mFlashPaint.setColor(0xff3eabff);
+        mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
         if ("fillin".equals(mClass)) {
             super.drawFlash(canvas, contentRect);
         }
     }
 
     @Override
+    protected void drawText(Canvas canvas, String text, Rect contentRect) {
+        if (!getTextEnv().isEditable()) {
+            if ("fillin".equals(mClass)) {
+                super.drawText(canvas, text, contentRect);
+                mFlashPaint.setColor(0xff3eabff);
+                mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
+                canvas.drawLine(contentRect.left, contentRect.bottom, contentRect.right, contentRect.bottom, mFlashPaint);
+            } else {
+                if (TextUtils.isEmpty(text)) {
+                    super.drawText(canvas, "( )", contentRect);
+                } else {
+                    super.drawText(canvas, "("+ text + ")", contentRect);
+                }
+            }
+        } else {
+            super.drawText(canvas, text, contentRect);
+        }
+    }
+
+    @Override
     public String getText() {
         String text = super.getText();
-        if (getTextEnv().isEditable()) {
-            return text;
-        } else {
-            if (TextUtils.isEmpty(text)) {
-                return "(    )";
-            } else {
-                return "(" + text + ")";
-            }
-        }
+        if (TextUtils.isEmpty(text))
+            return "";
+        return super.getText();
     }
 }
