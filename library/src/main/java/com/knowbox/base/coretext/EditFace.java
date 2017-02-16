@@ -21,7 +21,7 @@ import com.hyena.framework.utils.UIUtils;
  */
 public class EditFace extends CYEditFace {
 
-    private String mClass = "fillin";
+    private String mClass = "choose";
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -29,7 +29,7 @@ public class EditFace extends CYEditFace {
 
     public void setClass(String clazz) {
         if (TextUtils.isEmpty(clazz))
-            clazz = "fillin";
+            clazz = "choose";
         this.mClass = clazz;
     }
 

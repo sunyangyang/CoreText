@@ -89,12 +89,16 @@ public class QuestionListFragment extends Fragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             Item item = getItem(position);
-//            String question = "第" + position + "题：根据图片意思选择相符的句子#{\"type\":\"blank\",\"id\":1}##{\"type\":\"img\",\"id\"=1,\"size\":\"big_image\",\"src\":\"http://img1.3lian.com/2015/w8/28/d/66.jpg?aa=bb\"}#啊啊啊啊啊";
             viewHolder.mQtvQuestion.setText(item.question);
             try {
-                JSONObject jsonObject = new JSONObject(item.answer);
+                JSONObject jsonObject = new JSONObject(item.answer.replaceAll("#", ""));
                 int index = jsonObject.optInt("blank_id");
                 String answer = jsonObject.optString("choice");
+
+                switch (item.type) {
+
+                }
+
                 ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(index);
                 if (editable != null) {
                     editable.setText(answer);
@@ -114,12 +118,12 @@ public class QuestionListFragment extends Fragment {
     public class Item {
         String question;
         String answer;
-        String type;
+        int type;
 
         public Item(JSONObject json) {
             this.question = json.optString("Question");
             this.answer = json.optString("RightAnswer");
-            this.type = json.optString("QuestionType");
+            this.type = json.optInt("QuestionType");
         }
     }
 }
