@@ -56,12 +56,6 @@ public class TextureRenderView extends TextureView implements IRenderView {
         initView(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TextureRenderView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context);
-    }
-
     private void initView(Context context) {
         mMeasureHelper = new MeasureHelper(this);
         mSurfaceCallback = new SurfaceCallback(this);

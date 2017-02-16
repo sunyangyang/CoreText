@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId "com.knowbox.base"
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion 9
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }

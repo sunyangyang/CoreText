@@ -1,0 +1,136 @@
+{
+"RECORDS":[
+{
+"QuestionID":888082,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#\r\n选择你所听到的内容\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}#\r\n#{\"type\":\"para_end\"}#",
+"RightAnswer":"#{ \"type\" : \"answer\", \"blank_id\" : 1 , \"choice\" : \"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888083,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n根据图片选择单词完成句子根据图片选择单词完成句子根据图片选择单词完成句子\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}#\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#\r\nI like to eat #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}#\r\n#{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888084,
+"Question":"#{\"type\":\"para_begin\",\"size\":30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#\r\n根据录音组成正确的句子\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\":30,\"align\":\"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}#\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\":\"left\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"blank\",\"id\": 1,\"size\":\"line\"}#\r\n#{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":[\"D\",\"B\",\"C\"]}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888085,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择与你所听到的内容相符的图片\r\n\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}#\r\n#{\"type\":\"para_end\"}#",
+"RightAnswer":"#{ \"type\" : \"answer\", \"blank_id\" : 1 , \"choice\" : \"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888088,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#I like to eat #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888089,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#与cake的意思相符的图片 #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888090,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#英译中#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#cake的意思是 #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888091,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#中译英#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#翻译：蛋糕 #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888092,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择你所听到的内容#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888093,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择与你所听到的内容相符的图片#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888094,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择你所听到的句子中的词语#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888095,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据录音完成句子#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#I like this #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888096,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据录音选择你所听到的句子#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888097,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据录音选择正确的答语#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888098,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据录音选择正确的翻译#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"audio\",\"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/tingli\/15590285.mp3\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888099,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据图片选择单词完成句子#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#I like to eat #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888100,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择与图片含义一致的单词#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888101,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择与图片意思相符的句子#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888102,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择与句子意思相符的图片#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#I have a pan. #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888103,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据提示选择正确的答句#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#how are you？ #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888104,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#根据提示选择正确的问句#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#——，I'm fine。 #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+},
+{
+"QuestionID":888105,
+"Question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#选择正确的中文翻译#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#I'm a handsome uncle #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}##{\"type\":\"para_end\"}#",
+"RightAnswer":"#{\"type\":\"answer\",\"blank_id\":1,\"choice\":\"A\"}#",
+"QuestionType":"Choice"
+}
+]
+}

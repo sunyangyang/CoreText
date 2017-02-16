@@ -86,7 +86,8 @@ public class QuestionTextView extends CYPageView {
     }
 
     public void setText(String questionTxt) {
-        this.mQuestionTxt = questionTxt.replaceAll("\\\\#", "labelsharp");
+        this.mQuestionTxt = questionTxt.replaceAll("\\\\#", "labelsharp")
+                .replaceAll("\n", "").replaceAll("\r", "");
         blocks = analysisCommand().buildBlocks();
         doLayout(true);
     }
@@ -125,19 +126,17 @@ public class QuestionTextView extends CYPageView {
     private AttributedString analysisCommand() {
         AttributedString attributedString = new AttributedString(mTextEnv, mQuestionTxt);
         if (!TextUtils.isEmpty(mQuestionTxt)) {
-            Pattern pattern = Pattern.compile("#(.*?)#");
+            Pattern pattern = Pattern.compile("#\\{(.*?)\\}#");
             Matcher matcher = pattern.matcher(mQuestionTxt);
             while (matcher.find()) {
                 int start = matcher.start();
                 int end = matcher.end();
                 String data = matcher.group(1);
-                CYBlock block = getBlock(data);
+                CYBlock block = getBlock("{" + data + "}");
                 if (block != null) {
                     attributedString.replaceBlock(start, end, block);
                 }
             }
-//            attributedString.replaceBlock(0, 1, new AudioBlock(mTextEnv, ""));
-//            attributedString.replaceBlock(1, 2, new LatexBlock(mTextEnv, ""));
         }
         return attributedString;
     }

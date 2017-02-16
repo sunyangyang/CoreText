@@ -134,12 +134,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         initVideoView(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public IjkVideoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initVideoView(context);
-    }
-
     // REMOVED: onMeasure
     // REMOVED: onInitializeAccessibilityEvent
     // REMOVED: onInitializeAccessibilityNodeInfo
