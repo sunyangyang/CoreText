@@ -110,6 +110,11 @@ public class QuestionListFragment extends Fragment {
             return convertView;
         }
 
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
         class ViewHolder {
             QuestionTextView mQtvQuestion;
         }

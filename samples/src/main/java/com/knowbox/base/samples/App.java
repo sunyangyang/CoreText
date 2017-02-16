@@ -9,6 +9,14 @@ import android.os.Environment;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.clientlog.Logger;
 import com.hyena.framework.config.FrameworkConfig;
+import com.hyena.framework.database.BaseDataBaseHelper;
+import com.hyena.framework.database.DataBaseHelper;
+import com.hyena.framework.database.DataBaseManager;
+import com.hyena.framework.download.DownloadManager;
+import com.hyena.framework.download.Task;
+import com.hyena.framework.download.db.DownloadItem;
+import com.hyena.framework.download.task.TaskFactory;
+import com.hyena.framework.download.task.UrlTask;
 import com.hyena.framework.network.DefaultNetworkSensor;
 import com.hyena.framework.network.NetworkProvider;
 import com.hyena.framework.servcie.BaseServiceManager;
@@ -33,6 +41,17 @@ public class App extends BaseApp {
         NetworkProvider.getNetworkProvider().registNetworkSensor(new DefaultNetworkSensor());
         //注册应用系统服务
         ServiceProvider.getServiceProvider().registServiceManager(new ServiceManager());
+        TaskFactory.getTaskFactory().registDownloadTaskBuilder(new TaskFactory.DownloadTaskBuilder() {
+            @Override
+            public Task buildTask(String s, DownloadItem downloadItem) {
+                return UrlTask.createUrlTask(downloadItem);
+            }
+        });
+        DataBaseManager.getDataBaseManager().registDataBase(new BaseDataBaseHelper(this, "base", 1) {
+            @Override
+            public void initTablesImpl(DataBaseHelper dataBaseHelper) {
+            }
+        });
     }
 
     private class ServiceManager extends BaseServiceManager {
