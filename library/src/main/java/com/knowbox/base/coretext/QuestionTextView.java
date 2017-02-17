@@ -86,8 +86,27 @@ public class QuestionTextView extends CYPageView {
     }
 
     public void setText(String questionTxt) {
-        this.mQuestionTxt = questionTxt.replaceAll("\\\\#", "labelsharp")
+        if (TextUtils.isEmpty(questionTxt)) {
+            this.mQuestionTxt = questionTxt;
+            if (blocks != null && !blocks.isEmpty()) {
+                for (int i = 0; i < blocks.size(); i++) {
+                    blocks.get(i).release();
+                }
+            }
+            blocks = null;
+            return;
+        }
+        String text = questionTxt.replaceAll("\\\\#", "labelsharp")
                 .replaceAll("\n", "").replaceAll("\r", "");
+        if (text.equals(mQuestionTxt))
+            return;
+
+        this.mQuestionTxt = text;
+        if (blocks != null && !blocks.isEmpty()) {
+            for (int i = 0; i < blocks.size(); i++) {
+                blocks.get(i).release();
+            }
+        }
         blocks = analysisCommand().buildBlocks();
         doLayout(true);
     }
@@ -107,8 +126,10 @@ public class QuestionTextView extends CYPageView {
     }
 
     private void reLayout(boolean force) {
-        if (blocks == null || blocks.isEmpty())
+        if (blocks == null || blocks.isEmpty()) {
+            setPageBlock(mTextEnv, null);
             return;
+        }
 
         if (mLayout == null || force) {
             mLayout = new CYHorizontalLayout(mTextEnv, blocks);

@@ -5,6 +5,7 @@
 package com.knowbox.base.samples;
 
 import android.os.Environment;
+import android.os.Process;
 
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.clientlog.Logger;
@@ -33,6 +34,7 @@ public class App extends BaseApp {
         super.initApp();
         LogUtil.setDebug(true);
         LogUtil.setLevel(Logger.DO_NOT_WRITE_LOG);
+        LogUtil.v("yangzc", "pid: " + Process.myPid());
         //初始化底层服务配置
         FrameworkConfig.init(this).setAppRootDir(Environment.getExternalStorageDirectory())
                 .setGetEncodeKey("acd2469c596a553d44b50c26b4094f46")
@@ -52,6 +54,11 @@ public class App extends BaseApp {
             public void initTablesImpl(DataBaseHelper dataBaseHelper) {
             }
         });
+    }
+
+    @Override
+    public String[] getValidProcessNames() {
+        return new String[]{"com.knowbox.base.samples"};
     }
 
     private class ServiceManager extends BaseServiceManager {

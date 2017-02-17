@@ -47,7 +47,6 @@ public class QuestionListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(R.id.lv_question_list);
         mQuestionAdapter = new QuestionAdapter(getContext());
-        mListView.setAdapter(mQuestionAdapter);
 
         try {
             List<Item> items = new ArrayList<Item>();
@@ -56,11 +55,14 @@ public class QuestionListFragment extends Fragment {
             JSONArray jsonArray = jsonObject.optJSONArray("RECORDS");
             if (jsonArray != null) {
                 for (int i = 0; i < jsonArray.length(); i++) {
+                    if (i >= 2)
+                        continue;
                     JSONObject item = jsonArray.optJSONObject(i);
                     items.add(new Item(item));
                 }
             }
             mQuestionAdapter.setItems(items);
+            mListView.setAdapter(mQuestionAdapter);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -110,9 +112,21 @@ public class QuestionListFragment extends Fragment {
             return convertView;
         }
 
-        @Override
+        private List<Item> mItems;
         public int getCount() {
-            return 1;
+            return this.mItems == null?0:this.mItems.size();
+        }
+
+        public Item getItem(int position) {
+            return this.mItems == null?null:(position < this.mItems.size()?this.mItems.get(position):null);
+        }
+
+        public long getItemId(int position) {
+            return (long)position;
+        }
+
+        public void setItems(List<Item> items) {
+            this.mItems = items;
         }
 
         class ViewHolder {

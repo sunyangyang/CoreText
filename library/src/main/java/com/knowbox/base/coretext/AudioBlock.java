@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Process;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 
@@ -59,7 +60,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
     public AudioBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
-        LogUtil.v("yangzc", "init");
     }
 
     private void init(String content) {
@@ -70,7 +70,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         this.mDownloadManager = DownloadManager.getDownloadManager();
         mDownloadManager.addTaskListener(mTaskListener);
-
         mPlayBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_play);
         mPauseBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_pause);
 
@@ -80,6 +79,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         try {
             JSONObject json = new JSONObject(content);
             this.mSongUrl = json.optString("src");
+//            mSongUrl = "https://striker-hz.oss-cn-hangzhou.aliyuncs.com/10/0i/c1/d915c76a271045185cf1e38d9217cc?OSSAccessKeyId=FvPoWjsunFA24f2d&Expires=1487302462&Signature=fRcFULiOn2KK9odzBVecpD%2F0guY%3D&response-content-disposition=attachment%3B%20filename%3D%22%3F%3F%3F%3F%3F%3F%3Fv2.8.0%3F%3F%3F%3F(%3F%3F).docx%22%3B%20filename*%3DUTF-8%27%27%25E9%2580%259F%25E7%25AE%2597%25E7%259B%2592%25E5%25AD%2590%25E8%2580%2581%25E5%25B8%2588%25E7%25AB%25AFv2.8.0%25E9%259C%2580%25E6%25B1%2582%25E6%2596%2587%25E6%25A1%25A3%2528%25E6%259B%25B4%25E6%2596%25B0%2529.docx&filekey=100ic1d915c76a271045185cf1e38d9217cc";
 
             String taskId = mDownloadManager.buildTaskId(mSongUrl);
             Task task = mDownloadManager.getTaskById(taskId);
@@ -106,7 +106,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        LogUtil.v("yangzc", "draw, isDownloading: " +isDownloading);
         if (mPauseBitmap == null || mPlayBitmap == null
                 || mPauseBitmap.isRecycled() || mPlayBitmap.isRecycled())
             return;
@@ -231,10 +230,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
         if (taskId.equals(task.getTaskId()) && task.isPercentChange()) {
             mProgress = (int) (task.getProgress() * 100.0f / task.getTotalLen());
             isDownloading = true;
-            LogUtil.v("yangzc", "updateProgress: progress: " + mProgress + ", isDownloading: " + isDownloading);
             postInvalidateThis();
         }
     }
+
+
 
     private void complete(Task task) {
         String taskId = mDownloadManager.buildTaskId(mSongUrl);
