@@ -9,17 +9,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Process;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
-import com.hyena.framework.annotation.SystemService;
 import com.hyena.framework.audio.MusicDir;
 import com.hyena.framework.audio.StatusCode;
 import com.hyena.framework.audio.bean.Song;
-import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.download.DownloadManager;
 import com.hyena.framework.download.Task;
 import com.hyena.framework.download.task.UrlTask;
@@ -27,8 +24,8 @@ import com.hyena.framework.security.MD5Util;
 import com.hyena.framework.servcie.audio.PlayerBusService;
 import com.hyena.framework.servcie.audio.listener.PlayStatusChangeListener;
 import com.hyena.framework.utils.ImageFetcher;
+import com.hyena.framework.utils.ToastUtils;
 import com.hyena.framework.utils.UIUtils;
-import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
 
 import org.json.JSONException;
@@ -264,8 +261,12 @@ public class AudioBlock extends CYPlaceHolderBlock {
         }
 
         @Override
-        public void onComplete(Task task, int i) {
-            complete(task);
+        public void onComplete(Task task, int reason) {
+            if (reason == Task.TaskListener.REASON_SUCCESS) {
+                complete(task);
+            } else {
+                ToastUtils.showToast(getTextEnv().getContext(), "音频下载失败，请点击重试!");
+            }
         }
     };
 
