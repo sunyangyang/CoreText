@@ -16,6 +16,7 @@ import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.CYParagraphEndBlock;
+import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.layout.CYHorizontalLayout;
 import com.hyena.coretext.layout.CYLayout;
 import com.hyena.framework.utils.UIUtils;
@@ -36,6 +37,7 @@ public class QuestionTextView extends CYPageView {
     private TextEnv mTextEnv;
     private String mQuestionTxt;
     private CYLayout mLayout;
+    private List<ICYEditable> mEditableList;
 
     private List<CYBlock> blocks;
 
@@ -63,6 +65,8 @@ public class QuestionTextView extends CYPageView {
                 .setTextAlign(TextEnv.Align.CENTER)
                 .setPageHeight(Integer.MAX_VALUE)
                 .setVerticalSpacing(UIUtils.dip2px(getContext(), 3));
+        mTextEnv = mEnvBuilder.build();
+        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
     }
 
     public void setEditable(boolean editable) {
@@ -111,7 +115,22 @@ public class QuestionTextView extends CYPageView {
             }
         }
         blocks = analysisCommand().buildBlocks();
+        mEditableList = getEditableList();
         doLayout(true);
+    }
+
+    public List<ICYEditable> getEditables() {
+        return mEditableList;
+    }
+
+    public boolean next() {
+        if (mEditableList != null && !mEditableList.isEmpty()) {
+            int tabId = FOCUS_TAB_ID;
+            if (tabId + 1 < mEditableList.size()) {
+
+            }
+        }
+        return false;
     }
 
     @Override
