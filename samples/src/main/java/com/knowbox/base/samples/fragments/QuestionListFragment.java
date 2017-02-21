@@ -50,7 +50,7 @@ public class QuestionListFragment extends Fragment {
 
         try {
             List<Item> items = new ArrayList<Item>();
-            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("question.json"));
+            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("question1.json"));
             JSONObject jsonObject = new JSONObject(new String(buf));
             JSONArray jsonArray = jsonObject.optJSONArray("RECORDS");
             if (jsonArray != null) {
@@ -90,6 +90,7 @@ public class QuestionListFragment extends Fragment {
             }
             Item item = getItem(position);
             viewHolder.mQtvQuestion.setText(item.question);
+            viewHolder.mQtvQuestion.setEditable(true);
             try {
                 JSONObject jsonObject = new JSONObject(item.answer.replaceAll("#", ""));
                 int index = jsonObject.optInt("blank_id");
@@ -112,6 +113,11 @@ public class QuestionListFragment extends Fragment {
 
         class ViewHolder {
             QuestionTextView mQtvQuestion;
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
         }
     }
 

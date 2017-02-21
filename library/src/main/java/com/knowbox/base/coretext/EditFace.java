@@ -22,6 +22,7 @@ import com.hyena.framework.utils.UIUtils;
 public class EditFace extends CYEditFace {
 
     private String mClass = "choose";
+    private int mRoundCorner = UIUtils.dip2px(8);
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -33,31 +34,43 @@ public class EditFace extends CYEditFace {
         this.mClass = clazz;
     }
 
+    private RectF mRectF = new RectF();
     @Override
-    protected void drawBorder(Canvas canvas, Rect blockRect) {
+    protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!getTextEnv().isEditable())
             return;
-        if ("choose".equals(mClass)) {
-            super.drawBorder(canvas, blockRect);
+
+        if (("choose".equals(mClass) && hasFocus()) || "fillin".equals(mClass)) {
+            mRectF.set(contentRect);
+            mBorderPaint.setStrokeWidth(UIUtils.dip2px(getTextEnv().getContext(), 1));
+            mBorderPaint.setColor(0xff3196fe);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
         }
     }
 
-    private RectF mRectF = new RectF();
     @Override
-    protected void drawBackGround(Canvas canvas, Rect blockRect) {
+    protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!getTextEnv().isEditable())
             return;
 
-        mBackGroundPaint.setColor(Color.GRAY);
         mBackGroundPaint.setStyle(Paint.Style.FILL);
-        mRectF.set(blockRect);
+        mRectF.set(contentRect);
+
         if ("fillin".equals(mClass)) {
-            canvas.drawRoundRect(mRectF, 10, 10, mBackGroundPaint);
-        } else if ("choose".equals(mClass)) {
-            canvas.drawRoundRect(mRectF, 10, 10, mBackGroundPaint);
-        } else {
-            canvas.drawRoundRect(mRectF, 10, 10, mBackGroundPaint);
+            if (hasFocus()) {
+                mBackGroundPaint.setColor(Color.WHITE);
+            } else {
+                mBackGroundPaint.setColor(0xffe1e9f2);
+            }
+        } else if ("choose".equals(mClass)){
+            if (hasFocus()) {
+                mBackGroundPaint.setColor(0xffe1e9f2);
+            } else {
+                mBackGroundPaint.setColor(Color.WHITE);
+            }
         }
+        canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBackGroundPaint);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.hyena.framework.servcie.IServiceManager;
 import com.hyena.framework.servcie.ServiceProvider;
+import com.knowbox.base.samples.fragments.QuestionFragment;
 import com.knowbox.base.samples.fragments.QuestionListFragment;
 
 public class MainActivity extends FragmentActivity {
@@ -16,7 +17,8 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.main, new SamplesVideoFragment());
-        ft.replace(R.id.main, new QuestionListFragment());
+//        ft.replace(R.id.main, new QuestionListFragment());
+        ft.replace(R.id.main, new QuestionFragment());
         ft.commitAllowingStateLoss();
     }
 

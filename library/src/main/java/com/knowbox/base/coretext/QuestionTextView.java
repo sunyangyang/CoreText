@@ -59,7 +59,8 @@ public class QuestionTextView extends CYPageView {
         mEnvBuilder = new TextEnv.Builder(getContext())
                 .setPageWidth(width)
                 .setTextColor(0xff333333)
-                .setFontSize(UIUtils.dip2px(15))
+                .setFontSize(UIUtils.dip2px(20))
+                .setTextAlign(TextEnv.Align.CENTER)
                 .setPageHeight(Integer.MAX_VALUE)
                 .setVerticalSpacing(UIUtils.dip2px(getContext(), 3));
     }
@@ -86,6 +87,8 @@ public class QuestionTextView extends CYPageView {
     }
 
     public void setText(String questionTxt) {
+        mTextEnv = mEnvBuilder.build();
+        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
         if (TextUtils.isEmpty(questionTxt)) {
             this.mQuestionTxt = questionTxt;
             if (blocks != null && !blocks.isEmpty()) {

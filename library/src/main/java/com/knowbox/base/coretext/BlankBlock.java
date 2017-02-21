@@ -29,7 +29,7 @@ public class BlankBlock extends CYEditBlock {
     }
 
     private void init(String content) {
-        setPadding(UIUtils.dip2px(3), UIUtils.dip2px(2), UIUtils.dip2px(3), UIUtils.dip2px(2));
+        setPadding(UIUtils.dip2px(3), UIUtils.dip2px(1), UIUtils.dip2px(3), UIUtils.dip2px(1));
         try {
             JSONObject json = new JSONObject(content);
             setTabId(json.optInt("id"));
@@ -67,14 +67,14 @@ public class BlankBlock extends CYEditBlock {
             this.mHeight = textHeight;
         } else {
             if ("letter".equals(size)) {
-                this.mWidth = UIUtils.dip2px(30);
-                this.mHeight = textHeight;
+                this.mWidth = UIUtils.dip2px(32);
+                this.mHeight = UIUtils.dip2px(40);
             } else if ("line".equals(size)) {
                 this.mWidth = UIUtils.dip2px(265);
                 this.mHeight = getTextHeight(getEditFace().getTextPaint());
             } else if ("express".equals(size)) {
                 this.mWidth = UIUtils.dip2px(50);
-                this.mHeight = textHeight;
+                this.mHeight = UIUtils.dip2px(40);
             } else {
                 this.mWidth = UIUtils.dip2px(50);
                 this.mHeight = textHeight;
