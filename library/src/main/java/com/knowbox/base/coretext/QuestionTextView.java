@@ -188,21 +188,26 @@ public class QuestionTextView extends CYPageView {
         try {
             JSONObject json = new JSONObject(data);
             String type = json.optString("type");
-            if ("blank".equals(type)) {
-                return (T) new BlankBlock(mTextEnv, data);
-            } else if("img".equals(type)) {
-                return (T) new ImageBlock(mTextEnv, data);
-            } else if("P".equals(type)) {
-                return (T) new CYBreakLineBlock(mTextEnv, data);
-            } else if ("para_begin".equals(type)) {
-                return (T) new ParagraphStartBlock(mTextEnv, data);
-            } else if ("para_end".equals(type)) {
-                return (T) new CYParagraphEndBlock(mTextEnv, data);
-            } else if ("audio".equals(type)) {
-                return (T) new AudioBlock(mTextEnv, data);
-            }
+            return newBlock(type, data);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected <T extends CYBlock> T newBlock(String type, String data) {
+        if ("blank".equals(type)) {
+            return (T) new BlankBlock(mTextEnv, data);
+        } else if("img".equals(type)) {
+            return (T) new ImageBlock(mTextEnv, data);
+        } else if("P".equals(type)) {
+            return (T) new CYBreakLineBlock(mTextEnv, data);
+        } else if ("para_begin".equals(type)) {
+            return (T) new ParagraphStartBlock(mTextEnv, data);
+        } else if ("para_end".equals(type)) {
+            return (T) new CYParagraphEndBlock(mTextEnv, data);
+        } else if ("audio".equals(type)) {
+            return (T) new AudioBlock(mTextEnv, data);
         }
         return null;
     }

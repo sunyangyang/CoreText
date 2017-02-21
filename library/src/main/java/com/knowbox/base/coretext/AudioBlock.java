@@ -26,6 +26,7 @@ import com.hyena.framework.servcie.audio.listener.PlayStatusChangeListener;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.ToastUtils;
 import com.hyena.framework.utils.UIUtils;
+import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
 
 import org.json.JSONException;
@@ -42,8 +43,9 @@ public class AudioBlock extends CYPlaceHolderBlock {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private DownloadManager mDownloadManager;
 
-    private Bitmap mPlayBitmap;
-    private Bitmap mPauseBitmap;
+    protected Bitmap mPlayBitmap;
+    protected Bitmap mPauseBitmap;
+    protected int mBackGroundColor = 0xff82d941;
 
     private String mSongUrl;
     private int mRound = UIUtils.dip2px(15);
@@ -67,9 +69,9 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         this.mDownloadManager = DownloadManager.getDownloadManager();
         mDownloadManager.addTaskListener(mTaskListener);
+
         mPlayBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_play);
         mPauseBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_pause);
-
         setWidth(UIUtils.dip2px(90));
         setHeight(UIUtils.dip2px(43) + getPaddingTop() + getPaddingBottom());
 
@@ -108,7 +110,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
             return;
 
         mContentRect.set(getContentRect());
-        mPaint.setColor(0xff82d941);
+        mPaint.setColor(mBackGroundColor);
         canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
 
         if (isDownloading) {
@@ -265,7 +267,12 @@ public class AudioBlock extends CYPlaceHolderBlock {
             if (reason == Task.TaskListener.REASON_SUCCESS) {
                 complete(task);
             } else {
-                ToastUtils.showToast(getTextEnv().getContext(), "音频下载失败，请点击重试!");
+                UiThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showToast(getTextEnv().getContext(), "音频下载失败，请点击重试!");
+                    }
+                });
             }
         }
     };
