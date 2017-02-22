@@ -34,8 +34,9 @@ public class BlankBlock extends CYEditBlock {
             JSONObject json = new JSONObject(content);
             setTabId(json.optInt("id"));
             setDefaultText(json.optString("default"));
-            this.size = json.optString("size");
-            this.mClass = json.optString("class");//choose fillin
+            this.size = json.optString("size", "line");
+            this.mClass = json.optString("class", "choose");//choose fillin
+
             if (getTextEnv().isEditable()) {
                 if ("line".equals(size)) {
                     getEditFace().getTextPaint().setTextSize(UIUtils.dip2px(20));
@@ -62,7 +63,11 @@ public class BlankBlock extends CYEditBlock {
     private void updateSize() {
         int textHeight = getTextHeight(getTextEnv().getPaint());
         if (!getTextEnv().isEditable()) {
-            int width = (int) getTextEnv().getPaint().measureText(getEditFace().getText());
+            String text = getEditFace().getText();
+            if ("choose".equals(mClass)) {
+                text = "(" + text + ")";
+            }
+            int width = (int) getTextEnv().getPaint().measureText(text);
             this.mWidth = width + UIUtils.dip2px(10);
             this.mHeight = textHeight;
         } else {

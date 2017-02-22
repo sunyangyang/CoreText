@@ -7,6 +7,7 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 
 import com.hyena.coretext.AttributedString;
@@ -117,6 +118,21 @@ public class QuestionTextView extends CYPageView {
         blocks = analysisCommand().buildBlocks();
         mEditableList = getEditableList();
         doLayout(true);
+    }
+
+    public void setAnswers(SparseArray<String> answers) {
+        if (answers != null && mTextEnv != null) {
+            for (int i = 0; i < answers.size(); i++) {
+                int tabId = answers.keyAt(i);
+                String value = answers.valueAt(i);
+                mTextEnv.setEditableValue(tabId, value);
+            }
+        }
+    }
+
+    public void setEditableColor(SparseArray<Integer> colors) {
+        if (colors != null) {
+        }
     }
 
     public List<ICYEditable> getEditables() {

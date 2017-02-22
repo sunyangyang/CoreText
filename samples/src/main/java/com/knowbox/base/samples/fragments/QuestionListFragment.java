@@ -50,7 +50,7 @@ public class QuestionListFragment extends Fragment {
 
         try {
             List<Item> items = new ArrayList<Item>();
-            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("question1.json"));
+            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("questions.json"));
             JSONObject jsonObject = new JSONObject(new String(buf));
             JSONArray jsonArray = jsonObject.optJSONArray("RECORDS");
             if (jsonArray != null) {
@@ -90,24 +90,24 @@ public class QuestionListFragment extends Fragment {
             }
             Item item = getItem(position);
             viewHolder.mQtvQuestion.setText(item.question);
-            viewHolder.mQtvQuestion.setEditable(true);
-            try {
-                JSONObject jsonObject = new JSONObject(item.answer.replaceAll("#", ""));
-                int index = jsonObject.optInt("blank_id");
-                String answer = jsonObject.optString("choice");
-
-                switch (item.type) {
-
-                }
-
-                ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(index);
+            viewHolder.mQtvQuestion.setEditable(false);
+//            try {
+//                JSONObject jsonObject = new JSONObject(item.answer.replaceAll("#", ""));
+//                int index = jsonObject.optInt("blank_id");
+//                String answer = jsonObject.optString("choice");
+//
+//                switch (item.type) {
+//
+//                }
+//
+                ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
                 if (editable != null) {
-                    editable.setText(answer);
+                    editable.setText("A");
                     editable.setTextColor(Color.RED);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
             return convertView;
         }
 
@@ -115,10 +115,6 @@ public class QuestionListFragment extends Fragment {
             QuestionTextView mQtvQuestion;
         }
 
-        @Override
-        public int getCount() {
-            return 1;
-        }
     }
 
     public class Item {
@@ -127,7 +123,7 @@ public class QuestionListFragment extends Fragment {
         int type;
 
         public Item(JSONObject json) {
-            this.question = json.optString("Question");
+            this.question = json.optString("question");
             this.answer = json.optString("RightAnswer");
             this.type = json.optInt("QuestionType");
         }

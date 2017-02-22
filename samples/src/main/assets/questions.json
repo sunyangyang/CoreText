@@ -1,0 +1,10 @@
+{
+"RECORDS":[
+{
+"questionid":888107,
+"question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#D0D0D0\",\"margin\":8}#\r\n填空\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n这里有个空#{\"type\":\"P\"}#\r\n#{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"line\"}# \r\n#{\"type\":\"para_end\"}#哈哈哈",
+"QuestionType":"0",
+"RightAnswer":" [{ \"blank_id\" : 1, \"content\" : \"apple\"}]\r\n"
+}
+]
+}

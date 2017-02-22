@@ -29,8 +29,6 @@ public class EditFace extends CYEditFace {
     }
 
     public void setClass(String clazz) {
-        if (TextUtils.isEmpty(clazz))
-            clazz = "choose";
         this.mClass = clazz;
     }
 

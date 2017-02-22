@@ -33,7 +33,7 @@ public class ParagraphStartBlock extends CYParagraphStartBlock {
             getStyle().setTextColor(Color.parseColor(json.optString("color")));
             getStyle().setMarginBottom(UIUtils.dip2px(json.optInt("margin")/2));
             String align = json.optString("align");
-            if ("left".equals(align) || TextUtils.isEmpty(align)) {
+            if ("left".equals(align) || TextUtils.isEmpty(align) || !getTextEnv().isEditable()) {
                 getStyle().setHorizontalAlign(CYHorizontalAlign.LEFT);
             } else if("mid".equals(align)) {
                 getStyle().setHorizontalAlign(CYHorizontalAlign.CENTER);
