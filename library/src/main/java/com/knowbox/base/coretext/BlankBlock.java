@@ -88,6 +88,12 @@ public class BlankBlock extends CYEditBlock {
     }
 
     @Override
+    public void onMeasure() {
+        super.onMeasure();
+        updateSize();
+    }
+
+    @Override
     public int getContentWidth() {
         return mWidth;
     }

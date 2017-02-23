@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
  */
 public class QuestionTextView extends CYPageView {
 
-    private TextEnv.Builder mEnvBuilder;
     private TextEnv mTextEnv;
     private String mQuestionTxt;
     private CYLayout mLayout;
@@ -59,41 +58,32 @@ public class QuestionTextView extends CYPageView {
 
     private void init() {
         int width = getContext().getResources().getDisplayMetrics().widthPixels;
-        mEnvBuilder = new TextEnv.Builder(getContext())
+        mTextEnv = new TextEnv(getContext())
                 .setPageWidth(width)
                 .setTextColor(0xff333333)
                 .setFontSize(UIUtils.dip2px(20))
                 .setTextAlign(TextEnv.Align.CENTER)
                 .setPageHeight(Integer.MAX_VALUE)
                 .setVerticalSpacing(UIUtils.dip2px(getContext(), 3));
-        mTextEnv = mEnvBuilder.build();
         mTextEnv.getEventDispatcher().addLayoutEventListener(this);
     }
 
     public void setEditable(boolean editable) {
-        mEnvBuilder.setEditable(editable);
-        mTextEnv = mEnvBuilder.build();
-        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
+        mTextEnv.setEditable(editable);
         doLayout(true);
     }
 
     public void setTextColor(int textColor) {
-        mEnvBuilder.setTextColor(textColor);
-        mTextEnv = mEnvBuilder.build();
-        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
+        mTextEnv.setTextColor(textColor);
         doLayout(true);
     }
 
     public void setTextSize(int dp) {
-        mEnvBuilder.setFontSize(UIUtils.dip2px(getContext(), dp));
-        mTextEnv = mEnvBuilder.build();
-        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
+        mTextEnv.setFontSize(UIUtils.dip2px(getContext(), dp));
         doLayout(true);
     }
 
     public void setText(String questionTxt) {
-        mTextEnv = mEnvBuilder.build();
-        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
         if (TextUtils.isEmpty(questionTxt)) {
             this.mQuestionTxt = questionTxt;
             if (blocks != null && !blocks.isEmpty()) {
@@ -152,9 +142,7 @@ public class QuestionTextView extends CYPageView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mEnvBuilder.setPageWidth(w);
-        mTextEnv = mEnvBuilder.build();
-        mTextEnv.getEventDispatcher().addLayoutEventListener(this);
+        mTextEnv.setPageWidth(w);
         doLayout(true);
     }
 

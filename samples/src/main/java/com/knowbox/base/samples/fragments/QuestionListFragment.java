@@ -91,23 +91,11 @@ public class QuestionListFragment extends Fragment {
             Item item = getItem(position);
             viewHolder.mQtvQuestion.setText(item.question);
             viewHolder.mQtvQuestion.setEditable(false);
-//            try {
-//                JSONObject jsonObject = new JSONObject(item.answer.replaceAll("#", ""));
-//                int index = jsonObject.optInt("blank_id");
-//                String answer = jsonObject.optString("choice");
-//
-//                switch (item.type) {
-//
-//                }
-//
-                ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
-                if (editable != null) {
-                    editable.setText("A");
-                    editable.setTextColor(Color.RED);
-                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
+            if (editable != null) {
+                editable.setText("Hello");
+                editable.setTextColor(Color.RED);
+            }
             return convertView;
         }
 
