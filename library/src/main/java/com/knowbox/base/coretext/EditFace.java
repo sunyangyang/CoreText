@@ -88,9 +88,7 @@ public class EditFace extends CYEditFace {
         if (!getTextEnv().isEditable()) {
             if ("fillin".equals(mClass)) {
                 super.drawText(canvas, text, contentRect);
-                mFlashPaint.setColor(0xff3eabff);
-                mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
-                canvas.drawLine(contentRect.left, contentRect.bottom, contentRect.right, contentRect.bottom, mFlashPaint);
+                canvas.drawLine(contentRect.left, contentRect.bottom, contentRect.right, contentRect.bottom, mTextPaint);
             } else {
                 if (TextUtils.isEmpty(text)) {
                     super.drawText(canvas, "( )", contentRect);

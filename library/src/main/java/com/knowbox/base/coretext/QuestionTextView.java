@@ -120,23 +120,8 @@ public class QuestionTextView extends CYPageView {
         }
     }
 
-    public void setEditableColor(SparseArray<Integer> colors) {
-        if (colors != null) {
-        }
-    }
-
     public List<ICYEditable> getEditables() {
         return mEditableList;
-    }
-
-    public boolean next() {
-        if (mEditableList != null && !mEditableList.isEmpty()) {
-            int tabId = FOCUS_TAB_ID;
-            if (tabId + 1 < mEditableList.size()) {
-
-            }
-        }
-        return false;
     }
 
     @Override
