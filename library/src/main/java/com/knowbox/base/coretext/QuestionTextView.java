@@ -133,6 +133,8 @@ public class QuestionTextView extends CYPageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (mTextEnv != null && !mTextEnv.isEditable())
+            return super.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -207,5 +209,38 @@ public class QuestionTextView extends CYPageView {
         reLayout(force);
         requestLayout();
         postInvalidate();
+    }
+
+    private DataSource mDataSource = new DataSource();
+
+    public DataSource getDataSource() {
+        return mDataSource;
+    }
+
+    public class DataSource {
+
+        private String mText;
+        public DataSource setEditable(boolean editable) {
+            mTextEnv.setEditable(editable);
+            return this;
+        }
+
+        public DataSource setTextColor(int textColor) {
+            mTextEnv.setTextColor(textColor);
+            return this;
+        }
+
+        public DataSource setTextSize(int dp) {
+            mTextEnv.setFontSize(UIUtils.dip2px(getContext(), dp));
+            return this;
+        }
+
+        public void setText(String questionTxt) {
+            this.mText = questionTxt;
+        }
+
+        public void build() {
+            QuestionTextView.this.setText(mText);
+        }
     }
 }
