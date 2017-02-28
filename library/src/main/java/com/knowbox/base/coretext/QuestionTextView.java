@@ -7,7 +7,6 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.view.MotionEvent;
 
 import com.hyena.coretext.AttributedString;
@@ -68,22 +67,22 @@ public class QuestionTextView extends CYPageView {
         mTextEnv.getEventDispatcher().addLayoutEventListener(this);
     }
 
-    public void setEditable(boolean editable) {
-        mTextEnv.setEditable(editable);
-        doLayout(true);
-    }
+//    public void setEditable(boolean editable) {
+//        mTextEnv.setEditable(editable);
+//        doLayout(true);
+//    }
+//
+//    public void setTextColor(int textColor) {
+//        mTextEnv.setTextColor(textColor);
+//        doLayout(true);
+//    }
+//
+//    public void setTextSize(int dp) {
+//        mTextEnv.setFontSize(UIUtils.dip2px(getContext(), dp));
+//        doLayout(true);
+//    }
 
-    public void setTextColor(int textColor) {
-        mTextEnv.setTextColor(textColor);
-        doLayout(true);
-    }
-
-    public void setTextSize(int dp) {
-        mTextEnv.setFontSize(UIUtils.dip2px(getContext(), dp));
-        doLayout(true);
-    }
-
-    public void setText(String questionTxt) {
+    private void setText(String questionTxt) {
         if (TextUtils.isEmpty(questionTxt)) {
             this.mQuestionTxt = questionTxt;
             if (blocks != null && !blocks.isEmpty()) {
@@ -110,19 +109,19 @@ public class QuestionTextView extends CYPageView {
         doLayout(true);
     }
 
-    public void setAnswers(SparseArray<String> answers) {
-        if (answers != null && mTextEnv != null) {
-            for (int i = 0; i < answers.size(); i++) {
-                int tabId = answers.keyAt(i);
-                String value = answers.valueAt(i);
-                mTextEnv.setEditableValue(tabId, value);
-            }
-        }
-    }
-
-    public List<ICYEditable> getEditables() {
-        return mEditableList;
-    }
+//    public void setAnswers(SparseArray<String> answers) {
+//        if (answers != null && mTextEnv != null) {
+//            for (int i = 0; i < answers.size(); i++) {
+//                int tabId = answers.keyAt(i);
+//                String value = answers.valueAt(i);
+//                mTextEnv.setEditableValue(tabId, value);
+//            }
+//        }
+//    }
+//
+//    public List<ICYEditable> getEditables() {
+//        return mEditableList;
+//    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -211,32 +210,33 @@ public class QuestionTextView extends CYPageView {
         postInvalidate();
     }
 
-    private DataSource mDataSource = new DataSource();
+    private Builder mBuilder = new Builder();
 
-    public DataSource getDataSource() {
-        return mDataSource;
+    public Builder getBuilder() {
+        return mBuilder;
     }
 
-    public class DataSource {
+    public class Builder {
 
         private String mText;
-        public DataSource setEditable(boolean editable) {
+        public Builder setEditable(boolean editable) {
             mTextEnv.setEditable(editable);
             return this;
         }
 
-        public DataSource setTextColor(int textColor) {
+        public Builder setTextColor(int textColor) {
             mTextEnv.setTextColor(textColor);
             return this;
         }
 
-        public DataSource setTextSize(int dp) {
+        public Builder setTextSize(int dp) {
             mTextEnv.setFontSize(UIUtils.dip2px(getContext(), dp));
             return this;
         }
 
-        public void setText(String questionTxt) {
+        public Builder setText(String questionTxt) {
             this.mText = questionTxt;
+            return this;
         }
 
         public void build() {

@@ -83,14 +83,14 @@ public class QuestionListFragment extends Fragment {
                 convertView.setTag(viewHolder);
 
                 viewHolder.mQtvQuestion = (QuestionTextView) convertView.findViewById(R.id.qtv_question);
-                viewHolder.mQtvQuestion.setEditable(false);
 
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             Item item = getItem(position);
-            viewHolder.mQtvQuestion.setText(item.question);
-            viewHolder.mQtvQuestion.setEditable(false);
+            viewHolder.mQtvQuestion.getBuilder().setText(item.question)
+                    .setEditable(false).build();
+
             ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
             if (editable != null) {
                 editable.setText("Hello");
