@@ -95,9 +95,6 @@ public class QuestionTextView extends CYPageView {
         }
         String text = questionTxt.replaceAll("\\\\#", "labelsharp")
                 .replaceAll("\n", "").replaceAll("\r", "");
-        if (text.equals(mQuestionTxt))
-            return;
-
         this.mQuestionTxt = text;
         if (blocks != null && !blocks.isEmpty()) {
             for (int i = 0; i < blocks.size(); i++) {
