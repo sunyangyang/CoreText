@@ -116,10 +116,10 @@ public class QuestionTextView extends CYPageView {
 //            }
 //        }
 //    }
-//
-//    public List<ICYEditable> getEditables() {
-//        return mEditableList;
-//    }
+
+    public List<ICYEditable> getEditables() {
+        return mEditableList;
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
