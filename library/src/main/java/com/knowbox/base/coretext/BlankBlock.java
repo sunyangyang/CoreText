@@ -18,7 +18,6 @@ import org.json.JSONObject;
  */
 public class BlankBlock extends CYEditBlock {
 
-    private boolean mIsRight = false;
     private String mClass = "choose";
     private String size;
     private int mWidth, mHeight;
@@ -90,7 +89,7 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public void onMeasure() {
         super.onMeasure();
-        updateSize();
+//        updateSize();
     }
 
     @Override

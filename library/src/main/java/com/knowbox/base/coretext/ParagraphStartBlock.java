@@ -29,9 +29,22 @@ public class ParagraphStartBlock extends CYParagraphStartBlock {
     private void init(String content) {
         try {
             JSONObject json = new JSONObject(content);
-            getStyle().setTextSize(UIUtils.dip2px(json.optInt("size")/2));
-            getStyle().setTextColor(Color.parseColor(json.optString("color")));
-            getStyle().setMarginBottom(UIUtils.dip2px(json.optInt("margin")/2));
+
+            if (json.has("size")) {
+                getStyle().setTextSize(UIUtils.dip2px(json.optInt("size") / 2));
+            } else {
+                getStyle().setTextSize(getTextEnv().getFontSize());
+            }
+            if (json.has("color")) {
+                getStyle().setTextColor(Color.parseColor(json.optString("color")));
+            } else {
+                getStyle().setTextColor(getTextEnv().getTextColor());
+            }
+
+            if (json.has("margin")) {
+                getStyle().setMarginBottom(UIUtils.dip2px(json.optInt("margin") / 2));
+            }
+
             String align = json.optString("align");
             if ("left".equals(align) || TextUtils.isEmpty(align) || !getTextEnv().isEditable()) {
                 getStyle().setHorizontalAlign(CYHorizontalAlign.LEFT);

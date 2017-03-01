@@ -5,6 +5,7 @@
 package com.knowbox.base.coretext;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -233,6 +234,11 @@ public class QuestionTextView extends CYPageView {
 
         public Builder setText(String questionTxt) {
             this.mText = questionTxt;
+            return this;
+        }
+
+        public Builder setDebug(boolean debug) {
+            mTextEnv.setDebug(debug);
             return this;
         }
 
