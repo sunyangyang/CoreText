@@ -7,27 +7,31 @@ package com.knowbox.base.coretext;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.view.animation.LinearInterpolator;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.framework.audio.MusicDir;
 import com.hyena.framework.audio.StatusCode;
 import com.hyena.framework.audio.bean.Song;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.download.DownloadManager;
 import com.hyena.framework.download.Task;
 import com.hyena.framework.download.task.UrlTask;
 import com.hyena.framework.security.MD5Util;
 import com.hyena.framework.servcie.audio.PlayerBusService;
 import com.hyena.framework.servcie.audio.listener.PlayStatusChangeListener;
+import com.hyena.framework.utils.AnimationUtils;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.ToastUtils;
 import com.hyena.framework.utils.UIUtils;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ValueAnimator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,16 +47,14 @@ public class AudioBlock extends CYPlaceHolderBlock {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private DownloadManager mDownloadManager;
 
-    protected Bitmap mPlayBitmap;
-    protected Bitmap mPauseBitmap;
-    protected int mBackGroundColor = 0xff82d941;
+//    protected int mBackGroundColor = 0xff82d941;
+//    protected int mRound = UIUtils.dip2px(15);
 
     private String mSongUrl;
-    private int mRound = UIUtils.dip2px(15);
-
     private boolean mIsPlaying = false;
-    private boolean isDownloading = false;
+    private boolean mIsDownloading = false;
     private int mProgress = 0;
+    private Bitmap mBitmap;
 
     private static String mPlayingSongUri = "";
 
@@ -70,10 +72,13 @@ public class AudioBlock extends CYPlaceHolderBlock {
         this.mDownloadManager = DownloadManager.getDownloadManager();
         mDownloadManager.addTaskListener(mTaskListener);
 
-        mPlayBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_play);
-        mPauseBitmap = ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.sound_pause);
-        setWidth(UIUtils.dip2px(90));
-        setHeight(UIUtils.dip2px(43) + getPaddingTop() + getPaddingBottom());
+        mBitmap = getStartPlayBitmap();
+        if (mBitmap != null) {
+            setWidth(mBitmap.getWidth());
+            setHeight(mBitmap.getHeight() + getPaddingTop() + getPaddingBottom());
+        } else {
+            throw new RuntimeException("start play bitmap must be not null!!!");
+        }
 
         try {
             JSONObject json = new JSONObject(content);
@@ -87,11 +92,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 if (status == Task.STATUS_ADVANCING
                         || status == Task.STATUS_READY
                         || status == Task.STATUS_STARTED) {
-                    isDownloading = true;
                     mProgress = task.getProgress();
+                    onDownloadStateChange(true, mSongUrl, Task.TaskListener.REASON_SUCCESS);
                 } else if (status == Task.STATUS_COMPLETED) {
                     if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri)) {
-                        mIsPlaying = true;
+                        onPlayingStateChange(true, mSongUrl);
                     }
                 }
             }
@@ -100,39 +105,74 @@ public class AudioBlock extends CYPlaceHolderBlock {
         }
     }
 
+    protected Bitmap getStartPlayBitmap() {
+        return ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_3);
+    }
+
+    protected Bitmap[] getPlayingBitmaps() {
+        return new Bitmap[]{
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_1),
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_2),
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_3)
+        };
+    }
+
+    protected Bitmap[] getDownloadBitmaps() {
+        return new Bitmap[]{
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_1),
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_2),
+                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_3)
+        };
+    }
+
     private RectF mContentRect = new RectF();
-    private Rect mClipRect = new Rect();
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        if (mPauseBitmap == null || mPlayBitmap == null
-                || mPauseBitmap.isRecycled() || mPlayBitmap.isRecycled())
-            return;
-
         mContentRect.set(getContentRect());
-        mPaint.setColor(mBackGroundColor);
-        canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
+//        drawBackGround(canvas);
 
-        if (isDownloading) {
-            mPaint.setColor(0xff69c028);
-            canvas.save();
-            int height = (int) (mContentRect.height() * (100 - mProgress) / 100);
-            mClipRect.set((int)mContentRect.left, (int)mContentRect.top + height,
-                    (int)mContentRect.right, (int)mContentRect.bottom);
-            canvas.clipRect(mClipRect);
-            canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
-            canvas.restore();
-        }
-
-        if (mIsPlaying) {
-            drawBitmap(canvas, mPauseBitmap);
-        } else {
-            drawBitmap(canvas, mPlayBitmap);
-        }
+//        if (mIsDownloading) {
+//            drawDownloadState(canvas, mProgress);
+//        }
+//        drawPlayState(canvas);
+        drawBitmap(canvas, mBitmap);
     }
 
+//    protected void drawBackGround(Canvas canvas) {
+//        mPaint.setColor(mBackGroundColor);
+//        canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
+//    }
+
+//    private Rect mClipRect = new Rect();
+//    protected void drawDownloadState(Canvas canvas, int progress) {
+//        mPaint.setColor(0xff69c028);
+//        canvas.save();
+//        int height = (int) (mContentRect.height() * (100 - mProgress) / 100);
+//        mClipRect.set((int)mContentRect.left, (int)mContentRect.top + height,
+//                (int)mContentRect.right, (int)mContentRect.bottom);
+//        canvas.clipRect(mClipRect);
+//        canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
+//        canvas.restore();
+//    }
+
+//    protected void drawPlayState(Canvas canvas) {
+//        if (mPlayingBitmap == null || mStartPlayBitmap == null
+//                || mPlayingBitmap.isRecycled() || mStartPlayBitmap.isRecycled())
+//            return;
+//        if (mIsPlaying) {
+//            drawBitmap(canvas, mPlayingBitmap);
+//        } else {
+//            drawBitmap(canvas, mStartPlayBitmap);
+//        }
+//    }
+
     private RectF mRect = new RectF();
-    private void drawBitmap(Canvas canvas, Bitmap bitmap) {
+    protected void drawBitmap(Canvas canvas, Bitmap bitmap) {
+        if (bitmap == null || bitmap.isRecycled())
+            return;
+
         float left = mContentRect.left + (mContentRect.width() - bitmap.getWidth())/2;
         float top = mContentRect.top + (mContentRect.height() - bitmap.getHeight())/2;
         float right = left + bitmap.getWidth();
@@ -182,17 +222,15 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 if (status == Task.STATUS_ADVANCING
                         || status == Task.STATUS_READY
                         || status == Task.STATUS_STARTED) {
-//                    mPlayingSongUri = "";
-//                    task.pause();
                 } else if (status == Task.STATUS_COMPLETED) {
-                    mPlayingSongUri = mSongUrl;
+                    AudioBlock.mPlayingSongUri = mSongUrl;
                     play();
                 } else {
-                    mPlayingSongUri = mSongUrl;
+                    AudioBlock.mPlayingSongUri = mSongUrl;
                     download();
                 }
             } else {
-                mPlayingSongUri = mSongUrl;
+                AudioBlock.mPlayingSongUri = mSongUrl;
                 download();
             }
         }
@@ -224,25 +262,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
         }
     }
 
-    private void updateProgress(Task task) {
+    protected void updateProgress(Task task) {
         String taskId = mDownloadManager.buildTaskId(mSongUrl);
         if (taskId.equals(task.getTaskId()) && task.isPercentChange()) {
             mProgress = (int) (task.getProgress() * 100.0f / task.getTotalLen());
-            isDownloading = true;
-            postInvalidateThis();
-        }
-    }
-
-
-
-    private void complete(Task task) {
-        String taskId = mDownloadManager.buildTaskId(mSongUrl);
-        if (taskId.equals(task.getTaskId())) {
-            isDownloading = false;
-            //update status
-            if (mDownloadManager.buildTaskId(mPlayingSongUri).equals(taskId)) {
-                play();
-            }
+            mIsDownloading = true;
             postInvalidateThis();
         }
     }
@@ -255,24 +279,42 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         @Override
         public void onStart(Task task, long l, long l1) {
+            String taskId = mDownloadManager.buildTaskId(mSongUrl);
+            if (taskId.equals(task.getTaskId())) {
+                onDownloadStateChange(true, task.getRemoteUrl(), REASON_SUCCESS);
+            }
         }
 
         @Override
         public void onProgress(final Task task, long l, long l1) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             updateProgress(task);
         }
 
         @Override
         public void onComplete(Task task, int reason) {
-            if (reason == Task.TaskListener.REASON_SUCCESS) {
-                complete(task);
-            } else {
-                UiThreadHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.showToast(getTextEnv().getContext(), "音频下载失败，请点击重试!");
+            String taskId = mDownloadManager.buildTaskId(mSongUrl);
+            if (taskId.equals(task.getTaskId())) {
+                mIsDownloading = false;
+                onDownloadStateChange(false, task.getRemoteUrl(), reason);
+                if (reason == Task.TaskListener.REASON_SUCCESS) {
+                    //update status
+                    if (mDownloadManager.buildTaskId(mPlayingSongUri).equals(taskId)) {
+                        play();
                     }
-                });
+                    postInvalidateThis();
+                } else {
+                    UiThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(getTextEnv().getContext(), "音频下载失败，请点击重试!");
+                        }
+                    });
+                }
             }
         }
     };
@@ -294,9 +336,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 case StatusCode.STATUS_PLAYING: {
                     if (mIsPlaying)
                         return;
-
-                    mIsPlaying = true;
-                    postInvalidateThis();
+                    onPlayingStateChange(true, song.getUrl());
                     break;
                 }
                 case StatusCode.STATUS_ERROR:
@@ -305,14 +345,142 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 case StatusCode.STATUS_COMPLETED: {
                     if (!mIsPlaying)
                         return;
-
-                    mIsPlaying = false;
-                    mPlayingSongUri = "";
-                    postInvalidateThis();
+                    onPlayingStateChange(false, song.getUrl());
                     break;
                 }
             }
         }
     };
 
+    /**
+     * play state change
+     * @param isPlaying isPlaying
+     * @param playingUri action audio url
+     */
+    protected void onPlayingStateChange(boolean isPlaying, String playingUri) {
+        if (isPlaying) {
+            this.mIsPlaying = true;
+            AudioBlock.mPlayingSongUri = playingUri;
+        } else {
+            this.mIsPlaying = false;
+            AudioBlock.mPlayingSongUri = "";
+        }
+        startOrPauseSoundAnim();
+        postInvalidateThis();
+    }
+
+    /**
+     * download state change
+     * @param isDownloading mIsDownloading
+     * @param audioUri audioUri
+     * @param reason Task.listener.reason
+     */
+    protected void onDownloadStateChange(boolean isDownloading, String audioUri, int reason) {
+        this.mIsDownloading = isDownloading;
+        if (isDownloading) {
+            AudioBlock.mPlayingSongUri = audioUri;
+        }
+        startOrCompleteDownloadAnim();
+        postInvalidateThis();
+    }
+
+    protected boolean isPlaying() {
+        return mIsPlaying;
+    }
+
+    protected boolean isDownloading() {
+        return mIsDownloading;
+    }
+
+    private ValueAnimator mCurrentAnim;
+    protected void startOrCompleteDownloadAnim() {
+        UiThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mCurrentAnim != null) {
+                    mCurrentAnim.cancel();
+                }
+                if (isDownloading()) {
+                    mCurrentAnim = ValueAnimator.ofInt(0, getDownloadBitmaps().length);
+                    mCurrentAnim.setRepeatCount(ValueAnimator.INFINITE);
+                    mCurrentAnim.setDuration(500);
+                    mCurrentAnim.setInterpolator(new LinearInterpolator());
+                    AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            mBitmap = getStartPlayBitmap();
+                            postInvalidateThis();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {}
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+                            mBitmap = getStartPlayBitmap();
+                            postInvalidateThis();
+                        }
+
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            Integer index = (Integer) valueAnimator.getAnimatedValue();
+                            mBitmap = getDownloadBitmaps()[index];
+                            postInvalidateThis();
+                        }
+                    };
+                    mCurrentAnim.addUpdateListener(listener);
+                    mCurrentAnim.addListener(listener);
+                    mCurrentAnim.start();
+                }
+            }
+        });
+    }
+
+    protected void startOrPauseSoundAnim() {
+        UiThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mCurrentAnim != null) {
+                    mCurrentAnim.cancel();
+                }
+                if (isPlaying()) {
+                    mCurrentAnim = ValueAnimator.ofInt(0, getPlayingBitmaps().length);
+                    mCurrentAnim.setRepeatCount(ValueAnimator.INFINITE);
+                    mCurrentAnim.setDuration(500);
+                    mCurrentAnim.setInterpolator(new LinearInterpolator());
+                    AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            mBitmap = getStartPlayBitmap();
+                            postInvalidateThis();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {}
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+                            mBitmap = getStartPlayBitmap();
+                            postInvalidateThis();
+                        }
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            Integer index = (Integer) valueAnimator.getAnimatedValue();
+                            mBitmap = getPlayingBitmaps()[index];
+                            postInvalidateThis();
+                        }
+                    };
+                    mCurrentAnim.addUpdateListener(listener);
+                    mCurrentAnim.addListener(listener);
+                    mCurrentAnim.start();
+                }
+            }
+        });
+    }
 }
