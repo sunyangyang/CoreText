@@ -7,6 +7,7 @@ package com.knowbox.base.samples;
 import android.os.Environment;
 import android.os.Process;
 
+import com.hyena.coretext.builder.CYBlockProvider;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.clientlog.Logger;
 import com.hyena.framework.config.FrameworkConfig;
@@ -23,6 +24,7 @@ import com.hyena.framework.network.NetworkProvider;
 import com.hyena.framework.servcie.BaseServiceManager;
 import com.hyena.framework.servcie.ServiceProvider;
 import com.hyena.framework.utils.BaseApp;
+import com.knowbox.base.coretext.DefaultBlockBuilder;
 
 /**
  * Created by yangzc on 17/2/15.
@@ -54,6 +56,7 @@ public class App extends BaseApp {
             public void initTablesImpl(DataBaseHelper dataBaseHelper) {
             }
         });
+        CYBlockProvider.getBlockProvider().registerBlockBuilder(new DefaultBlockBuilder());
     }
 
     @Override
