@@ -71,15 +71,19 @@ public class EditFace extends CYEditFace {
         canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBackGroundPaint);
     }
 
+    private Rect mRect = new Rect();
+    private int padding = UIUtils.dip2px(5);
     @Override
     protected void drawFlash(Canvas canvas, Rect contentRect) {
         if (!getTextEnv().isEditable())
             return;
-
+        mRect.set(contentRect);
+        mRect.top = mRect.top + padding;
+        mRect.bottom = mRect.bottom - padding;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
         if ("fillin".equals(mClass)) {
-            super.drawFlash(canvas, contentRect);
+            super.drawFlash(canvas, mRect);
         }
     }
 

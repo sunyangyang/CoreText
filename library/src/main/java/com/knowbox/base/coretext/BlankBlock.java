@@ -75,7 +75,7 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = UIUtils.dip2px(40);
             } else if ("line".equals(size)) {
                 this.mWidth = UIUtils.dip2px(265);
-                this.mHeight = getTextHeight(getEditFace().getTextPaint());
+                this.mHeight = UIUtils.dip2px(40);
             } else if ("express".equals(size)) {
                 this.mWidth = UIUtils.dip2px(50);
                 this.mHeight = UIUtils.dip2px(40);
