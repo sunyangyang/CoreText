@@ -59,6 +59,8 @@ public class QuestionListFragment extends Fragment {
                     items.add(new Item(item));
                 }
             }
+            items.addAll(items);
+            items.addAll(items);
             mQuestionAdapter.setItems(items);
             mListView.setAdapter(mQuestionAdapter);
         } catch (IOException e) {

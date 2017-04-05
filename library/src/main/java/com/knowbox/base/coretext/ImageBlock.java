@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
-import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
@@ -43,7 +42,7 @@ public class ImageBlock extends CYImageBlock {
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
-            LogUtil.v("yangzc", content);
+//            LogUtil.v("yangzc", content);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) mScreenWidth);
@@ -65,7 +64,7 @@ public class ImageBlock extends CYImageBlock {
     public boolean onTouchEvent(int action, float x, float y) {
         super.onTouchEvent(action, x, y);
         switch (action) {
-            case MotionEvent.ACTION_UP: {
+            case MotionEvent.ACTION_DOWN: {
                 //action click
                 retry();
                 break;

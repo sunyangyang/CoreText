@@ -17,7 +17,6 @@ import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.framework.audio.MusicDir;
 import com.hyena.framework.audio.StatusCode;
 import com.hyena.framework.audio.bean.Song;
-import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.download.DownloadManager;
 import com.hyena.framework.download.Task;
 import com.hyena.framework.download.task.UrlTask;
@@ -27,7 +26,6 @@ import com.hyena.framework.servcie.audio.listener.PlayStatusChangeListener;
 import com.hyena.framework.utils.AnimationUtils;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.ToastUtils;
-import com.hyena.framework.utils.UIUtils;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
 import com.nineoldandroids.animation.Animator;
@@ -185,7 +183,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
     public boolean onTouchEvent(int action, float x, float y) {
         super.onTouchEvent(action, x, y);
         switch (action) {
-            case MotionEvent.ACTION_UP: {
+            case MotionEvent.ACTION_DOWN: {
                 //action click
                 playOrPause();
                 break;
