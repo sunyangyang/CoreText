@@ -45,13 +45,10 @@ public class AudioBlock extends CYPlaceHolderBlock {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private DownloadManager mDownloadManager;
 
-//    protected int mBackGroundColor = 0xff82d941;
-//    protected int mRound = UIUtils.dip2px(15);
-
     private String mSongUrl;
     private boolean mIsPlaying = false;
     private boolean mIsDownloading = false;
-    private int mProgress = 0;
+    int mProgress = 0;
     private Bitmap mBitmap;
 
     private static String mPlayingSongUri = "";
@@ -129,42 +126,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         mContentRect.set(getContentRect());
-//        drawBackGround(canvas);
-
-//        if (mIsDownloading) {
-//            drawDownloadState(canvas, mProgress);
-//        }
-//        drawPlayState(canvas);
         drawBitmap(canvas, mBitmap);
     }
-
-//    protected void drawBackGround(Canvas canvas) {
-//        mPaint.setColor(mBackGroundColor);
-//        canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
-//    }
-
-//    private Rect mClipRect = new Rect();
-//    protected void drawDownloadState(Canvas canvas, int progress) {
-//        mPaint.setColor(0xff69c028);
-//        canvas.save();
-//        int height = (int) (mContentRect.height() * (100 - mProgress) / 100);
-//        mClipRect.set((int)mContentRect.left, (int)mContentRect.top + height,
-//                (int)mContentRect.right, (int)mContentRect.bottom);
-//        canvas.clipRect(mClipRect);
-//        canvas.drawRoundRect(mContentRect, mRound, mRound, mPaint);
-//        canvas.restore();
-//    }
-
-//    protected void drawPlayState(Canvas canvas) {
-//        if (mPlayingBitmap == null || mStartPlayBitmap == null
-//                || mPlayingBitmap.isRecycled() || mStartPlayBitmap.isRecycled())
-//            return;
-//        if (mIsPlaying) {
-//            drawBitmap(canvas, mPlayingBitmap);
-//        } else {
-//            drawBitmap(canvas, mStartPlayBitmap);
-//        }
-//    }
 
     private RectF mRect = new RectF();
     protected void drawBitmap(Canvas canvas, Bitmap bitmap) {
@@ -202,7 +165,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         }
     }
 
-    private void playOrPause() {
+    protected void playOrPause() {
         if (TextUtils.isEmpty(mSongUrl))
             return;
 
@@ -258,6 +221,9 @@ public class AudioBlock extends CYPlaceHolderBlock {
         if (mDownloadManager != null) {
             mDownloadManager.removeTaskListener(mTaskListener);
         }
+        if (mCurrentAnim != null) {
+            mCurrentAnim.cancel();
+        }
     }
 
     protected void updateProgress(Task task) {
@@ -273,10 +239,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         @Override
         public void onReady(Task task) {
-        }
-
-        @Override
-        public void onStart(Task task, long l, long l1) {
             String taskId = mDownloadManager.buildTaskId(mSongUrl);
             if (taskId.equals(task.getTaskId())) {
                 onDownloadStateChange(true, task.getRemoteUrl(), REASON_SUCCESS);
@@ -284,12 +246,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
         }
 
         @Override
+        public void onStart(Task task, long l, long l1) {
+        }
+
+        @Override
         public void onProgress(final Task task, long l, long l1) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             updateProgress(task);
         }
 
@@ -301,7 +262,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 onDownloadStateChange(false, task.getRemoteUrl(), reason);
                 if (reason == Task.TaskListener.REASON_SUCCESS) {
                     //update status
-                    if (mDownloadManager.buildTaskId(mPlayingSongUri).equals(taskId)) {
+                    if (!TextUtils.isEmpty(mPlayingSongUri)
+                            && mDownloadManager.buildTaskId(mPlayingSongUri).equals(taskId)) {
                         play();
                     }
                     postInvalidateThis();
@@ -320,8 +282,10 @@ public class AudioBlock extends CYPlaceHolderBlock {
     private PlayStatusChangeListener mPlayStatusChangeListener = new PlayStatusChangeListener() {
         @Override
         public void onStatusChange(Song song, int status) {
-            if (song == null || mSongUrl == null || !mSongUrl.equals(song.getUrl()))
+            if (song == null || mSongUrl == null || !mSongUrl.equals(song.getUrl())) {
+                onPlayingStateChange(false, "");
                 return;
+            }
 
             switch (status) {
                 case StatusCode.STATUS_RELEASE:
