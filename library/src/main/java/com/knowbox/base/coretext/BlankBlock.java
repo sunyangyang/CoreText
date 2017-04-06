@@ -4,6 +4,8 @@
 
 package com.knowbox.base.coretext;
 
+import android.text.TextUtils;
+
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
@@ -89,7 +91,6 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public void onMeasure() {
         super.onMeasure();
-//        updateSize();
     }
 
     @Override
@@ -105,5 +106,14 @@ public class BlankBlock extends CYEditBlock {
     @Override
     protected CYEditFace createEditFace(TextEnv textEnv, ICYEditable editable) {
         return new EditFace(textEnv, editable);
+    }
+
+    @Override
+    public boolean isValid() {
+        if (!getTextEnv().isEditable()
+                && TextUtils.isEmpty(getEditFace().getText())) {
+            return false;
+        }
+        return super.isValid();
     }
 }
