@@ -401,7 +401,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 if (isDownloading()) {
                     mCurrentAnim = ValueAnimator.ofInt(0, getDownloadBitmaps().length);
                     mCurrentAnim.setRepeatCount(ValueAnimator.INFINITE);
-                    mCurrentAnim.setDuration(300);
+                    mCurrentAnim.setDuration(1000);
                     mCurrentAnim.setInterpolator(new LinearInterpolator());
                     AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
                         @Override
@@ -447,7 +447,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 if (isPlaying()) {
                     mCurrentAnim = ValueAnimator.ofInt(0, getPlayingBitmaps().length);
                     mCurrentAnim.setRepeatCount(ValueAnimator.INFINITE);
-                    mCurrentAnim.setDuration(300);
+                    mCurrentAnim.setDuration(1000);
                     mCurrentAnim.setInterpolator(new LinearInterpolator());
                     AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
                         @Override

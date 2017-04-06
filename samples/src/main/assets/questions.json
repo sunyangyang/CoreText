@@ -8,7 +8,7 @@
     },
     {
       "questionid":888083,
-      "question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#D0D0D0\",\"margin\":8}#\r\n根据图片选择单词完成句子\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}#\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#\r\nI like to eat #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}#\r\n#{\"type\":\"para_end\"}#",
+      "question":"#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#D0D0D0\",\"margin\":8}#\r\n根据图片选择单词完成句子\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}#\r\n#{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http:\/\/7xohdn.com2.z0.glb.qiniucdn1.com\/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}#\r\n#{\"type\":\"para_end\"}#\r\n#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#000000\",\"margin\":8}#\r\nI like to eat #{\"type\":\"blank\",\"id\": 1,\"size\":\"letter\"}#\r\n#{\"type\":\"para_end\"}#",
       "QuestionType":"1",
       "RightAnswer":"[{\"blank_id\":1,\"choice\":\"A\"}]"
     },

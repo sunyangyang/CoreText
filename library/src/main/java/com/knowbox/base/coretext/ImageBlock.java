@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
@@ -28,6 +29,12 @@ public class ImageBlock extends CYImageBlock {
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String mFailText = "点击重试";
+    private boolean isLoading = false;
+
+    private static final int DP_14 = UIUtils.dip2px(14);
+    private static final int DP_37 = UIUtils.dip2px(37);
+    private static final int DP_199 = UIUtils.dip2px(199);
+    private static final int DP_79 = UIUtils.dip2px(79);
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -38,21 +45,20 @@ public class ImageBlock extends CYImageBlock {
     private void init(Context context, String content) {
         try {
             mPaint.setColor(Color.BLACK);
-            mPaint.setTextSize(UIUtils.dip2px(14));
+            mPaint.setTextSize(DP_14);
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
-//            LogUtil.v("yangzc", content);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) mScreenWidth);
                 setHeight((int) (mScreenWidth/2));
             } else if ("small_img".equals(size)) {
-                setWidth(UIUtils.dip2px(37));
-                setHeight(UIUtils.dip2px(37));
+                setWidth(DP_37);
+                setHeight(DP_37);
             } else {
-                setWidth(UIUtils.dip2px(60));
-                setHeight(UIUtils.dip2px(60));
+                setWidth(DP_199);
+                setHeight(DP_79);
             }
             setResUrl(url);
         } catch (JSONException e) {
@@ -78,26 +84,34 @@ public class ImageBlock extends CYImageBlock {
         super.draw(canvas);
         if (mBitmap == null || mBitmap.isRecycled()) {
             //show load fail
-            float width = mPaint.measureText(mFailText);
-            Rect rect = getContentRect();
-            canvas.drawText(mFailText, rect.left + (rect.width() - width)/2,
-                    rect.top + (rect.height() + getTextHeight(mPaint))/2, mPaint);
+            if (!isLoading) {
+                float width = mPaint.measureText(mFailText);
+                Rect rect = getContentRect();
+                canvas.drawText(mFailText, rect.left + (rect.width() - width) / 2,
+                        rect.top + (rect.height() + getTextHeight(mPaint)) / 2, mPaint);
+            }
         }
     }
 
     @Override
     protected void setBitmap(Bitmap bitmap) {
+        //finish loading
+        this.isLoading = false;
         super.setBitmap(bitmap);
     }
 
     @Override
     public CYImageBlock setResUrl(String url) {
         this.mUrl = url;
+        //start loading
+        this.isLoading = true;
+        postInvalidateThis();
         return super.setResUrl(url);
     }
 
     private void retry() {
-        if (mBitmap != null && !mBitmap.isRecycled()) {
+        if (TextUtils.isEmpty(mUrl)
+                || (mBitmap != null && !mBitmap.isRecycled())) {
             return;
         }
         setResUrl(mUrl);
