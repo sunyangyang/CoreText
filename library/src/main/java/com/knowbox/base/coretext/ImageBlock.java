@@ -25,11 +25,11 @@ import org.json.JSONObject;
  */
 public class ImageBlock extends CYImageBlock {
 
-    private float mScreenWidth = 0;
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String mFailText = "点击重试";
     private boolean isLoading = false;
+    private String size;
 
     private static final int DP_14 = UIUtils.dip2px(14);
     private static final int DP_37 = UIUtils.dip2px(37);
@@ -38,7 +38,6 @@ public class ImageBlock extends CYImageBlock {
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        mScreenWidth = textEnv.getContext().getResources().getDisplayMetrics().widthPixels;
         init(textEnv.getContext(), content);
     }
 
@@ -49,10 +48,11 @@ public class ImageBlock extends CYImageBlock {
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
+            this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                setWidth((int) mScreenWidth);
-                setHeight((int) (mScreenWidth/2));
+                setWidth(getTextEnv().getPageWidth());
+                setHeight(getTextEnv().getPageWidth()/2);
             } else if ("small_img".equals(size)) {
                 setWidth(DP_37);
                 setHeight(DP_37);
@@ -64,6 +64,22 @@ public class ImageBlock extends CYImageBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int getContentWidth() {
+        if ("big_image".equals(size)) {
+            return getTextEnv().getPageWidth();
+        }
+        return super.getContentWidth();
+    }
+
+    @Override
+    public int getContentHeight() {
+        if ("big_image".equals(size)) {
+            return getTextEnv().getPageWidth()/2;
+        }
+        return super.getContentHeight();
     }
 
     @Override
