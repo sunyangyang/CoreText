@@ -58,6 +58,10 @@ public class AudioBlock extends CYPlaceHolderBlock {
         init(content);
     }
 
+    public static void clear() {
+        mPlayingSongUri = "";
+    }
+
     private void init(String content) {
         mPlayBusService = (PlayerBusService) getTextEnv().getContext()
                 .getSystemService(PlayerBusService.BUS_SERVICE_NAME);
@@ -216,7 +220,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
     public void release() {
         super.release();
         if (mPlayBusService != null) {
-            mPlayBusService.getPlayerBusServiceObserver().removemPlayStatusChangeListener(mPlayStatusChangeListener);
+            mPlayBusService.getPlayerBusServiceObserver()
+                    .removemPlayStatusChangeListener(mPlayStatusChangeListener);
         }
         if (mDownloadManager != null) {
             mDownloadManager.removeTaskListener(mTaskListener);
