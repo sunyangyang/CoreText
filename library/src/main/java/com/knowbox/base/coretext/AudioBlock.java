@@ -4,10 +4,12 @@
 
 package com.knowbox.base.coretext;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
@@ -41,6 +43,7 @@ import java.io.File;
  */
 public class AudioBlock extends CYPlaceHolderBlock {
 
+    private AudioManager audioManager;
     private PlayerBusService mPlayBusService;
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private DownloadManager mDownloadManager;
@@ -63,6 +66,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
     }
 
     private void init(String content) {
+        audioManager = (AudioManager) getTextEnv().getContext()
+                .getSystemService(Context.AUDIO_SERVICE);
         mPlayBusService = (PlayerBusService) getTextEnv().getContext()
                 .getSystemService(PlayerBusService.BUS_SERVICE_NAME);
         mPlayBusService.getPlayerBusServiceObserver()
@@ -203,6 +208,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
     private void play() {
         try {
+            checkVoice();
             Song song = new Song(false, mSongUrl,
                     getSongFile().getAbsolutePath());
             mPlayBusService.play(song);
@@ -449,5 +455,15 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 }
             }
         });
+    }
+
+    public boolean checkVoice() {
+        int current = audioManager.getStreamVolume(AudioManager.STREAM_RING);
+        int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+        if (current * 1.0f / max < 0.1f) {
+            ToastUtils.showToast(getTextEnv().getContext(), "请调大音量播放");
+            return false;
+        }
+        return true;
     }
 }
