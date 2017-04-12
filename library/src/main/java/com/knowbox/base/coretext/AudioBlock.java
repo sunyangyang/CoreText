@@ -87,6 +87,13 @@ public class AudioBlock extends CYPlaceHolderBlock {
         try {
             JSONObject json = new JSONObject(content);
             this.mSongUrl = json.optString("src");
+            if (!TextUtils.isEmpty(mSongUrl)) {
+                if (mSongUrl.indexOf("?") != -1) {
+                    mSongUrl += "&tag=" + getTextEnv().getTag();
+                } else {
+                    mSongUrl += "?tag=" + getTextEnv().getTag();
+                }
+            }
 //            mSongUrl = "https://striker-hz.oss-cn-hangzhou.aliyuncs.com/10/0i/c1/d915c76a271045185cf1e38d9217cc?OSSAccessKeyId=FvPoWjsunFA24f2d&Expires=1487302462&Signature=fRcFULiOn2KK9odzBVecpD%2F0guY%3D&response-content-disposition=attachment%3B%20filename%3D%22%3F%3F%3F%3F%3F%3F%3Fv2.8.0%3F%3F%3F%3F(%3F%3F).docx%22%3B%20filename*%3DUTF-8%27%27%25E9%2580%259F%25E7%25AE%2597%25E7%259B%2592%25E5%25AD%2590%25E8%2580%2581%25E5%25B8%2588%25E7%25AB%25AFv2.8.0%25E9%259C%2580%25E6%25B1%2582%25E6%2596%2587%25E6%25A1%25A3%2528%25E6%259B%25B4%25E6%2596%25B0%2529.docx&filekey=100ic1d915c76a271045185cf1e38d9217cc";
 
             String taskId = mDownloadManager.buildTaskId(mSongUrl);
@@ -459,9 +466,14 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
     public boolean checkVoice() {
         int current = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-        int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-        if (current * 1.0f / max < 0.1f) {
-            ToastUtils.showToast(getTextEnv().getContext(), "请调大音量播放");
+//        int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+        if (current == 0) {
+            UiThreadHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtils.showToast(getTextEnv().getContext(), "请调大音量播放");
+                }
+            });
             return false;
         }
         return true;

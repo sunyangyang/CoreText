@@ -8,12 +8,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.hyena.coretext.CYSinglePageView;
+import com.hyena.coretext.TextEnv;
 
 /**
  * Created by yangzc on 17/2/6.
  */
 public class QuestionTextView extends CYSinglePageView {
-
 
     public QuestionTextView(Context context) {
         super(context);
@@ -25,5 +25,15 @@ public class QuestionTextView extends CYSinglePageView {
 
     public QuestionTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    public TextEnv buildDefaultTextEnv(Context context) {
+        return super.buildDefaultTextEnv(context);
+    }
+
+    @Override
+    public TextEnv getTextEnv() {
+        return super.getTextEnv();
     }
 }

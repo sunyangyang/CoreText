@@ -90,6 +90,7 @@ public class QuestionListFragment extends Fragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             Item item = getItem(position);
+//            viewHolder.mQtvQuestion.getTextEnv().setFontScale(0.1f);
             viewHolder.mQtvQuestion.getBuilder().setText(item.question)
                     .setEditable(false).build();
 

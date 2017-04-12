@@ -44,6 +44,8 @@ public class BlankBlock extends CYEditBlock {
                     getEditFace().getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
                 }
+            } else {
+                this.mClass = "fillin";
             }
             ((EditFace)getEditFace()).setClass(mClass);
         } catch (JSONException e) {
@@ -70,7 +72,7 @@ public class BlankBlock extends CYEditBlock {
                 text = "(" + text + ")";
             }
             int width = (int) getTextEnv().getPaint().measureText(text);
-            this.mWidth = width + UIUtils.dip2px(10);
+            this.mWidth = width;
             this.mHeight = textHeight;
         } else {
             if ("letter".equals(size)) {

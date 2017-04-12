@@ -31,7 +31,7 @@ public class ParagraphStartBlock extends CYParagraphStartBlock {
             JSONObject json = new JSONObject(content);
 
             if (json.has("size")) {
-                getStyle().setTextSize(UIUtils.dip2px(json.optInt("size") / 2));
+                getStyle().setTextSize(UIUtils.dip2px(json.optInt("size") * getTextEnv().getFontScale() / 2));
             } else {
                 getStyle().setTextSize(getTextEnv().getFontSize());
             }
@@ -53,6 +53,9 @@ public class ParagraphStartBlock extends CYParagraphStartBlock {
             } else {
                 getStyle().setHorizontalAlign(CYHorizontalAlign.RIGHT);
             }
+
+            String style = json.optString("style");
+            getStyle().setStyle(style);
         } catch (JSONException e) {
             e.printStackTrace();
         }
