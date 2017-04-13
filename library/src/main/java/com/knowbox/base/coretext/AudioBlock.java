@@ -474,7 +474,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
     }
 
     public boolean checkVoice() {
-        if (audioManager.getMode() == AudioManager.MODE_NORMAL) {
+        if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
             UiThreadHandler.post(new Runnable() {
                 @Override
                 public void run() {
