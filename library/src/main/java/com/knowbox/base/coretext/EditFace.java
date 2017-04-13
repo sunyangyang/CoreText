@@ -13,6 +13,7 @@ import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
+import com.hyena.coretext.blocks.CYParagraphStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.framework.utils.UIUtils;
 
@@ -102,6 +103,14 @@ public class EditFace extends CYEditFace {
             }
         } else {
             super.drawText(canvas, text, contentRect);
+        }
+    }
+
+    @Override
+    public void setParagraphStyle(CYParagraphStyle style) {
+        super.setParagraphStyle(style);
+        if (style != null && mTextPaint != null) {
+            mTextPaint.setTextSize(style.getTextSize());
         }
     }
 

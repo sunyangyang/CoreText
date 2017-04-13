@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
+import com.hyena.coretext.blocks.CYParagraphStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.framework.utils.UIUtils;
 
@@ -24,13 +25,15 @@ public class BlankBlock extends CYEditBlock {
     private String size;
     private int mWidth, mHeight;
 
+    private static final int DP_3 = UIUtils.dip2px(3);
+    private static final int DP_1 = UIUtils.dip2px(1);
+
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
     }
 
     private void init(String content) {
-        setPadding(UIUtils.dip2px(3), UIUtils.dip2px(1), UIUtils.dip2px(3), UIUtils.dip2px(1));
         try {
             JSONObject json = new JSONObject(content);
             setTabId(json.optInt("id"));
@@ -44,8 +47,10 @@ public class BlankBlock extends CYEditBlock {
                     getEditFace().getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
                 }
+                setPadding(DP_3, DP_1, DP_3, DP_1);
             } else {
                 this.mClass = "fillin";
+                setPadding(DP_1, DP_1, DP_1, DP_1);
             }
             ((EditFace)getEditFace()).setClass(mClass);
         } catch (JSONException e) {
@@ -65,13 +70,13 @@ public class BlankBlock extends CYEditBlock {
     }
 
     private void updateSize() {
-        int textHeight = getTextHeight(getTextEnv().getPaint());
+        int textHeight = getTextHeight(getEditFace().getTextPaint());
         if (!getTextEnv().isEditable()) {
             String text = getEditFace().getText();
             if ("choose".equals(mClass)) {
                 text = "(" + text + ")";
             }
-            int width = (int) getTextEnv().getPaint().measureText(text);
+            int width = (int) getEditFace().getTextPaint().measureText(text);
             this.mWidth = width;
             this.mHeight = textHeight;
         } else {
@@ -88,6 +93,14 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = UIUtils.dip2px(50);
                 this.mHeight = textHeight;
             }
+        }
+    }
+
+    @Override
+    public void setParagraphStyle(CYParagraphStyle style) {
+        super.setParagraphStyle(style);
+        if (style != null) {
+            updateSize();
         }
     }
 

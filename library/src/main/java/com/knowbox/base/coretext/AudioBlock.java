@@ -386,6 +386,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     mCurrentAnim.setDuration(1000);
                     mCurrentAnim.setInterpolator(new LinearInterpolator());
                     AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
+                        private int mIndex = -1;
                         @Override
                         public void onAnimationStart(Animator animator) {}
 
@@ -407,8 +408,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             Integer index = (Integer) valueAnimator.getAnimatedValue();
-                            mBitmap = getDownloadBitmaps()[index];
-                            postInvalidateThis();
+                            if (mIndex != index) {
+                                mBitmap = getDownloadBitmaps()[index];
+                                postInvalidateThis();
+                                this.mIndex = index;
+                            }
                         }
                     };
                     mCurrentAnim.addUpdateListener(listener);
@@ -432,6 +436,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     mCurrentAnim.setDuration(1000);
                     mCurrentAnim.setInterpolator(new LinearInterpolator());
                     AnimationUtils.ValueAnimatorListener listener = new AnimationUtils.ValueAnimatorListener() {
+                        private int mCurrentIndex = -1;
+
                         @Override
                         public void onAnimationStart(Animator animator) {}
 
@@ -452,8 +458,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             Integer index = (Integer) valueAnimator.getAnimatedValue();
-                            mBitmap = getPlayingBitmaps()[index];
-                            postInvalidateThis();
+                            if (index != mCurrentIndex) {
+                                mBitmap = getPlayingBitmaps()[index];
+                                postInvalidateThis();
+                                mCurrentIndex = index;
+                            }
                         }
                     };
                     mCurrentAnim.addUpdateListener(listener);
