@@ -21,7 +21,10 @@ import org.json.JSONObject;
  */
 public class BlankBlock extends CYEditBlock {
 
-    private String mClass = "choose";
+    public static String CLASS_FILL_IN = "fillin";
+    public static String CLASS_CHOICE = "choice";
+
+    private String mClass = CLASS_CHOICE;
     private String size;
     private int mWidth, mHeight;
 
@@ -39,7 +42,7 @@ public class BlankBlock extends CYEditBlock {
             setTabId(json.optInt("id"));
             setDefaultText(json.optString("default"));
             this.size = json.optString("size", "line");
-            this.mClass = json.optString("class", "choose");//choose fillin
+            this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
             if (getTextEnv().isEditable()) {
                 if ("line".equals(size)) {
@@ -49,7 +52,7 @@ public class BlankBlock extends CYEditBlock {
                 }
                 setPadding(DP_3, DP_1, DP_3, DP_1);
             } else {
-                this.mClass = "fillin";
+                this.mClass = CLASS_FILL_IN;
                 setPadding(DP_1, DP_1, DP_1, DP_1);
             }
             ((EditFace)getEditFace()).setClass(mClass);
@@ -73,7 +76,7 @@ public class BlankBlock extends CYEditBlock {
         int textHeight = getTextHeight(getEditFace().getTextPaint());
         if (!getTextEnv().isEditable()) {
             String text = getEditFace().getText();
-            if ("choose".equals(mClass)) {
+            if (CLASS_CHOICE.equals(mClass)) {
                 text = "(" + text + ")";
             }
             int width = (int) getEditFace().getTextPaint().measureText(text);

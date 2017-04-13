@@ -22,7 +22,7 @@ import com.hyena.framework.utils.UIUtils;
  */
 public class EditFace extends CYEditFace {
 
-    private String mClass = "choose";
+    private String mClass = BlankBlock.CLASS_CHOICE;
     private int mRoundCorner = UIUtils.dip2px(8);
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
@@ -39,7 +39,7 @@ public class EditFace extends CYEditFace {
         if (!getTextEnv().isEditable())
             return;
 
-        if (("choose".equals(mClass) && hasFocus()) || "fillin".equals(mClass)) {
+        if ((BlankBlock.CLASS_CHOICE.equals(mClass) && hasFocus()) || BlankBlock.CLASS_FILL_IN.equals(mClass)) {
             mRectF.set(contentRect);
             mBorderPaint.setStrokeWidth(UIUtils.dip2px(getTextEnv().getContext(), 1));
             mBorderPaint.setColor(0xff3196fe);
@@ -56,13 +56,13 @@ public class EditFace extends CYEditFace {
         mBackGroundPaint.setStyle(Paint.Style.FILL);
         mRectF.set(contentRect);
 
-        if ("fillin".equals(mClass)) {
+        if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
             if (hasFocus()) {
                 mBackGroundPaint.setColor(Color.WHITE);
             } else {
                 mBackGroundPaint.setColor(0xffe1e9f2);
             }
-        } else if ("choose".equals(mClass)){
+        } else if (BlankBlock.CLASS_CHOICE.equals(mClass)){
             if (hasFocus()) {
                 mBackGroundPaint.setColor(0xffe1e9f2);
             } else {
@@ -83,7 +83,7 @@ public class EditFace extends CYEditFace {
         mRect.bottom = mRect.bottom - padding;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
-        if ("fillin".equals(mClass)) {
+        if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
             super.drawFlash(canvas, mRect);
         }
     }
@@ -91,7 +91,7 @@ public class EditFace extends CYEditFace {
     @Override
     protected void drawText(Canvas canvas, String text, Rect contentRect) {
         if (!getTextEnv().isEditable()) {
-            if ("fillin".equals(mClass)) {
+            if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 super.drawText(canvas, text, contentRect);
                 canvas.drawLine(contentRect.left, contentRect.bottom, contentRect.right, contentRect.bottom, mTextPaint);
             } else {
