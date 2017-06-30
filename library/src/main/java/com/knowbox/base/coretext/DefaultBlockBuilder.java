@@ -11,6 +11,7 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYParagraphEndBlock;
+import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.builder.CYBlockProvider;
 
 import org.json.JSONException;
@@ -27,7 +28,12 @@ public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
 
     @Override
     public List<CYBlock> build(TextEnv textEnv, String content) {
-        return analysisCommand(textEnv, content).buildBlocks();
+        return analysisCommand(textEnv, content).build();
+    }
+
+    @Override
+    public CYTextBlock buildTextBlock(TextEnv textEnv, String s) {
+        return new CYTextBlock(textEnv, s);
     }
 
     private AttributedString analysisCommand(TextEnv textEnv, String content) {
@@ -72,6 +78,8 @@ public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
             return (T) new CYParagraphEndBlock(textEnv, data);
         } else if ("audio".equals(type)) {
             return (T) new AudioBlock(textEnv, data);
+        } else if ("img_hollow".equals(type)) {
+            return (T) new ImageHollowBlock(textEnv, data);
         }
         return null;
     }

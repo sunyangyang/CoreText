@@ -13,7 +13,6 @@ import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
-import com.hyena.coretext.blocks.CYParagraphStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.framework.utils.UIUtils;
 
@@ -24,9 +23,10 @@ public class EditFace extends CYEditFace {
 
     private String mClass = BlankBlock.CLASS_CHOICE;
     private int mRoundCorner = UIUtils.dip2px(8);
-
+    private ICYEditable editable;
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
+        this.editable = editable;
     }
 
     public void setClass(String clazz) {
@@ -36,12 +36,13 @@ public class EditFace extends CYEditFace {
     private RectF mRectF = new RectF();
     @Override
     protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!getTextEnv().isEditable())
+        if (!mTextEnv.isEditable())
             return;
 
-        if ((BlankBlock.CLASS_CHOICE.equals(mClass) && hasFocus()) || BlankBlock.CLASS_FILL_IN.equals(mClass)) {
+        if ((BlankBlock.CLASS_CHOICE.equals(mClass) && editable.hasFocus())
+                || BlankBlock.CLASS_FILL_IN.equals(mClass)) {
             mRectF.set(contentRect);
-            mBorderPaint.setStrokeWidth(UIUtils.dip2px(getTextEnv().getContext(), 1));
+            mBorderPaint.setStrokeWidth(UIUtils.dip2px(mTextEnv.getContext(), 1));
             mBorderPaint.setColor(0xff3196fe);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
@@ -50,20 +51,20 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!getTextEnv().isEditable())
+        if (!mTextEnv.isEditable())
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
         mRectF.set(contentRect);
 
         if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            if (hasFocus()) {
+            if (editable.hasFocus()) {
                 mBackGroundPaint.setColor(Color.WHITE);
             } else {
                 mBackGroundPaint.setColor(0xffe1e9f2);
             }
         } else if (BlankBlock.CLASS_CHOICE.equals(mClass)){
-            if (hasFocus()) {
+            if (editable.hasFocus()) {
                 mBackGroundPaint.setColor(0xffe1e9f2);
             } else {
                 mBackGroundPaint.setColor(Color.WHITE);
@@ -76,7 +77,7 @@ public class EditFace extends CYEditFace {
     private int padding = UIUtils.dip2px(5);
     @Override
     protected void drawFlash(Canvas canvas, Rect contentRect) {
-        if (!getTextEnv().isEditable())
+        if (!mTextEnv.isEditable())
             return;
         mRect.set(contentRect);
         mRect.top = mRect.top + padding;
@@ -90,7 +91,7 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect contentRect) {
-        if (!getTextEnv().isEditable()) {
+        if (!mTextEnv.isEditable()) {
             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 super.drawText(canvas, text, contentRect);
                 canvas.drawLine(contentRect.left, contentRect.bottom, contentRect.right, contentRect.bottom, mTextPaint);
@@ -103,14 +104,6 @@ public class EditFace extends CYEditFace {
             }
         } else {
             super.drawText(canvas, text, contentRect);
-        }
-    }
-
-    @Override
-    public void setParagraphStyle(CYParagraphStyle style) {
-        super.setParagraphStyle(style);
-        if (style != null && mTextPaint != null) {
-            mTextPaint.setTextSize(style.getTextSize());
         }
     }
 

@@ -31,6 +31,9 @@ public class BlankBlock extends CYEditBlock {
     private static final int DP_3 = UIUtils.dip2px(3);
     private static final int DP_1 = UIUtils.dip2px(1);
 
+    private int mOffsetX, mOffsetY;
+
+    private String mDefaultText;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
@@ -40,14 +43,14 @@ public class BlankBlock extends CYEditBlock {
         try {
             JSONObject json = new JSONObject(content);
             setTabId(json.optInt("id"));
-            setDefaultText(json.optString("default"));
+            mDefaultText = json.optString("default");
             this.size = json.optString("size", "line");
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
             if (getTextEnv().isEditable()) {
                 if ("line".equals(size)) {
-                    getEditFace().getTextPaint().setTextSize(UIUtils.dip2px(20));
-                    getEditFace().getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(20));
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
                 }
                 setPadding(DP_3, DP_1, DP_3, DP_1);
@@ -60,7 +63,6 @@ public class BlankBlock extends CYEditBlock {
             e.printStackTrace();
         }
         updateSize();
-        getEditFace().postInit();
     }
 
     @Override
@@ -73,13 +75,13 @@ public class BlankBlock extends CYEditBlock {
     }
 
     private void updateSize() {
-        int textHeight = getTextHeight(getEditFace().getTextPaint());
+        int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
         if (!getTextEnv().isEditable()) {
-            String text = getEditFace().getText();
+            String text = getText();
             if (CLASS_CHOICE.equals(mClass)) {
                 text = "(" + text + ")";
             }
-            int width = (int) getEditFace().getTextPaint().measureText(text);
+            int width = (int) ((EditFace)getEditFace()).getTextPaint().measureText(text);
             this.mWidth = width;
             this.mHeight = textHeight;
         } else {
@@ -130,9 +132,27 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public boolean isValid() {
         if (!getTextEnv().isEditable()
-                && TextUtils.isEmpty(getEditFace().getText())) {
+                && TextUtils.isEmpty(getText())) {
             return false;
         }
         return super.isValid();
+    }
+
+    @Override
+    public String getDefaultText() {
+        return mDefaultText;
+    }
+
+    public void setOffset(int x, int y) {
+        this.mOffsetX = x;
+        this.mOffsetY = y;
+    }
+
+    public int getOffsetX() {
+        return mOffsetX;
+    }
+
+    public int getOffsetY() {
+        return mOffsetY;
     }
 }

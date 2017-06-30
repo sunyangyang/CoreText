@@ -1,8 +1,9 @@
 apply plugin: 'com.android.library'
+apply from: '../fat-aar.gradle'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 22
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 9
