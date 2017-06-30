@@ -37,6 +37,9 @@ public class QuestionFragment extends Fragment {
                 "#{\"type\":\"blank\",\"id\": 2,\"class\":\"choice\",\"size\":\"letter\"}#k" +
                 "#{\"type\":\"para_end\"}#" +
 
+
+                "#{\"type\": \"img\",\"id\":1,\"size\": \"big_image\",\"src\": \"http://p0.ifengimg.com/pmop/2017/0628/82D3C0505BBD97AF9A743E671769099FAD3ACCA1_size17_w600_h334.jpeg\"}#" +
+
                 "#{\"type\": \"para_begin\",\"style\": \"math_fill_image\"}#" +
                 "#{\"type\": \"img_hollow\",\"id\":1,\"size\": \"big_image\",\"src\": \"http://p0.ifengimg.com/pmop/2017/0628/82D3C0505BBD97AF9A743E671769099FAD3ACCA1_size17_w600_h334.jpeg\",\"blanklist\":" +
                 "[" +
