@@ -1,4 +1,5 @@
 #!/bin/sh
+./gradlew library:assembleRelease
 if [ "$1" = "student" ]
 then
 	rm -rf ~/devsoft/projects/android/AndroidRCStudent/base-release/library-release.aar

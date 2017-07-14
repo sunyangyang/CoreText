@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply from: '../fat-aar.gradle'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 9
@@ -32,3 +32,15 @@ dependencies {
     provided files('extlibs/easemobchat_2.2.3.jar')
     compile project(':coretext')
 }
+
+ext {
+    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('library:assembleRelease')}
+}
+
+if (IS_RELEASE) {
+    dependencies.add("embedded", project(':coretext'));
+} else {
+    dependencies.add("compile", project(':coretext'))
+}
+println("IS_RELEASE: " + IS_RELEASE)
+

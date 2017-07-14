@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
-import com.hyena.coretext.blocks.CYParagraphStyle;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.framework.utils.UIUtils;
 
@@ -102,8 +102,8 @@ public class BlankBlock extends CYEditBlock {
     }
 
     @Override
-    public void setParagraphStyle(CYParagraphStyle style) {
-        super.setParagraphStyle(style);
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
         if (style != null) {
             updateSize();
         }

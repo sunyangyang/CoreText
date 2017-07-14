@@ -44,10 +44,14 @@ public class QuestionFragment extends Fragment {
                 "#{\"type\": \"img_hollow\",\"id\":1,\"size\": \"big_image\",\"src\": \"http://p0.ifengimg.com/pmop/2017/0628/82D3C0505BBD97AF9A743E671769099FAD3ACCA1_size17_w600_h334.jpeg\",\"blanklist\":" +
                 "[" +
                 "{\"type\": \"blank\",\"id\": 1,\"size\": \"express\",\"x_pos\": 20.3,\"y_pos\": 39.2,\"class\": \"fillin\"}," +
-                "{\"type\": \"blank\",\"id\": 1,\"size\": \"express\",\"x_pos\": 20.3,\"y_pos\": 89.2,\"class\": \"fillin\"}" +
+                "{\"type\": \"blank\",\"id\": 2,\"size\": \"express\",\"x_pos\": 20.3,\"y_pos\": 89.2,\"class\": \"fillin\"}" +
                 "]" +
                 "}#" +
                 "#{\"type\": \"para_end\"}#" +
+
+                "#{\"type\":\"under_begin\"}#" +
+                "哈哈哈哈哈哈哈哈" +
+                "#{\"type\":\"under_end\"}#" +
                 "";
         textView.getBuilder().setText(question).build();
         textView.setText(2, "p");
