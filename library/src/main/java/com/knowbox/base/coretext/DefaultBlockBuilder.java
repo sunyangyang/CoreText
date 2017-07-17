@@ -78,7 +78,7 @@ public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
             return (T) new CYStyleEndBlock(textEnv, data);
         } else if ("audio".equals(type)) {
             return (T) new AudioBlock(textEnv, data);
-        } else if ("img_hollow".equals(type)) {
+        } else if ("fill_img".equals(type)) {
             return (T) new ImageHollowBlock(textEnv, data);
         } else if ("under_begin".equals(type)) {
             return (T) new SpanBlock(textEnv, data);

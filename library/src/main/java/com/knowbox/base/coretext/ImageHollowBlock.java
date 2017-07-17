@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
+import com.hyena.coretext.utils.Const;
 import com.hyena.framework.clientlog.LogUtil;
 
 import org.json.JSONArray;
@@ -47,7 +48,21 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     }
 
     private BlankBlock createBlankBlock(JSONObject json) {
-        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString());
+        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString()) {
+            @Override
+            public int getContentWidth() {
+                return (int) (super.getContentWidth() * getScale());
+            }
+
+            @Override
+            public int getContentHeight() {
+                return (int) (super.getContentHeight() * getScale());
+            }
+        };
+        EditFace editFace = (EditFace) blankBlock.getEditFace();
+        editFace.getTextPaint().setTextSize(Const.DP_1 * 14);
+        editFace.updateEnv();
+
         double x = json.optDouble("x_pos") * getWidth() / 100;
         double y = json.optDouble("y_pos") * getHeight() / 100;
         blankBlock.setOffset((int)x, (int)y);
@@ -75,6 +90,17 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             BlankBlock block = (BlankBlock) blankBlocks.get(i);
             LogUtil.v("ImageHollowBlock", block.getBlockRect().toString());
             if (block.getBlockRect().contains((int)x, (int)y)) {
+                return block;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ICYEditable findEditableByTabId(int tabId) {
+        for (int i = 0; i < blankBlocks.size(); i++) {
+            BlankBlock block = (BlankBlock) blankBlocks.get(i);
+            if (block.getTabId() == tabId) {
                 return block;
             }
         }

@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
+import com.hyena.framework.utils.MathUtils;
 import com.hyena.framework.utils.UIUtils;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
@@ -40,6 +41,7 @@ public class ImageBlock extends CYImageBlock {
     private static final int DP_199 = UIUtils.dip2px(199);
     private static final int DP_79 = UIUtils.dip2px(79);
 
+    private float mScale = 1.0f;
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(textEnv.getContext(), content);
@@ -52,13 +54,19 @@ public class ImageBlock extends CYImageBlock {
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
+            //big_image default 680*270
+            String widthPx = json.optString("width", "680px").replace("px", "");
+            String heightPx = json.optString("height", "270px").replace("px", "");
+            int width = MathUtils.valueOfInt(widthPx);
+            int height = MathUtils.valueOfInt(heightPx);
+            mScale = getTextEnv().getPageWidth() * 1.0f/width;
             mFailSmallDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_small);
             mFailBigDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_big);
             this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                setWidth(getTextEnv().getPageWidth());
-                setHeight((int) (getTextEnv().getPageWidth()/2.52f));
+                setWidth((int) (width * mScale));
+                setHeight((int) (height * mScale));
             } else if ("small_img".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
@@ -70,6 +78,10 @@ public class ImageBlock extends CYImageBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public float getScale() {
+        return mScale;
     }
 
     @Override

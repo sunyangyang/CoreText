@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.hyena.coretext.CYSinglePageView;
 import com.hyena.coretext.TextEnv;
+import com.hyena.coretext.utils.Const;
 
 /**
  * Created by yangzc on 17/2/6.

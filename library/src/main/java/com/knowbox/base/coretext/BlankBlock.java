@@ -94,6 +94,12 @@ public class BlankBlock extends CYEditBlock {
             } else if ("express".equals(size)) {
                 this.mWidth = UIUtils.dip2px(50);
                 this.mHeight = UIUtils.dip2px(40);
+            } else if ("img_blank".equals(size)) {
+                this.mWidth = 130;
+                this.mHeight = 60;
+            } else if ("big_img_blank".equals(size)) {
+                this.mWidth = 160;
+                this.mHeight = 60;
             } else {
                 this.mWidth = UIUtils.dip2px(50);
                 this.mHeight = textHeight;
