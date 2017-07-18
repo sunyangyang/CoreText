@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.utils.Const;
 import com.hyena.framework.utils.UIUtils;
 
 /**
@@ -39,11 +40,10 @@ public class EditFace extends CYEditFace {
         if (!mTextEnv.isEditable())
             return;
 
-        if ((BlankBlock.CLASS_CHOICE.equals(mClass) && editable.hasFocus())
-                || BlankBlock.CLASS_FILL_IN.equals(mClass)) {
+        if (editable.hasFocus()) {
             mRectF.set(contentRect);
-            mBorderPaint.setStrokeWidth(UIUtils.dip2px(mTextEnv.getContext(), 1));
-            mBorderPaint.setColor(0xff3196fe);
+            mBorderPaint.setStrokeWidth(Const.DP_1);
+            mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
         }
@@ -56,19 +56,10 @@ public class EditFace extends CYEditFace {
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
         mRectF.set(contentRect);
-
-        if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            if (editable.hasFocus()) {
-                mBackGroundPaint.setColor(Color.WHITE);
-            } else {
-                mBackGroundPaint.setColor(0xffe1e9f2);
-            }
-        } else if (BlankBlock.CLASS_CHOICE.equals(mClass)){
-            if (editable.hasFocus()) {
-                mBackGroundPaint.setColor(0xffe1e9f2);
-            } else {
-                mBackGroundPaint.setColor(Color.WHITE);
-            }
+        if (editable.hasFocus()) {
+            mBackGroundPaint.setColor(Color.WHITE);
+        } else {
+            mBackGroundPaint.setColor(0xffe1e9f2);
         }
         canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBackGroundPaint);
     }
@@ -79,6 +70,7 @@ public class EditFace extends CYEditFace {
     protected void drawFlash(Canvas canvas, Rect contentRect) {
         if (!mTextEnv.isEditable())
             return;
+
         mRect.set(contentRect);
         mRect.top = mRect.top + padding;
         mRect.bottom = mRect.bottom - padding;

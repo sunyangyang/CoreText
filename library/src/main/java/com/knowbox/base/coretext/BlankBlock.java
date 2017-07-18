@@ -11,6 +11,7 @@ import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.utils.Const;
 import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
@@ -52,7 +53,11 @@ public class BlankBlock extends CYEditBlock {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(20));
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
+                } else if ("express".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
                 }
+                ((EditFace)getEditFace()).updateEnv();
                 setPadding(DP_3, DP_1, DP_3, DP_1);
             } else {
                 this.mClass = CLASS_FILL_IN;
@@ -86,14 +91,17 @@ public class BlankBlock extends CYEditBlock {
             this.mHeight = textHeight;
         } else {
             if ("letter".equals(size)) {
-                this.mWidth = UIUtils.dip2px(32);
-                this.mHeight = UIUtils.dip2px(40);
+                this.mWidth = 32 * Const.DP_1;
+                this.mHeight = 40 * Const.DP_1;
             } else if ("line".equals(size)) {
-                this.mWidth = UIUtils.dip2px(265);
-                this.mHeight = UIUtils.dip2px(40);
+                this.mWidth = 265 * Const.DP_1;
+                this.mHeight = 40 * Const.DP_1;
             } else if ("express".equals(size)) {
-                this.mWidth = UIUtils.dip2px(50);
-                this.mHeight = UIUtils.dip2px(40);
+                float width = ((EditFace) getEditFace()).getTextPaint().measureText(getText()) + Const.DP_1 * 6;
+                if (width < 32 * Const.DP_1) {
+                    this.mWidth = 32 * Const.DP_1;
+                }
+                this.mHeight = 32 * Const.DP_1;
             } else if ("img_blank".equals(size)) {
                 this.mWidth = 130;
                 this.mHeight = 60;

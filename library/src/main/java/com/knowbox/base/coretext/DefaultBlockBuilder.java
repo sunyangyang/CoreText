@@ -13,6 +13,7 @@ import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYStyleEndBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.builder.CYBlockProvider;
+import com.hyena.framework.utils.BaseApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +22,31 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import maximsblog.blogspot.com.jlatexmath.core.AjLatexMath;
+import maximsblog.blogspot.com.jlatexmath.core.DefaultTeXFont;
+import maximsblog.blogspot.com.jlatexmath.core.Glue;
+import maximsblog.blogspot.com.jlatexmath.core.SymbolAtom;
+import maximsblog.blogspot.com.jlatexmath.core.TeXFormula;
+
 /**
  * Created by yangzc on 17/3/3.
  */
 public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
+
+    {
+        //init latex
+        AjLatexMath.init(BaseApp.getAppContext());
+        try {
+            SymbolAtom.get("");
+        } catch (Throwable e) {}
+        DefaultTeXFont.getSizeFactor(1);
+        try {
+            Glue.get(1, 1, null);
+        } catch (Throwable e) {}
+        try {
+            TeXFormula.get("");
+        } catch (Throwable e) {}
+    }
 
     @Override
     public List<CYBlock> build(TextEnv textEnv, String content) {
@@ -84,6 +106,8 @@ public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
             return (T) new SpanBlock(textEnv, data);
         } else if ("under_end".equals(type)) {
             return (T) new CYStyleEndBlock(textEnv, data);
+        } else if ("latex".equals(type)) {
+            return (T) new LatexBlock(textEnv, data);
         }
         return null;
     }
