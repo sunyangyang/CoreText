@@ -3,10 +3,12 @@ package com.knowbox.base.coretext;
 import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
-import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.CYLatexBlock;
-import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.blocks.IEditFace;
 import com.hyena.coretext.blocks.latex.FillInAtom;
+import com.hyena.coretext.blocks.latex.FillInBox;
+import com.hyena.coretext.utils.Const;
+import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,18 +42,35 @@ public class LatexBlock extends CYLatexBlock {
         if ("fillin".equals(command)) {
             return new FillInAtom(args[1], args[2], args[3]) {
                 @Override
-                public CYEditFace getEditFace(TextEnv env, ICYEditable editable) {
-                    return new EditFace(env, editable);
-                }
-
-                @Override
-                public Box getFillInBox(TeXEnvironment env, Text ch) {
-                    //重新new一个box
-                    return super.getFillInBox(env, ch);
+                public Box createFillInBox(TeXEnvironment env, int index, String clazz, Text ch) {
+                    return new BlankBox((TextEnv) env.getTag(), index, clazz, ch);
                 }
             };
         }
         return super.createAtom(command, tp, args);
+    }
+
+    class BlankBox extends FillInBox {
+
+        public BlankBox(TextEnv textEnv, int tabId, String clazz, Text text) {
+            super(textEnv, tabId, clazz, text);
+            //latex size均为express
+            int width = (int) ((EditFace) getEditFace()).getTextPaint()
+                    .measureText(getText() == null? "" : getText());
+            if (width < 32 * Const.DP_1) {
+                width = 32 * Const.DP_1;
+            }
+            setWidthWithScale(width + Const.DP_1 * 6);
+            ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
+            ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
+            ((EditFace)getEditFace()).updateEnv();
+            setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
+        }
+
+        @Override
+        public IEditFace createEditFace() {
+            return new EditFace(getTextEnv(), this);
+        }
     }
 
     private static String convert2Latex(String data) {

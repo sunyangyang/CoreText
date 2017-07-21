@@ -59,7 +59,7 @@ public class ImageBlock extends CYImageBlock {
             String heightPx = json.optString("height", "270px").replace("px", "");
             int width = MathUtils.valueOfInt(widthPx);
             int height = MathUtils.valueOfInt(heightPx);
-            mScale = getTextEnv().getPageWidth() * 1.0f/width;
+            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
             mFailSmallDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_small);
             mFailBigDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_big);
             this.size = size;
@@ -87,7 +87,7 @@ public class ImageBlock extends CYImageBlock {
     @Override
     public int getContentWidth() {
         if ("big_image".equals(size)) {
-            return getTextEnv().getPageWidth();
+            return getTextEnv().getSuggestedPageWidth();
         }
         return super.getContentWidth();
     }
@@ -95,7 +95,8 @@ public class ImageBlock extends CYImageBlock {
     @Override
     public int getContentHeight() {
         if ("big_image".equals(size)) {
-            return getTextEnv().getPageWidth()/2;
+            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/680;
+            return (int) (270 * mScale);
         }
         return super.getContentHeight();
     }

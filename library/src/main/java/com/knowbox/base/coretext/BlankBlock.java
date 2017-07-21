@@ -83,6 +83,9 @@ public class BlankBlock extends CYEditBlock {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
         if (!getTextEnv().isEditable()) {
             String text = getText();
+            if (text == null) {
+                text = "";
+            }
             if (CLASS_CHOICE.equals(mClass)) {
                 text = "(" + text + ")";
             }
@@ -97,8 +100,9 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 265 * Const.DP_1;
                 this.mHeight = 40 * Const.DP_1;
             } else if ("express".equals(size)) {
-                float width = ((EditFace) getEditFace()).getTextPaint().measureText(getText()) + Const.DP_1 * 6;
-                if (width < 32 * Const.DP_1) {
+                this.mWidth = (int) ((EditFace) getEditFace()).getTextPaint()
+                        .measureText(getText() == null ? "" : getText());
+                if (mWidth < 32 * Const.DP_1) {
                     this.mWidth = 32 * Const.DP_1;
                 }
                 this.mHeight = 32 * Const.DP_1;
