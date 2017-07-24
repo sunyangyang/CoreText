@@ -65,7 +65,7 @@ public class QuestionFragment extends Fragment {
                 "" +
                 "#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{3+\\#{\\\"type\\\":\\\"blank\\\",\\\"id\\\":\\\"2\\\",\\\"size\\\":\\\"express\\\",\\\"class\\\":\\\"fillin\\\"}\\#}\"}#=2" +
                 "";
-        textView.getBuilder().setText(question).build();
+        textView.getBuilder().setText(question).setEditable(false).build();
         textView.setText(1, "12345678");
         textView.setText(2, "1234");
         return textView;
