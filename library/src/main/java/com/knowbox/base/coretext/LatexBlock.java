@@ -56,15 +56,19 @@ public class LatexBlock extends CYLatexBlock {
         public BlankBox(TextEnv textEnv, int tabId, String clazz, Text text) {
             super(textEnv, tabId, clazz, text);
             //latex size均为express
+            ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
+            ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
             int width = (int) ((EditFace) getEditFace()).getTextPaint()
                     .measureText(getText() == null? "" : getText());
-            if (width < 32 * Const.DP_1) {
+            if (textEnv.isEditable() && width < 32 * Const.DP_1) {
                 width = 32 * Const.DP_1;
             }
             setWidthWithScale(width + Const.DP_1 * 6);
-            setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
-            ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
-            ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
+            if (textEnv.isEditable()) {
+                setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
+            } else {
+                setHeightWithScale(((EditFace)getEditFace()).getTextPaint().ascent() + Const.DP_1 * 5);
+            }
             setDepth(getHeight()/2);
             ((EditFace)getEditFace()).updateEnv();
         }
