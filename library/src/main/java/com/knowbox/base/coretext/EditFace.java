@@ -41,7 +41,7 @@ public class EditFace extends CYEditFace {
             return;
 
         if (editable.hasFocus()) {
-            mRectF.set(contentRect);
+            mRectF.set(blockRect);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);
@@ -55,7 +55,7 @@ public class EditFace extends CYEditFace {
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
-        mRectF.set(contentRect);
+        mRectF.set(blockRect);
         if (editable.hasFocus()) {
             mBackGroundPaint.setColor(Color.WHITE);
         } else {
@@ -75,7 +75,7 @@ public class EditFace extends CYEditFace {
         mRect.top = mRect.top + padding;
         mRect.bottom = mRect.bottom - padding;
         mFlashPaint.setColor(0xff3eabff);
-        mFlashPaint.setStrokeWidth(UIUtils.dip2px(1));
+        mFlashPaint.setStrokeWidth(Const.DP_1);
         if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
             super.drawFlash(canvas, mRect);
         }

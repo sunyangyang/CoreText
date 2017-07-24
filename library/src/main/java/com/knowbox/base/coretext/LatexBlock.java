@@ -8,6 +8,7 @@ import com.hyena.coretext.blocks.IEditFace;
 import com.hyena.coretext.blocks.latex.FillInAtom;
 import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.utils.Const;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
@@ -61,15 +62,18 @@ public class LatexBlock extends CYLatexBlock {
                 width = 32 * Const.DP_1;
             }
             setWidthWithScale(width + Const.DP_1 * 6);
+            setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
             ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
             ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
+            setDepth(getHeight()/2);
             ((EditFace)getEditFace()).updateEnv();
-            setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
         }
 
         @Override
         public IEditFace createEditFace() {
-            return new EditFace(getTextEnv(), this);
+            EditFace editFace = new EditFace(getTextEnv(), this);
+            editFace.setClass("fillin");
+            return editFace;
         }
     }
 
@@ -94,16 +98,17 @@ public class LatexBlock extends CYLatexBlock {
                 JSONObject jsonFillIn = new JSONObject("{" + group + "}");
                 String fillInType = jsonFillIn.optString("type");
                 if (TextUtils.equals(fillInType, "blank")) {
-                    String id = jsonFillIn.optString("id");
+                    int id = jsonFillIn.optInt("id");
                     //                String size = jsonFillIn.optString("size");//永远express
                     String clazz = jsonFillIn.optString("class");
-                    String replaceStr = "\\\\fillin{" + id + "}{" + clazz + "}{}";
-                    latex = matcher.replaceFirst(replaceStr);
+                    String replaceStr = "\\fillin{" + id + "}{" + clazz + "}{}";
+                    latex = latex.replace("#{" + group + "}#", replaceStr);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        LogUtil.v("yangzc", "latex: " + latex);
         return latex;
     }
 }

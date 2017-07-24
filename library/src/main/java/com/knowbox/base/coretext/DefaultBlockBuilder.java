@@ -13,6 +13,7 @@ import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYStyleEndBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.builder.CYBlockProvider;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.BaseApp;
 
 import org.json.JSONException;
@@ -67,6 +68,7 @@ public class DefaultBlockBuilder implements CYBlockProvider.CYBlockBuilder {
                 int start = matcher.start();
                 int end = matcher.end();
                 String data = matcher.group(1);
+                LogUtil.v("DefaultBlockBuilder", "analysisCommand: " + data);
                 CYBlock block = getBlock(textEnv, "{" + data + "}");
                 if (block != null) {
                     attributedString.replaceBlock(start, end, block);

@@ -114,14 +114,27 @@ public class ImageBlock extends CYImageBlock {
         return super.onTouchEvent(action, x, y);
     }
 
+    private Rect mImageRect = new Rect();
     @Override
     public void draw(Canvas canvas) {
-        super.draw(canvas);
         if (mBitmap == null || mBitmap.isRecycled()) {
+            canvas.drawRect(this.getContentRect(), this.mPaint);
             //show load fail
             if (!isLoading) {
                 drawFail(canvas);
             }
+        } else {
+            Rect rect= getContentRect();
+            if (rect.width() * mBitmap.getHeight() > rect.height() * mBitmap.getWidth()) {
+                //按照图片的高度缩放
+                int width = (int) (rect.height() * 1.0f * mBitmap.getWidth()/mBitmap.getHeight());
+                mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
+            } else {
+                //按照图片的宽度缩放
+                int height = (int) (rect.width() * 1.0f * mBitmap.getHeight()/mBitmap.getWidth());
+                mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
+            }
+            canvas.drawBitmap(mBitmap, null, mImageRect, mPaint);
         }
     }
 
