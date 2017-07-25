@@ -105,6 +105,9 @@ public class BlankBlock extends CYEditBlock {
                 if (mWidth < 32 * Const.DP_1) {
                     this.mWidth = 32 * Const.DP_1;
                 }
+                if (mWidth > getTextEnv().getSuggestedPageWidth() - DP_3 * 2) {
+                    mWidth = getTextEnv().getSuggestedPageWidth() - DP_3 * 2;
+                }
                 this.mHeight = 32 * Const.DP_1;
             } else if ("img_blank".equals(size)) {
                 this.mWidth = 130;

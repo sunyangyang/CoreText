@@ -8,8 +8,6 @@ import com.hyena.coretext.blocks.IEditFace;
 import com.hyena.coretext.blocks.latex.FillInAtom;
 import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +110,6 @@ public class LatexBlock extends CYLatexBlock {
                 e.printStackTrace();
             }
         }
-        LogUtil.v("yangzc", "latex: " + latex);
         return latex;
     }
 }
