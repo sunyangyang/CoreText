@@ -71,8 +71,6 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             block.setX((int) (block.getOffsetX() * contentRect.width() + contentRect.left));
             block.setLineY((int) (block.getOffsetY() * contentRect.height() + contentRect.top));
             block.draw(canvas);
-
-            canvas.drawCircle(block.getX(), block.getLineY(), Const.DP_1 * 2, paint);
         }
     }
 
