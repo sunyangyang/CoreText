@@ -1,6 +1,7 @@
 package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.hyena.coretext.TextEnv;
@@ -48,36 +49,30 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     }
 
     private BlankBlock createBlankBlock(JSONObject json) {
-        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString()) {
-            @Override
-            public int getContentWidth() {
-                return (int) (super.getContentWidth() * getScale());
-            }
-
-            @Override
-            public int getContentHeight() {
-                return (int) (super.getContentHeight() * getScale());
-            }
-        };
+        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString());
         EditFace editFace = (EditFace) blankBlock.getEditFace();
         editFace.getTextPaint().setTextSize(Const.DP_1 * 14);
         editFace.updateEnv();
 
-        double x = json.optDouble("x_pos") * getWidth() / 100;
-        double y = json.optDouble("y_pos") * getHeight() / 100;
-        blankBlock.setOffset((int)x, (int)y);
+        double x = json.optDouble("x_pos")/100;
+        double y = json.optDouble("y_pos")/100;
+        blankBlock.setOffset(x, y);
         return blankBlock;
     }
 
+    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        Rect contentRect = getContentRect();
         for (int i = 0; i < blankBlocks.size(); i++) {
             BlankBlock block = (BlankBlock) blankBlocks.get(i);
-            Rect contentRect = getContentRect();
-            block.setX(block.getOffsetX() + contentRect.left);
-            block.setLineY(block.getOffsetY() + contentRect.top);
+            block.setLineHeight(block.getHeight());
+            block.setX((int) (block.getOffsetX() * contentRect.width() + contentRect.left));
+            block.setLineY((int) (block.getOffsetY() * contentRect.height() + contentRect.top));
             block.draw(canvas);
+
+            canvas.drawCircle(block.getX(), block.getLineY(), Const.DP_1 * 2, paint);
         }
     }
 

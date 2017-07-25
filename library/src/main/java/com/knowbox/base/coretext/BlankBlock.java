@@ -32,7 +32,7 @@ public class BlankBlock extends CYEditBlock {
     private static final int DP_3 = UIUtils.dip2px(3);
     private static final int DP_1 = UIUtils.dip2px(1);
 
-    private int mOffsetX, mOffsetY;
+    private double mOffsetX, mOffsetY;
 
     private String mDefaultText;
     public BlankBlock(TextEnv textEnv, String content) {
@@ -161,16 +161,17 @@ public class BlankBlock extends CYEditBlock {
         return mDefaultText;
     }
 
-    public void setOffset(int x, int y) {
+    public void setOffset(double x, double y) {
         this.mOffsetX = x;
         this.mOffsetY = y;
     }
 
-    public int getOffsetX() {
+    public double getOffsetX() {
         return mOffsetX;
     }
 
-    public int getOffsetY() {
+    public double getOffsetY() {
         return mOffsetY;
     }
+
 }

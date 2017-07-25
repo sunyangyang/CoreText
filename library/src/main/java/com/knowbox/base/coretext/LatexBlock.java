@@ -63,7 +63,7 @@ public class LatexBlock extends CYLatexBlock {
             if (textEnv.isEditable() && width < 32 * Const.DP_1) {
                 width = 32 * Const.DP_1;
             }
-            setWidthWithScale(width + Const.DP_1 * 6);
+            setWidthWithScale(width + Const.DP_1 * 10);
             if (textEnv.isEditable()) {
                 setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
             } else {

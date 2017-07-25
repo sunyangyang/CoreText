@@ -41,6 +41,7 @@ public class ImageBlock extends CYImageBlock {
     private static final int DP_199 = UIUtils.dip2px(199);
     private static final int DP_79 = UIUtils.dip2px(79);
 
+    protected int mWidth, mHeight;
     private float mScale = 1.0f;
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -49,7 +50,7 @@ public class ImageBlock extends CYImageBlock {
 
     private void init(Context context, String content) {
         try {
-            mPaint.setColor(Color.BLACK);
+            mPaint.setColor(Color.WHITE);
             mPaint.setTextSize(DP_14);
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
@@ -59,6 +60,8 @@ public class ImageBlock extends CYImageBlock {
             String heightPx = json.optString("height", "270px").replace("px", "");
             int width = MathUtils.valueOfInt(widthPx);
             int height = MathUtils.valueOfInt(heightPx);
+            this.mWidth = (width == 0 ? 680: width);
+            this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
             mFailSmallDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_small);
             mFailBigDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_big);
@@ -67,7 +70,7 @@ public class ImageBlock extends CYImageBlock {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (width * mScale));
                 setHeight((int) (height * mScale));
-            } else if ("small_img".equals(size)) {
+            } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
             } else {
@@ -95,8 +98,8 @@ public class ImageBlock extends CYImageBlock {
     @Override
     public int getContentHeight() {
         if ("big_image".equals(size)) {
-            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/680;
-            return (int) (270 * mScale);
+            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/mWidth;
+            return (int) (mHeight * mScale);
         }
         return super.getContentHeight();
     }
