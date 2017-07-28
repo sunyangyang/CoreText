@@ -10,17 +10,24 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
+import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
-import com.hyena.framework.utils.UIUtils;
-import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ViewScaleType;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,14 +35,11 @@ import org.json.JSONObject;
 /**
  * Created by yangzc on 17/2/6.
  */
-public class ImageBlock extends CYImageBlock {
+public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoadingListener {
 
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private boolean isLoading = false;
     private String size;
-    private Drawable mFailSmallDrawable = null;
-    private Drawable mFailBigDrawable = null;
 
     private static final int DP_14 = Const.DP_1 * 14;
     private static final int DP_38 = Const.DP_1 * 38;
@@ -44,8 +48,13 @@ public class ImageBlock extends CYImageBlock {
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
+    private boolean mIsAlive = true;
+    private DisplayImageOptions options;
+    protected Drawable drawable = null;
+
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        ImageFetcher.getImageFetcher();
         init(textEnv.getContext(), content);
     }
 
@@ -64,23 +73,23 @@ public class ImageBlock extends CYImageBlock {
             this.mWidth = (width == 0 ? 680: width);
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
-            mFailSmallDrawable = context.getResources()
-                    .getDrawable(R.drawable.block_image_fail_small);
-            mFailBigDrawable = context.getResources()
-                    .getDrawable(R.drawable.block_image_fail_big);
             this.size = size;
+            DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (width * mScale));
                 setHeight((int) (height * mScale));
+                builder.showImageOnFail(R.drawable.block_image_fail_big);
             } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
             } else {
                 setWidth(DP_199);
                 setHeight(DP_79);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
             }
-            setResUrl(url);
+            ImageLoader.getInstance().displayImage(url, this, options = builder.build(), this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -120,70 +129,11 @@ public class ImageBlock extends CYImageBlock {
         return super.onTouchEvent(action, x, y);
     }
 
-    private Rect mImageRect = new Rect();
     @Override
     public void draw(Canvas canvas) {
-        if (mBitmap == null || mBitmap.isRecycled()) {
-            canvas.drawRect(this.getContentRect(), this.mPaint);
-            //show load fail
-            if (!isLoading) {
-                drawFail(canvas);
-            }
-        } else {
-            Rect rect= getContentRect();
-            if (rect.width() * mBitmap.getHeight() > rect.height() * mBitmap.getWidth()) {
-                //按照图片的高度缩放
-                int width = (int) (rect.height() * 1.0f * mBitmap.getWidth()/mBitmap.getHeight());
-                mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
-            } else {
-                //按照图片的宽度缩放
-                int height = (int) (rect.width() * 1.0f * mBitmap.getHeight()/mBitmap.getWidth());
-                mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
-            }
-            canvas.drawBitmap(mBitmap, null, mImageRect, mPaint);
+        if (drawable != null) {
+            drawable.draw(canvas);
         }
-    }
-
-    Rect mTempRect = new Rect();
-    protected void drawFail(Canvas canvas) {
-        Drawable drawable = mFailBigDrawable;
-        Rect contentRect = getContentRect();
-        if (drawable.getIntrinsicWidth() > contentRect.width()
-                || drawable.getIntrinsicHeight() > contentRect.height()) {
-            drawable = mFailSmallDrawable;
-        }
-        int x = contentRect.left + (getContentWidth() - drawable.getIntrinsicWidth()) /2;
-        int y = contentRect.top + (getContentHeight() - drawable.getIntrinsicHeight()) /2;
-        mTempRect.set(x, y, x + drawable.getIntrinsicWidth(), y + drawable.getIntrinsicHeight());
-        drawable.setBounds(mTempRect);
-        drawable.draw(canvas);
-    }
-
-    @Override
-    public void postInvalidate() {
-        postInvalidateThis();
-    }
-
-    @Override
-    protected void setBitmap(Bitmap bitmap) {
-        //finish loading
-        this.isLoading = false;
-        super.setBitmap(bitmap);
-    }
-
-    @Override
-    public CYImageBlock setResUrl(String url) {
-        this.mUrl = url;
-        //start loading
-        this.isLoading = true;
-        UiThreadHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ImageBlock.this.isLoading = false;
-                postInvalidateThis();
-            }
-        }, 3000);
-        return super.setResUrl(url);
     }
 
     private void retry() {
@@ -191,11 +141,90 @@ public class ImageBlock extends CYImageBlock {
                 || (mBitmap != null && !mBitmap.isRecycled())) {
             return;
         }
-        setResUrl(mUrl);
+        ImageLoader.getInstance().displayImage(mUrl, this, options, this);
     }
 
     @Override
     public void release() {
         super.release();
+        mIsAlive = false;
+    }
+
+    /* ImageAware实现 */
+    @Override
+    public int getWidth() {
+        return super.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return super.getHeight();
+    }
+
+    @Override
+    public ViewScaleType getScaleType() {
+        return ViewScaleType.FIT_INSIDE;
+    }
+
+    @Override
+    public View getWrappedView() {
+        return null;
+    }
+
+    @Override
+    public boolean isCollected() {
+        return !mIsAlive;
+    }
+
+    @Override
+    public int getId() {
+        return TextUtils.isEmpty(this.mUrl)?super.hashCode():this.mUrl.hashCode();
+    }
+
+    private Rect mImageRect = new Rect();
+    private void setImageDrawableInfo(Drawable drawable) {
+        Rect rect= getContentRect();
+        if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
+            //按照图片的高度缩放
+            int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth()/drawable.getIntrinsicHeight());
+            mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
+        } else {
+            //按照图片的宽度缩放
+            int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight()/drawable.getIntrinsicWidth());
+            mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
+        }
+        drawable.setBounds(mImageRect);
+        this.drawable = drawable;
+        postInvalidate();
+    }
+
+    @Override
+    public boolean setImageDrawable(Drawable drawable) {
+        setImageDrawableInfo(drawable);
+        return true;
+    }
+
+    @Override
+    public boolean setImageBitmap(Bitmap bitmap) {
+        setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
+                .getResources(), bitmap));
+        return true;
+    }
+
+    /* 回调部分 */
+    @Override
+    public void onLoadingStarted(String s, View view) {
+    }
+
+    @Override
+    public void onLoadingFailed(String s, View view, FailReason failReason) {
+    }
+
+    @Override
+    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+    }
+
+    @Override
+    public void onLoadingCancelled(String s, View view) {
     }
 }

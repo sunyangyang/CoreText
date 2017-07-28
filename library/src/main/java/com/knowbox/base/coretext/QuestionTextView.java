@@ -24,7 +24,7 @@ public class QuestionTextView extends CYSinglePageView {
     public QuestionTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            setLayerType(LAYER_TYPE_HARDWARE, null);
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
         }
     }
 

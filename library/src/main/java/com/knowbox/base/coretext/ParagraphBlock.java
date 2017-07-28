@@ -12,7 +12,6 @@ import com.hyena.coretext.blocks.CYHorizontalAlign;
 import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYStyleStartBlock;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +41,7 @@ public class ParagraphBlock extends CYStyleStartBlock {
             }
             if (json.has("align")) {
                 String align = json.optString("align");
-                if ("left".equals(align) || TextUtils.isEmpty(align) || !getTextEnv().isEditable()) {
+                if (!getTextEnv().isEditable() || "left".equals(align) || TextUtils.isEmpty(align)) {
                     style.setHorizontalAlign(CYHorizontalAlign.LEFT);
                 } else if("mid".equals(align)) {
                     style.setHorizontalAlign(CYHorizontalAlign.CENTER);

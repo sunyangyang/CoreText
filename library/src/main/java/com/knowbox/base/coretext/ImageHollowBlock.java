@@ -1,7 +1,9 @@
 package com.knowbox.base.coretext;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
@@ -26,11 +28,12 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     public ImageHollowBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         setFocusable(true);
-        init(content);
+        loadBlanks(content);
     }
 
-    private void init(String content) {
+    private void loadBlanks(String content) {
         try {
+            blankBlocks.clear();
             JSONObject json = new JSONObject(content);
             JSONArray blankList = json.optJSONArray("blanklist");
             if (blankList != null) {
@@ -47,7 +50,17 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     }
 
     private BlankBlock createBlankBlock(JSONObject json) {
-        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString());
+        BlankBlock blankBlock = new BlankBlock(getTextEnv(), json.toString()) {
+            @Override
+            public void postInvalidateThis() {
+                super.postInvalidateThis();
+            }
+
+            @Override
+            public void postInvalidate() {
+                super.postInvalidate();
+            }
+        };
         EditFace editFace = (EditFace) blankBlock.getEditFace();
         editFace.getTextPaint().setTextSize(Const.DP_1 * 14);
         editFace.updateEnv();
@@ -61,13 +74,15 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        Rect contentRect = getContentRect();
-        for (int i = 0; i < blankBlocks.size(); i++) {
-            BlankBlock block = (BlankBlock) blankBlocks.get(i);
-            block.setLineHeight(block.getHeight());
-            block.setX((int) (block.getOffsetX() * contentRect.width() + contentRect.left));
-            block.setLineY((int) (block.getOffsetY() * contentRect.height() + contentRect.top));
-            block.draw(canvas);
+        if (drawable != null) {
+            Rect contentRect = getContentRect();
+            for (int i = 0; i < blankBlocks.size(); i++) {
+                BlankBlock block = (BlankBlock) blankBlocks.get(i);
+                block.setLineHeight(block.getHeight());
+                block.setX((int) (block.getOffsetX() * contentRect.width() + contentRect.left));
+                block.setLineY((int) (block.getOffsetY() * contentRect.height() + contentRect.top));
+                block.draw(canvas);
+            }
         }
     }
 
@@ -75,10 +90,8 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     public ICYEditable findEditable(float x, float y) {
         x += getX();
         y += getLineY();
-//        LogUtil.v("ImageHollowBlock", "x: " + x + ", y: " + y);
         for (int i = 0; i < blankBlocks.size(); i++) {
             BlankBlock block = (BlankBlock) blankBlocks.get(i);
-//            LogUtil.v("ImageHollowBlock", block.getBlockRect().toString());
             if (block.getBlockRect().contains((int)x, (int)y)) {
                 return block;
             }
@@ -112,4 +125,5 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     public List<ICYEditable> findAllEditable() {
         return blankBlocks;
     }
+
 }

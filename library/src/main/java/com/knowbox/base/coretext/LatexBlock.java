@@ -62,9 +62,10 @@ public class LatexBlock extends CYLatexBlock {
             if (textEnv.isEditable() && width < 32 * Const.DP_1) {
                 width = 32 * Const.DP_1;
             }
-            setWidthWithScale(width + Const.DP_1 * 10);
+            setWidthWithScale(width);
             if (textEnv.isEditable()) {
-                setHeightWithScale(32 * Const.DP_1 + Const.DP_1 * 4);
+//                setHeightWithScale(32 * Const.DP_1);
+                setHeightWithScale(-((EditFace) getEditFace()).getTextPaint().ascent() + Const.DP_1 * 2);
             } else {
                 setHeightWithScale(-((EditFace) getEditFace()).getTextPaint().ascent());
             }
@@ -92,8 +93,8 @@ public class LatexBlock extends CYLatexBlock {
             e.printStackTrace();
         }
 
-        String latex = data.replaceAll("labelsharp", "#");
-        Pattern pattern = Pattern.compile("#\\{(.*?)\\}#");
+        String latex = data/*.replaceAll("labelsharp", "#")*/;
+        Pattern pattern = Pattern.compile("\\\\#\\{(.*?)\\}\\\\#");
         Matcher matcher = pattern.matcher(latex);
         while (matcher.find()) {
             String group = matcher.group(1);
@@ -105,7 +106,7 @@ public class LatexBlock extends CYLatexBlock {
                     //                String size = jsonFillIn.optString("size");//永远express
                     String clazz = jsonFillIn.optString("class");
                     String replaceStr = "\\fillin{" + id + "}{" + clazz + "}{}";
-                    latex = latex.replace("#{" + group + "}#", replaceStr);
+                    latex = latex.replace("\\#{" + group + "}\\#", replaceStr);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
