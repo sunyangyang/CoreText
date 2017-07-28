@@ -117,23 +117,27 @@ public class AudioBlock extends CYPlaceHolderBlock {
     }
 
     protected Bitmap getStartPlayBitmap() {
-        return ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_3);
+        return mPlayingBitmap[2];
     }
 
+    private static final Bitmap mPlayingBitmap[] = new Bitmap[] {
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_1),
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_2),
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_3)
+    };
+
+    private static final Bitmap mDownloadBitmap[] = new Bitmap[] {
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_1),
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_2),
+            ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_3)
+    };
+
     protected Bitmap[] getPlayingBitmaps() {
-        return new Bitmap[]{
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_1),
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_2),
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_play_3)
-        };
+        return mPlayingBitmap;
     }
 
     protected Bitmap[] getDownloadBitmaps() {
-        return new Bitmap[]{
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_1),
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_2),
-                ImageFetcher.getImageFetcher().loadImageSync("drawable://" + R.drawable.song_download_3)
-        };
+        return mDownloadBitmap;
     }
 
     private RectF mContentRect = new RectF();

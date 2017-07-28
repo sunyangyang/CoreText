@@ -35,7 +35,7 @@ import maximsblog.blogspot.com.jlatexmath.core.TeXFormula;
  */
 public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockProvider.CYBlockBuilder {
 
-    {
+    static {
         //init latex
         AjLatexMath.init(BaseApp.getAppContext());
         try {

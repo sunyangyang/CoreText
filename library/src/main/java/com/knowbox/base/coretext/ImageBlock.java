@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
+import com.hyena.coretext.utils.Const;
 import com.hyena.framework.utils.MathUtils;
 import com.hyena.framework.utils.UIUtils;
 import com.hyena.framework.utils.UiThreadHandler;
@@ -36,10 +37,10 @@ public class ImageBlock extends CYImageBlock {
     private Drawable mFailSmallDrawable = null;
     private Drawable mFailBigDrawable = null;
 
-    private static final int DP_14 = UIUtils.dip2px(14);
-    private static final int DP_38 = UIUtils.dip2px(38);
-    private static final int DP_199 = UIUtils.dip2px(199);
-    private static final int DP_79 = UIUtils.dip2px(79);
+    private static final int DP_14 = Const.DP_1 * 14;
+    private static final int DP_38 = Const.DP_1 * 38;
+    private static final int DP_199 = Const.DP_1 * 199;
+    private static final int DP_79 = Const.DP_1 * 79;
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
@@ -63,8 +64,10 @@ public class ImageBlock extends CYImageBlock {
             this.mWidth = (width == 0 ? 680: width);
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
-            mFailSmallDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_small);
-            mFailBigDrawable = context.getResources().getDrawable(R.drawable.block_image_fail_big);
+            mFailSmallDrawable = context.getResources()
+                    .getDrawable(R.drawable.block_image_fail_small);
+            mFailBigDrawable = context.getResources()
+                    .getDrawable(R.drawable.block_image_fail_big);
             this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
@@ -157,6 +160,11 @@ public class ImageBlock extends CYImageBlock {
     }
 
     @Override
+    public void postInvalidate() {
+        postInvalidateThis();
+    }
+
+    @Override
     protected void setBitmap(Bitmap bitmap) {
         //finish loading
         this.isLoading = false;
@@ -175,7 +183,6 @@ public class ImageBlock extends CYImageBlock {
                 postInvalidateThis();
             }
         }, 3000);
-        postInvalidateThis();
         return super.setResUrl(url);
     }
 
@@ -185,5 +192,10 @@ public class ImageBlock extends CYImageBlock {
             return;
         }
         setResUrl(mUrl);
+    }
+
+    @Override
+    public void release() {
+        super.release();
     }
 }

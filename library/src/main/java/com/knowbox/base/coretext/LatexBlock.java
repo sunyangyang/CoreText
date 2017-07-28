@@ -8,6 +8,7 @@ import com.hyena.coretext.blocks.IEditFace;
 import com.hyena.coretext.blocks.latex.FillInAtom;
 import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.PaintManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,8 +57,8 @@ public class LatexBlock extends CYLatexBlock {
             //latex size均为express
             ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
             ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
-            int width = (int) ((EditFace) getEditFace()).getTextPaint()
-                    .measureText(getText() == null? "" : getText());
+            int width = (int) PaintManager.getInstance().getWidth(((EditFace) getEditFace())
+                    .getTextPaint(), getText() == null? "" : getText());
             if (textEnv.isEditable() && width < 32 * Const.DP_1) {
                 width = 32 * Const.DP_1;
             }

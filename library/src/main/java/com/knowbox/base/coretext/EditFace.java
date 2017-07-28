@@ -15,7 +15,6 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.utils.UIUtils;
 
 /**
  * Created by yangzc on 17/2/14.
@@ -23,7 +22,7 @@ import com.hyena.framework.utils.UIUtils;
 public class EditFace extends CYEditFace {
 
     private String mClass = BlankBlock.CLASS_CHOICE;
-    private int mRoundCorner = UIUtils.dip2px(8);
+    private int mRoundCorner = Const.DP_1 * 8;
     private ICYEditable editable;
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -65,7 +64,7 @@ public class EditFace extends CYEditFace {
     }
 
     private Rect mRect = new Rect();
-    private int padding = UIUtils.dip2px(5);
+    private int padding = Const.DP_1 * 5;
     @Override
     protected void drawFlash(Canvas canvas, Rect contentRect) {
         if (!mTextEnv.isEditable())
@@ -104,6 +103,6 @@ public class EditFace extends CYEditFace {
         String text = super.getText();
         if (TextUtils.isEmpty(text))
             return "";
-        return super.getText();
+        return text;
     }
 }

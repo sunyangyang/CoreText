@@ -1,14 +1,12 @@
 package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.clientlog.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +58,6 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
         return blankBlock;
     }
 
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -78,10 +75,10 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     public ICYEditable findEditable(float x, float y) {
         x += getX();
         y += getLineY();
-        LogUtil.v("ImageHollowBlock", "x: " + x + ", y: " + y);
+//        LogUtil.v("ImageHollowBlock", "x: " + x + ", y: " + y);
         for (int i = 0; i < blankBlocks.size(); i++) {
             BlankBlock block = (BlankBlock) blankBlocks.get(i);
-            LogUtil.v("ImageHollowBlock", block.getBlockRect().toString());
+//            LogUtil.v("ImageHollowBlock", block.getBlockRect().toString());
             if (block.getBlockRect().contains((int)x, (int)y)) {
                 return block;
             }

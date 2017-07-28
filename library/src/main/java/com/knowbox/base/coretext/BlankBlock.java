@@ -29,12 +29,10 @@ public class BlankBlock extends CYEditBlock {
     private String size;
     private int mWidth, mHeight;
 
-    private static final int DP_3 = UIUtils.dip2px(3);
-    private static final int DP_1 = UIUtils.dip2px(1);
-
     private double mOffsetX, mOffsetY;
 
     private String mDefaultText;
+    private int mTextLength = 20;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
@@ -48,22 +46,31 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
+            if ("img_blank".equals(getSize())) {
+                mTextLength = 4;
+            } else if ("big_img_blank".equals(getSize())) {
+                mTextLength = 8;
+            } else {
+                mTextLength = 20;
+            }
+
             if (getTextEnv().isEditable()) {
                 if ("line".equals(size)) {
-                    ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(20));
-                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(20));
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 20);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 20);
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
                 } else if ("express".equals(size)) {
-                    ((EditFace)getEditFace()).getTextPaint().setTextSize(UIUtils.dip2px(19));
-                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(UIUtils.dip2px(19));
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
                 }
                 ((EditFace)getEditFace()).updateEnv();
-                setPadding(DP_3, DP_1, DP_3, DP_1);
+                setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
             } else {
                 this.mClass = CLASS_FILL_IN;
-                setPadding(DP_1, DP_1, DP_1, DP_1);
+                setPadding(Const.DP_1, Const.DP_1, Const.DP_1, Const.DP_1);
             }
             ((EditFace)getEditFace()).setClass(mClass);
+            setMargin(Const.DP_1 * 3, Const.DP_1 * 3);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -72,24 +79,46 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public void setText(String text) {
-        if (getTextEnv() != null) {
+        if (TextUtils.equals(text, getText()))
+            return;
+
+        if (getTextEnv() != null && text != null) {
+            if (text.length() > getTextLength())
+                return;
+
             getTextEnv().setEditableValue(getTabId(), text);
-            updateSize();
-            getTextEnv().getEventDispatcher().requestLayout();
+            if (!getTextEnv().isEditable() || "express".equals(size)) {
+                updateSize();
+                requestLayout();
+            } else {
+                postInvalidateThis();
+            }
         }
+    }
+
+    public int getTextLength() {
+        return mTextLength;
+    }
+
+    public void setTextLength(int length) {
+        this.mTextLength = length;
+    }
+
+    public String getSize() {
+        return size;
     }
 
     private void updateSize() {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
+        String text = getText();
         if (!getTextEnv().isEditable()) {
-            String text = getText();
             if (text == null) {
                 text = "";
             }
             if (CLASS_CHOICE.equals(mClass)) {
                 text = "(" + text + ")";
             }
-            int width = (int) ((EditFace)getEditFace()).getTextPaint().measureText(text);
+            int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
             this.mWidth = width;
             this.mHeight = textHeight;
         } else {
@@ -100,13 +129,12 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 265 * Const.DP_1;
                 this.mHeight = 40 * Const.DP_1;
             } else if ("express".equals(size)) {
-                this.mWidth = (int) ((EditFace) getEditFace()).getTextPaint()
-                        .measureText(getText() == null ? "" : getText());
+                this.mWidth = getTextWidth(((EditFace) getEditFace()).getTextPaint(), text == null ? "" : text);
                 if (mWidth < 32 * Const.DP_1) {
                     this.mWidth = 32 * Const.DP_1;
                 }
-                if (mWidth > getTextEnv().getSuggestedPageWidth() - DP_3 * 2) {
-                    mWidth = getTextEnv().getSuggestedPageWidth() - DP_3 * 2;
+                if (mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
+                    mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
                 }
                 this.mHeight = 32 * Const.DP_1;
             } else if ("img_blank".equals(size)) {
@@ -116,19 +144,19 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 160;
                 this.mHeight = 60;
             } else {
-                this.mWidth = UIUtils.dip2px(50);
+                this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
             }
         }
     }
 
-    @Override
-    public void setStyle(CYStyle style) {
-        super.setStyle(style);
-        if (style != null) {
-            updateSize();
-        }
-    }
+//    @Override
+//    public void setStyle(CYStyle style) {
+//        super.setStyle(style);
+//        if (style != null) {
+//            updateSize();
+//        }
+//    }
 
     @Override
     public void onMeasure() {
@@ -137,12 +165,12 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public int getContentWidth() {
-        return mWidth;
+        return mWidth - getPaddingLeft() - getPaddingRight();
     }
 
     @Override
     public int getContentHeight() {
-        return mHeight;
+        return mHeight - getPaddingTop() -getPaddingBottom();
     }
 
     @Override

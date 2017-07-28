@@ -94,11 +94,11 @@ public class QuestionListFragment extends Fragment {
             viewHolder.mQtvQuestion.getBuilder().setText(item.question)
                     .setEditable(false).build();
 
-            ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
-            if (editable != null) {
-                editable.setText("Hello");
-                editable.setTextColor(Color.RED);
-            }
+//            ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
+//            if (editable != null) {
+//                editable.setText("Hello");
+//                editable.setTextColor(Color.RED);
+//            }
             return convertView;
         }
 
