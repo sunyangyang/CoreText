@@ -19,6 +19,7 @@ import android.view.View;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
@@ -48,7 +49,6 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
-    private boolean mIsAlive = true;
     private DisplayImageOptions options;
     protected Drawable drawable = null;
 
@@ -80,15 +80,20 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
                 setWidth((int) (width * mScale));
                 setHeight((int) (height * mScale));
                 builder.showImageOnFail(R.drawable.block_image_fail_big);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_big);
             } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
             } else {
                 setWidth(DP_199);
                 setHeight(DP_79);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
             }
+            this.mUrl = url;
+            LogUtil.v("yangzc", url);
             ImageLoader.getInstance().displayImage(url, this, options = builder.build(), this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,6 +137,17 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
     @Override
     public void draw(Canvas canvas) {
         if (drawable != null) {
+            Rect rect= getContentRect();
+            if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
+                //按照图片的高度缩放
+                int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth()/drawable.getIntrinsicHeight());
+                mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
+            } else {
+                //按照图片的宽度缩放
+                int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight()/drawable.getIntrinsicWidth());
+                mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
+            }
+            drawable.setBounds(mImageRect);
             drawable.draw(canvas);
         }
     }
@@ -145,9 +161,14 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
     }
 
     @Override
-    public void release() {
-        super.release();
-        mIsAlive = false;
+    public void restart() {
+        super.restart();
+        ImageLoader.getInstance().displayImage(mUrl, this, options, this);
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
     }
 
     /* ImageAware实现 */
@@ -173,7 +194,7 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
 
     @Override
     public boolean isCollected() {
-        return !mIsAlive;
+        return false;
     }
 
     @Override
@@ -183,24 +204,14 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
 
     private Rect mImageRect = new Rect();
     private void setImageDrawableInfo(Drawable drawable) {
-        Rect rect= getContentRect();
-        if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
-            //按照图片的高度缩放
-            int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth()/drawable.getIntrinsicHeight());
-            mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
-        } else {
-            //按照图片的宽度缩放
-            int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight()/drawable.getIntrinsicWidth());
-            mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
-        }
-        drawable.setBounds(mImageRect);
         this.drawable = drawable;
         postInvalidate();
     }
 
     @Override
     public boolean setImageDrawable(Drawable drawable) {
-        setImageDrawableInfo(drawable);
+        if (drawable != null)
+            setImageDrawableInfo(drawable);
         return true;
     }
 
@@ -214,17 +225,21 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
     /* 回调部分 */
     @Override
     public void onLoadingStarted(String s, View view) {
+        LogUtil.v("yangzc", "onLoadingStarted: " + s);
     }
 
     @Override
     public void onLoadingFailed(String s, View view, FailReason failReason) {
+        LogUtil.v("yangzc", "onLoadingFailed: " + s);
     }
 
     @Override
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+        LogUtil.v("yangzc", "onLoadingComplete: " + s);
     }
 
     @Override
     public void onLoadingCancelled(String s, View view) {
+        LogUtil.v("yangzc", "onLoadingCancelled: " + s);
     }
 }

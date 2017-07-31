@@ -165,12 +165,12 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public int getContentWidth() {
-        return mWidth - getPaddingLeft() - getPaddingRight();
+        return mWidth;
     }
 
     @Override
     public int getContentHeight() {
-        return mHeight - getPaddingTop() -getPaddingBottom();
+        return mHeight;
     }
 
     @Override

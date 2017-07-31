@@ -234,8 +234,20 @@ public class AudioBlock extends CYPlaceHolderBlock {
     }
 
     @Override
-    public void release() {
-        super.release();
+    public void restart() {
+        super.restart();
+        if (mPlayBusService != null) {
+            mPlayBusService.getPlayerBusServiceObserver()
+                    .addPlayStatusChangeListener(mPlayStatusChangeListener);
+        }
+        if (mDownloadManager != null) {
+            mDownloadManager.addTaskListener(mTaskListener);
+        }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
         if (mPlayBusService != null) {
             mPlayBusService.getPlayerBusServiceObserver()
                     .removemPlayStatusChangeListener(mPlayStatusChangeListener);
