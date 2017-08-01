@@ -60,6 +60,16 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             public void postInvalidate() {
                 super.postInvalidate();
             }
+
+            @Override
+            public int getWidth() {
+                return (int) (super.getWidth() * getScale());
+            }
+
+            @Override
+            public int getHeight() {
+                return (int) (super.getHeight() * getScale());
+            }
         };
         EditFace editFace = (EditFace) blankBlock.getEditFace();
         editFace.getTextPaint().setTextSize(Const.DP_1 * 14);

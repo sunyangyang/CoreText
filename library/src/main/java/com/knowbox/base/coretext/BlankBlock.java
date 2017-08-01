@@ -9,10 +9,8 @@ import android.text.TextUtils;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
-import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.utils.UIUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,9 +116,17 @@ public class BlankBlock extends CYEditBlock {
             if (CLASS_CHOICE.equals(mClass)) {
                 text = "(" + text + ")";
             }
-            int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
-            this.mWidth = width;
-            this.mHeight = textHeight;
+            if ("img_blank".equals(size)) {
+                this.mWidth = 130;
+                this.mHeight = 60;
+            } else if ("big_img_blank".equals(size)) {
+                this.mWidth = 160;
+                this.mHeight = 60;
+            } else {
+                int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
+                this.mWidth = width;
+                this.mHeight = textHeight;
+            }
         } else {
             if ("letter".equals(size)) {
                 this.mWidth = 32 * Const.DP_1;
@@ -175,7 +181,15 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     protected CYEditFace createEditFace(TextEnv textEnv, ICYEditable editable) {
-        return new EditFace(textEnv, editable);
+        EditFace editFace = new EditFace(textEnv, editable);
+        if ("img_blank".equals(size)) {
+            editFace.setShowUnderLine(false);
+        } else if ("big_img_blank".equals(size)) {
+            editFace.setShowUnderLine(false);
+        } else {
+            editFace.setShowUnderLine(true);
+        }
+        return editFace;
     }
 
     @Override

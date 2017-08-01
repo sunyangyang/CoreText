@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -36,7 +37,7 @@ import org.json.JSONObject;
 /**
  * Created by yangzc on 17/2/6.
  */
-public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoadingListener {
+public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -60,8 +61,10 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
 
     private void init(Context context, String content) {
         try {
-            mPaint.setColor(Color.WHITE);
-            mPaint.setTextSize(DP_14);
+            mPaint.setColor(0xffe9f0f6);
+            mPaint.setStrokeWidth(Const.DP_1);
+            mPaint.setStyle(Paint.Style.STROKE);
+
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
@@ -94,7 +97,7 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
             }
             this.mUrl = url;
             LogUtil.v("yangzc", url);
-            ImageLoader.getInstance().displayImage(url, this, options = builder.build(), this);
+            ImageLoader.getInstance().displayImage(url, mImageAware, options = builder.build(), this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -134,6 +137,7 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
         return super.onTouchEvent(action, x, y);
     }
 
+    private RectF mRect = new RectF();
     @Override
     public void draw(Canvas canvas) {
         if (drawable != null) {
@@ -149,6 +153,8 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
             }
             drawable.setBounds(mImageRect);
             drawable.draw(canvas);
+            mRect.set(rect);
+            canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
         }
     }
 
@@ -157,13 +163,13 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
                 || (mBitmap != null && !mBitmap.isRecycled())) {
             return;
         }
-        ImageLoader.getInstance().displayImage(mUrl, this, options, this);
+        ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);
     }
 
     @Override
     public void restart() {
         super.restart();
-        ImageLoader.getInstance().displayImage(mUrl, this, options, this);
+        ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);
     }
 
     @Override
@@ -171,56 +177,69 @@ public class ImageBlock extends CYImageBlock implements ImageAware, ImageLoading
         super.stop();
     }
 
-    /* ImageAware实现 */
-    @Override
-    public int getWidth() {
-        return super.getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return super.getHeight();
-    }
-
-    @Override
-    public ViewScaleType getScaleType() {
-        return ViewScaleType.FIT_INSIDE;
-    }
-
-    @Override
-    public View getWrappedView() {
-        return null;
-    }
-
-    @Override
-    public boolean isCollected() {
-        return false;
-    }
-
-    @Override
-    public int getId() {
-        return TextUtils.isEmpty(this.mUrl)?super.hashCode():this.mUrl.hashCode();
-    }
-
     private Rect mImageRect = new Rect();
-    private void setImageDrawableInfo(Drawable drawable) {
-        this.drawable = drawable;
-        postInvalidate();
-    }
+    /* ImageAware实现 */
+    private ImageAware mImageAware = new ImageAware() {
 
-    @Override
-    public boolean setImageDrawable(Drawable drawable) {
-        if (drawable != null)
-            setImageDrawableInfo(drawable);
-        return true;
-    }
+        @Override
+        public int getWidth() {
+            return (int) (ImageBlock.this.getWidth() * getScale());
+        }
 
-    @Override
-    public boolean setImageBitmap(Bitmap bitmap) {
-        setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
-                .getResources(), bitmap));
-        return true;
-    }
+        @Override
+        public int getHeight() {
+            return (int) (ImageBlock.this.getHeight() * getScale());
+        }
+
+        private float getScale() {
+            int screenHeight = getTextEnv().getContext().getResources()
+                    .getDisplayMetrics().heightPixels;
+            float scale = 1.0f;
+            if (ImageBlock.this.getHeight() > screenHeight) {
+                scale = screenHeight * 1.0f/ImageBlock.this.getHeight();
+            }
+            return scale;
+        }
+
+        @Override
+        public ViewScaleType getScaleType() {
+            return ViewScaleType.FIT_INSIDE;
+        }
+
+        @Override
+        public View getWrappedView() {
+            return null;
+        }
+
+        @Override
+        public boolean isCollected() {
+            return false;
+        }
+
+        @Override
+        public int getId() {
+            return TextUtils.isEmpty(mUrl)?super.hashCode():mUrl.hashCode();
+        }
+
+        private void setImageDrawableInfo(Drawable drawable) {
+            ImageBlock.this.drawable = drawable;
+            postInvalidate();
+        }
+
+        @Override
+        public boolean setImageDrawable(Drawable drawable) {
+            if (drawable != null)
+                setImageDrawableInfo(drawable);
+            return true;
+        }
+
+        @Override
+        public boolean setImageBitmap(Bitmap bitmap) {
+            setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
+                    .getResources(), bitmap));
+            return true;
+        }
+    };
 
     /* 回调部分 */
     @Override
