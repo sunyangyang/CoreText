@@ -77,9 +77,13 @@ public class LatexBlock extends CYLatexBlock {
         @Override
         public IEditFace createEditFace() {
             EditFace editFace = new EditFace(getTextEnv(), this);
-            editFace.setShowUnderLine(false);
             editFace.setClass("fillin");
             return editFace;
+        }
+
+        @Override
+        public boolean hasBottomLine() {
+            return false;
         }
     }
 

@@ -15,7 +15,6 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.PaintManager;
 
 /**
  * Created by yangzc on 17/2/14.
@@ -25,8 +24,6 @@ public class EditFace extends CYEditFace {
     private String mClass = BlankBlock.CLASS_CHOICE;
     private int mRoundCorner = Const.DP_1 * 5;
     private ICYEditable editable;
-    private Paint mBottomLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private boolean isShowUnderLine = true;
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
         this.editable = editable;
@@ -83,41 +80,22 @@ public class EditFace extends CYEditFace {
         }
     }
 
-    public void setShowUnderLine(boolean isShowUnderLine) {
-        this.isShowUnderLine = isShowUnderLine;
-    }
-
     @Override
-    protected void drawText(Canvas canvas, String text, Rect contentRect) {
+    protected void drawText(Canvas canvas, String text, Rect contentRect, boolean hasBottomLine) {
         if (!mTextEnv.isEditable()) {
             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-                super.drawText(canvas, text, contentRect);
-                if (isShowUnderLine) {
-                    mBottomLinePaint.set(mTextPaint);
-                    mBottomLinePaint.setStrokeWidth(Const.DP_1);
-                    float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
-                    float x = (float) contentRect.left + ((float) contentRect.width() - textWidth) / 2.0F;
-                    TextEnv.Align align = this.mTextEnv.getTextAlign();
-                    float y;
-                    if (align == TextEnv.Align.TOP) {
-                        y = (float) (contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
-                    } else if (align == TextEnv.Align.CENTER) {
-                        y = (float) (contentRect.top + (contentRect.height() + PaintManager.getInstance().getHeight(this.mTextPaint)) / 2) - this.mTextPaintMetrics.bottom;
-                    } else {
-                        y = (float) contentRect.bottom - this.mTextPaintMetrics.bottom;
-                    }
-                    y += Const.DP_1 * 3;
-                    canvas.drawLine(x, y, x + textWidth, y, mBottomLinePaint);
-                }
+                mBottomLinePaint.set(mTextPaint);
+                mBottomLinePaint.setStrokeWidth(Const.DP_1);
+                super.drawText(canvas, text, contentRect, hasBottomLine);
             } else {
                 if (TextUtils.isEmpty(text)) {
-                    super.drawText(canvas, "( )", contentRect);
+                    super.drawText(canvas, "( )", contentRect, false);
                 } else {
-                    super.drawText(canvas, "("+ text + ")", contentRect);
+                    super.drawText(canvas, "("+ text + ")", contentRect, false);
                 }
             }
         } else {
-            super.drawText(canvas, text, contentRect);
+            super.drawText(canvas, text, contentRect, false);
         }
     }
 

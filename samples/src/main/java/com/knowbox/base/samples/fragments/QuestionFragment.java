@@ -83,6 +83,7 @@ public class QuestionFragment extends Fragment {
         question = question.replaceAll("\\\\", "");
 
 //        question = "#{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"left\",\"color\":\"#D0D0D0\",\"margin\":8}#选择与图片意思相符的句子#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"size\" : 30,\"align\": \"mid\",\"color\":\"#000000\",\"margin\":8}##{\"type\":\"img\",\"id\":1,\"size\" : \"big_image\", \"src\":\"http://7xohdn.com2.z0.glb.qiniucdn.com/Fs-pR0yS0GVARZRTOkCu18TGBfU6\"}##{\"type\":\"para_end\"}#";
+
         textView.getBuilder().setText(question).setEditable(false).build();
         textView.setText(1, "12345678");
         textView.setText(2, "1234");

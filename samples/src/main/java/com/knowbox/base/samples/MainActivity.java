@@ -17,8 +17,8 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.main, new SamplesVideoFragment());
-//        ft.replace(R.id.main, new QuestionListFragment());
-        ft.replace(R.id.main, new QuestionFragment());
+        ft.replace(R.id.main, new QuestionListFragment());
+//        ft.replace(R.id.main, new QuestionFragment());
         ft.commitAllowingStateLoss();
     }
 

@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.app.adapter.SingleTypeAdapter;
 import com.hyena.framework.utils.FileUtils;
 import com.knowbox.base.coretext.QuestionTextView;
@@ -84,6 +86,7 @@ public class QuestionListFragment extends Fragment {
                 viewHolder = new ViewHolder();
                 convertView.setTag(viewHolder);
 
+                viewHolder.mIndex = (TextView) convertView.findViewById(R.id.index);
                 viewHolder.mQtvQuestion = (QuestionTextView) convertView.findViewById(R.id.qtv_question);
 
             } else {
@@ -91,7 +94,9 @@ public class QuestionListFragment extends Fragment {
             }
             Item item = getItem(position);
 //            viewHolder.mQtvQuestion.getTextEnv().setFontScale(0.1f);
-            viewHolder.mQtvQuestion.getTextEnv().setAttachedView(parent).setTag(position + "");
+            viewHolder.mIndex.setText(position + "");
+            viewHolder.mQtvQuestion.getTextEnv().setTag(position + "").setAttachedView(parent)
+                    .setEditableValue(1, new EditableValue(Color.RED, "position-" + position));
             viewHolder.mQtvQuestion.getBuilder().setText(item.question)
                     .setEditable(false).build();
 
@@ -104,6 +109,7 @@ public class QuestionListFragment extends Fragment {
         }
 
         class ViewHolder {
+            TextView mIndex;
             QuestionTextView mQtvQuestion;
         }
 

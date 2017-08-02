@@ -164,6 +164,12 @@ public class BlankBlock extends CYEditBlock {
 //        }
 //    }
 
+
+    @Override
+    public String getText() {
+        return super.getText();
+    }
+
     @Override
     public void onMeasure() {
         super.onMeasure();
@@ -182,14 +188,18 @@ public class BlankBlock extends CYEditBlock {
     @Override
     protected CYEditFace createEditFace(TextEnv textEnv, ICYEditable editable) {
         EditFace editFace = new EditFace(textEnv, editable);
-        if ("img_blank".equals(size)) {
-            editFace.setShowUnderLine(false);
-        } else if ("big_img_blank".equals(size)) {
-            editFace.setShowUnderLine(false);
-        } else {
-            editFace.setShowUnderLine(true);
-        }
         return editFace;
+    }
+
+    @Override
+    public boolean hasBottomLine() {
+        if ("img_blank".equals(size)) {
+            return false;
+        } else if ("big_img_blank".equals(size)) {
+            return false;
+        } else {
+            return super.hasBottomLine();
+        }
     }
 
     @Override
