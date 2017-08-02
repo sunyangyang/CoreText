@@ -95,8 +95,8 @@ public class QuestionListFragment extends Fragment {
             Item item = getItem(position);
 //            viewHolder.mQtvQuestion.getTextEnv().setFontScale(0.1f);
             viewHolder.mIndex.setText(position + "");
-            viewHolder.mQtvQuestion.getTextEnv().setTag(position + "").setAttachedView(parent)
-                    .setEditableValue(1, new EditableValue(Color.RED, "position-" + position));
+            viewHolder.mQtvQuestion.getTextEnv().setTag(position + "").setEditableValue(1, new EditableValue(Color.RED, "position" + position));
+            viewHolder.mQtvQuestion.getTextEnv().setAttachedView(parent);
             viewHolder.mQtvQuestion.getBuilder().setText(item.question)
                     .setEditable(false).build();
 

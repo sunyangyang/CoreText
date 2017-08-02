@@ -1,9 +1,7 @@
 package com.knowbox.base.coretext;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
@@ -72,7 +70,7 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             }
         };
         EditFace editFace = (EditFace) blankBlock.getEditFace();
-        editFace.getTextPaint().setTextSize(Const.DP_1 * 14);
+        editFace.getTextPaint().setTextSize(Const.DP_1 * 14 * getScale());
         editFace.updateEnv();
 
         double x = json.optDouble("x_pos")/100;

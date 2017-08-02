@@ -30,7 +30,7 @@ public class BlankBlock extends CYEditBlock {
     private double mOffsetX, mOffsetY;
 
     private String mDefaultText;
-    private int mTextLength = 20;
+    private int mTextLength = 16;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
