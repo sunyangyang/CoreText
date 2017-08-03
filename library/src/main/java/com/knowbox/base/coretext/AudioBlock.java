@@ -172,7 +172,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 break;
             }
         }
-        return super.onTouchEvent(action, x, y);
+        return true;
     }
 
     private void download() {

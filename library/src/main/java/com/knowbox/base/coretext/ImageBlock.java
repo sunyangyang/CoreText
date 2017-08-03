@@ -7,7 +7,6 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -43,7 +42,6 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String size;
 
-    private static final int DP_14 = Const.DP_1 * 14;
     private static final int DP_38 = Const.DP_1 * 38;
     private static final int DP_199 = Const.DP_1 * 199;
     private static final int DP_79 = Const.DP_1 * 79;
@@ -98,6 +96,15 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.block_image_fail_small);
             }
+
+            if (url != null) {
+                if (url.contains("?")) {
+                    url += "&tag=" + getTextEnv().getTag();
+                } else {
+                    url += "?tag=" + getTextEnv().getTag();
+                }
+            }
+
             this.mUrl = url;
             LogUtil.v("yangzc", url);
             ImageLoader.getInstance().displayImage(url, mImageAware, options = builder.build(), this);
@@ -156,14 +163,15 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             }
             drawable.setBounds(mImageRect);
             drawable.draw(canvas);
-            mRect.set(rect);
-            canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
+            if (!getTextEnv().isEditable()) {//绘制边框
+                mRect.set(rect);
+                canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
+            }
         }
     }
 
     private void retry() {
-        if (TextUtils.isEmpty(mUrl)
-                || (mBitmap != null && !mBitmap.isRecycled())) {
+        if (TextUtils.isEmpty(mUrl) || drawable != null) {
             return;
         }
         ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);
