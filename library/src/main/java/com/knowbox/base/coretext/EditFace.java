@@ -63,39 +63,40 @@ public class EditFace extends CYEditFace {
         canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBackGroundPaint);
     }
 
-    private Rect mRect = new Rect();
-    private int padding = Const.DP_1 * 5;
+//    private Rect mRect = new Rect();
+//    private int padding = Const.DP_1 * 5;
     @Override
-    protected void drawFlash(Canvas canvas, Rect contentRect) {
+    protected void drawFlash(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!mTextEnv.isEditable())
             return;
 
-        mRect.set(contentRect);
-        mRect.top = mRect.top + padding;
-        mRect.bottom = mRect.bottom - padding;
+//        mRect.set(contentRect);
+//        mRect.top = mRect.top + padding;
+//        mRect.bottom = mRect.bottom - padding;
+
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
         if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            super.drawFlash(canvas, mRect);
+            super.drawFlash(canvas, blockRect, blockRect);
         }
     }
 
     @Override
-    protected void drawText(Canvas canvas, String text, Rect contentRect, boolean hasBottomLine) {
+    protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
         if (!mTextEnv.isEditable()) {
             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 mBottomLinePaint.set(mTextPaint);
                 mBottomLinePaint.setStrokeWidth(Const.DP_1);
-                super.drawText(canvas, text, contentRect, hasBottomLine);
+                super.drawText(canvas, text, blockRect, contentRect, hasBottomLine);
             } else {
                 if (TextUtils.isEmpty(text)) {
-                    super.drawText(canvas, "( )", contentRect, false);
+                    super.drawText(canvas, "( )", blockRect, contentRect, false);
                 } else {
-                    super.drawText(canvas, "("+ text + ")", contentRect, false);
+                    super.drawText(canvas, "("+ text + ")", blockRect, contentRect, false);
                 }
             }
         } else {
-            super.drawText(canvas, text, contentRect, false);
+            super.drawText(canvas, text, blockRect, contentRect, false);
         }
     }
 
