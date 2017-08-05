@@ -1,12 +1,15 @@
 package com.knowbox.base.coretext;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +25,7 @@ import java.util.List;
 public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
 
     private List<ICYEditable> blankBlocks = new ArrayList<>();
+    private volatile boolean isShowBlank = false;
 
     public ImageHollowBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -87,7 +91,7 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        if (drawable != null) {
+        if (drawable != null && isShowBlank) {
             Rect contentRect = getContentRect();
             for (int i = 0; i < blankBlocks.size(); i++) {
                 BlankBlock block = (BlankBlock) blankBlocks.get(i);
@@ -139,4 +143,35 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
         return blankBlocks;
     }
 
+    @Override
+    public void onLoadingStarted(String s, View view) {
+        super.onLoadingStarted(s, view);
+        isShowBlank = false;
+        postInvalidate();
+    }
+
+    @Override
+    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+        super.onLoadingComplete(s, view, bitmap);
+        if (bitmap != null && !bitmap.isRecycled()) {
+            isShowBlank = true;
+        } else {
+            isShowBlank = false;
+        }
+        postInvalidate();
+    }
+
+    @Override
+    public void onLoadingCancelled(String s, View view) {
+        super.onLoadingCancelled(s, view);
+        isShowBlank = false;
+        postInvalidate();
+    }
+
+    @Override
+    public void onLoadingFailed(String s, View view, FailReason failReason) {
+        super.onLoadingFailed(s, view, failReason);
+        isShowBlank = false;
+        postInvalidate();
+    }
 }
