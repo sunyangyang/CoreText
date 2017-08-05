@@ -82,19 +82,19 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 setHeight((int) (height * mScale));
                 builder.showImageOnFail(R.drawable.block_image_fail_big);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_big);
-                builder.showImageOnLoading(R.drawable.block_image_fail_big);
+                builder.showImageOnLoading(R.drawable.image_loading);
             } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
             } else {
                 setWidth(DP_199);
                 setHeight(DP_79);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
             }
 
             if (url != null) {
