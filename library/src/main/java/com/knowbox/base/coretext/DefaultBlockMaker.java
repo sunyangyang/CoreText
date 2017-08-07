@@ -3,9 +3,11 @@ package com.knowbox.base.coretext;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYStyleEndBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.builder.IBlockMaker;
+import com.hyena.coretext.utils.Const;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +43,14 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if("P".equals(type)) {
             return (T) new CYBreakLineBlock(textEnv, data);
         } else if ("para_begin".equals(type)) {
-            return (T) new ParagraphBlock(textEnv, data);
+            return (T) new ParagraphBlock(textEnv, data) {
+                @Override
+                public CYStyle getStyle() {
+                    CYStyle style = super.getStyle();
+                    style.setMarginBottom(Const.DP_1 * 20);
+                    return style;
+                }
+            };
         } else if ("para_end".equals(type)) {
             return (T) new CYStyleEndBlock(textEnv, data);
         } else if ("audio".equals(type)) {
