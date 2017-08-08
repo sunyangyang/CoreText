@@ -66,7 +66,7 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             @Override
             public void draw(Canvas canvas) {
                 EditFace editFace = (EditFace) getEditFace();
-                editFace.getTextPaint().setTextSize(Const.DP_1 * 14 * getScale());
+                editFace.getTextPaint().setTextSize(Const.DP_1 * 9 * getScale());
                 editFace.updateEnv();
                 super.draw(canvas);
             }

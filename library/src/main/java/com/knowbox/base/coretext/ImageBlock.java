@@ -86,6 +86,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
+                setPadding(Const.DP_1 * 2, 0, Const.DP_1 * 2, 0);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
@@ -152,14 +153,18 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     public void draw(Canvas canvas) {
         if (drawable != null) {
             Rect rect= getContentRect();
-            if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
-                //按照图片的高度缩放
-                int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth()/drawable.getIntrinsicHeight());
-                mImageRect.set(rect.left + (rect.width() - width)/2, rect.top, rect.right - (rect.width() - width)/2, rect.bottom);
+            if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
+                if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
+                    //按照图片的高度缩放
+                    int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth() / drawable.getIntrinsicHeight());
+                    mImageRect.set(rect.left + (rect.width() - width) / 2, rect.top, rect.right - (rect.width() - width) / 2, rect.bottom);
+                } else {
+                    //按照图片的宽度缩放
+                    int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight() / drawable.getIntrinsicWidth());
+                    mImageRect.set(rect.left, rect.top + (rect.height() - height) / 2, rect.right, rect.bottom - (rect.height() - height) / 2);
+                }
             } else {
-                //按照图片的宽度缩放
-                int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight()/drawable.getIntrinsicWidth());
-                mImageRect.set(rect.left, rect.top + (rect.height() - height)/2, rect.right, rect.bottom - (rect.height() - height)/2);
+                mImageRect.set(rect);
             }
             drawable.setBounds(mImageRect);
             drawable.draw(canvas);
