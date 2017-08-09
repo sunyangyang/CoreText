@@ -169,7 +169,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             drawable.setBounds(mImageRect);
             drawable.draw(canvas);
             if (!getTextEnv().isEditable()) {//绘制边框
-                mRect.set(rect);
+                mRect.set(mImageRect);
                 canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
             }
         }
