@@ -76,6 +76,8 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
             this.size = size;
             DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+            builder.cacheInMemory(true);
+            builder.cacheOnDisk(true);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (width * mScale));
@@ -97,15 +99,6 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
             }
-
-            if (url != null) {
-                if (url.contains("?")) {
-                    url += "&tag=" + getTextEnv().getTag();
-                } else {
-                    url += "?tag=" + getTextEnv().getTag();
-                }
-            }
-
             this.mUrl = url;
             LogUtil.v("yangzc", url);
             ImageLoader.getInstance().displayImage(url, mImageAware, options = builder.build(), this);
@@ -151,6 +144,9 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private RectF mRect = new RectF();
     @Override
     public void draw(Canvas canvas) {
+        if (drawable == null || !(drawable instanceof BitmapDrawable)) {
+            tryLoadFromCache();
+        }
         if (drawable != null) {
             Rect rect= getContentRect();
             if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
@@ -172,6 +168,15 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 mRect.set(mImageRect);
                 canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
             }
+        }
+    }
+
+    private void tryLoadFromCache() {
+        String key = mUrl + "_" + mImageAware.getWidth() + "x" + mImageAware.getHeight();
+        Bitmap bitmap = ImageLoader.getInstance().getMemoryCache().get(key);
+        if (bitmap != null && !bitmap.isRecycled()) {
+            drawable = new BitmapDrawable(getTextEnv().getContext()
+                    .getResources(), bitmap);
         }
     }
 
