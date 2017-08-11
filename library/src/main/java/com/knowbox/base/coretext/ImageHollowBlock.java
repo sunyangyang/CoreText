@@ -62,6 +62,11 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
 
             @Override
             public void draw(Canvas canvas) {
+                if (getTextEnv().isEditable()) {
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
+                } else {
+                    setPadding(Const.DP_1, Const.DP_1, Const.DP_1, Const.DP_1);
+                }
                 EditFace editFace = (EditFace) getEditFace();
                 editFace.getTextPaint().setTextSize(Const.DP_1 * 9 * getScale());
                 editFace.updateEnv();
@@ -69,13 +74,19 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
             }
 
             @Override
-            public int getWidth() {
-                return (int) (super.getWidth() * getScale());
+            public int getContentWidth() {
+                return (int) (super.getContentWidth() * getScale() - getPaddingLeft() - getPaddingRight());
             }
 
             @Override
-            public int getHeight() {
-                return (int) (super.getHeight() * getScale());
+            public int getContentHeight() {
+                return (int) (super.getContentHeight() * getScale() - getPaddingTop() - getPaddingBottom());
+            }
+
+            @Override
+            public void setPadding(int left, int top, int right, int bottom) {
+                super.setPadding((int) (left * getScale()), (int) (top * getScale()),
+                        (int) (right * getScale()), (int) (bottom * getScale()));
             }
         };
 
