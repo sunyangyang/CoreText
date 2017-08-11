@@ -50,6 +50,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private float mScale = 1.0f;
     private DisplayImageOptions options;
     protected Drawable drawable = null;
+    protected ImageAware mImageAware;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -100,6 +101,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 builder.showImageOnLoading(R.drawable.image_loading);
             }
             this.mUrl = url;
+            mImageAware = new ThisImageAware();
             LogUtil.v("yangzc", url);
             ImageLoader.getInstance().displayImage(url, mImageAware, options = builder.build(), this);
         } catch (JSONException e) {
@@ -144,9 +146,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private RectF mRect = new RectF();
     @Override
     public void draw(Canvas canvas) {
-        if (drawable == null || !(drawable instanceof BitmapDrawable)) {
-            tryLoadFromCache();
-        }
+        tryLoadFromCache();
         if (drawable != null) {
             Rect rect= getContentRect();
             if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
@@ -171,12 +171,18 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
         }
     }
 
+    private boolean isSuccess = false;
     private void tryLoadFromCache() {
+        if (isSuccess)
+            return;
         String key = mUrl + "_" + mImageAware.getWidth() + "x" + mImageAware.getHeight();
         Bitmap bitmap = ImageLoader.getInstance().getMemoryCache().get(key);
         if (bitmap != null && !bitmap.isRecycled()) {
+            isSuccess = true;
             drawable = new BitmapDrawable(getTextEnv().getContext()
                     .getResources(), bitmap);
+        } else {
+            isSuccess = false;
         }
     }
 
@@ -200,24 +206,29 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     private Rect mImageRect = new Rect();
     /* ImageAware实现 */
-    private ImageAware mImageAware = new ImageAware() {
+    private class ThisImageAware implements ImageAware {
+        private int width, height;
+        public ThisImageAware() {
+            this.width = ImageBlock.this.getWidth();
+            this.height = ImageBlock.this.getHeight();
+        }
 
         @Override
         public int getWidth() {
-            return (int) (ImageBlock.this.getWidth() * getScale());
+            return (int) (width * getScale());
         }
 
         @Override
         public int getHeight() {
-            return (int) (ImageBlock.this.getHeight() * getScale());
+            return (int) (height * getScale());
         }
 
         private float getScale() {
             int screenHeight = getTextEnv().getContext().getResources()
                     .getDisplayMetrics().heightPixels;
             float scale = 1.0f;
-            if (ImageBlock.this.getHeight() > screenHeight) {
-                scale = screenHeight * 1.0f/ImageBlock.this.getHeight();
+            if (height > screenHeight) {
+                scale = screenHeight * 1.0f/height;
             }
             return scale;
         }
@@ -261,6 +272,10 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             return true;
         }
     };
+
+    protected boolean isSuccess() {
+        return isSuccess;
+    }
 
     /* 回调部分 */
     @Override
