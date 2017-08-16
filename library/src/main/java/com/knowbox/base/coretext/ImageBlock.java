@@ -186,7 +186,8 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
         }
     }
 
-    private void retry() {
+    @Override
+    public void retry() {
         if (TextUtils.isEmpty(mUrl) || drawable != null) {
             return;
         }
@@ -273,7 +274,8 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
         }
     };
 
-    protected boolean isSuccess() {
+    @Override
+    public boolean isSuccess() {
         return isSuccess;
     }
 
