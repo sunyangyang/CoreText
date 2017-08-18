@@ -14,39 +14,35 @@ import com.hyena.framework.servcie.BaseService;
  */
 public interface PushService extends BaseService {
 
-    public static final String SERVICE_NAME = "com.jens.base.push";
+	String BROADCAST_PUSH = "com.jens.base.service.push";
+	String ARGS_MSG = "msg";
+
+    String SERVICE_NAME = "com.jens.base.push";
 
 	/**
 	 * 绑定
 	 */
-	public void bind(Context context, String apiKey);
+	void bind(Context context, String apiKey);
 
     /**
      * 添加设备
-     * @param userId
-     * @param channelId
+     * @param deviceId
      */
-	public void registerDevice(String userId, String channelId);
+	void registerDevice(String deviceId);
 
     /**
      * 退出登录
      */
-    public void logout();
+    void logout();
 
 	/**
 	 * 解绑
 	 */
-	public void unbind(Context context);
-	
-	/**
-	 * 收到推送消息
-	 * @param message
-	 */
-	public void onReceivePushInfo(String message);
+	void unbind(Context context);
 	
 	/**
 	 * 获得推送消息服务观察者
 	 * @return
 	 */
-	public PushServiceObserver getPushServiceObserver();
+	PushServiceObserver getPushServiceObserver();
 }

@@ -1,4 +1,4 @@
-package com.knowbox.base.samples.push;
+package com.knowbox.base.service.push;
 
 import android.app.Service;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import com.igexin.sdk.GTServiceManager;
  * Created by yangzc on 17/7/20.
  */
 
-public class PushService extends Service {
+public class GetuiPushService extends Service {
 
     @Override
     public void onCreate() {

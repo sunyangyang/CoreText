@@ -14,16 +14,16 @@ import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;
 import com.knowbox.base.samples.fragments.QuestionFragment;
-import com.knowbox.base.samples.push.PushIntentService;
-import com.knowbox.base.samples.push.PushService;
+import com.knowbox.base.service.push.GetuiPushIntentService;
+import com.knowbox.base.service.push.GetuiPushService;
 
 public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
+        PushManager.getInstance().initialize(this.getApplicationContext(), GetuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GetuiPushIntentService.class);
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.main, new SamplesVideoFragment());

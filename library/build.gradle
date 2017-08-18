@@ -30,6 +30,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.github.yangzc:AndroidSupport:v1.2.0'
     provided files('extlibs/easemobchat_2.2.3.jar')
+    compile 'com.getui:sdk:2.+'
     compile project(':coretext')
 }
 

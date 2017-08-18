@@ -1,11 +1,11 @@
-package com.knowbox.base.samples.push;
+package com.knowbox.base.service.push;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.hyena.framework.clientlog.LogUtil;
+import com.hyena.framework.utils.BaseApp;
 import com.hyena.framework.utils.MsgCenter;
-import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
@@ -13,15 +13,15 @@ import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
-import com.knowbox.base.samples.R;
+import com.knowbox.base.R;
 
 /**
  * Created by yangzc on 17/7/23.
  */
 
-public class PushIntentService extends GTIntentService {
+public class GetuiPushIntentService extends GTIntentService {
 
-    private static final String TAG = "PushIntentService";
+    private static final String TAG = "GetuiPushIntentService";
 
     @Override
     public void onReceiveServicePid(Context context, int pid) {
@@ -31,6 +31,11 @@ public class PushIntentService extends GTIntentService {
     @Override
     public void onReceiveClientId(Context context, String clientid) {
         LogUtil.v(TAG, "onReceiveClientId, clientid: " + clientid);
+        try {
+            PushService pushService = (PushService) BaseApp.getAppContext()
+                    .getSystemService(PushService.SERVICE_NAME);
+            pushService.registerDevice(clientid);
+        }catch (Exception e){}
     }
 
     @Override
@@ -52,9 +57,11 @@ public class PushIntentService extends GTIntentService {
         } else {
             String data = new String(payload);
             LogUtil.d(TAG, "receiver payload = " + data);
-            Intent intent = new Intent("action.push");
-            intent.putExtra("data", data);
+
+            Intent intent = new Intent(PushService.BROADCAST_PUSH);
+            intent.putExtra(PushService.ARGS_MSG, data);
             MsgCenter.sendGlobalBroadcast(intent);
+
         }
         LogUtil.d(TAG, "----------------------------------------------------------------------------------------------");
     }

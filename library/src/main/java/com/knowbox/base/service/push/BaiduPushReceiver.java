@@ -3,15 +3,16 @@
  */
 package com.knowbox.base.service.push;
 
-import java.util.List;
-
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.baidu.android.pushservice.PushMessageReceiver;
-import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.BaseApp;
+import com.hyena.framework.utils.MsgCenter;
+
+import java.util.List;
 
 /*
  * Push消息处理receiver。请编写您需要的回调函数， 一般来说： onBind是必须的，用来处理startWork返回值；
@@ -72,7 +73,7 @@ public class BaiduPushReceiver extends PushMessageReceiver {
         try {
             PushService pushService = (PushService) BaseApp.getAppContext()
                     .getSystemService(PushService.SERVICE_NAME);
-            pushService.registerDevice(userId, channelId);
+            pushService.registerDevice(channelId);
         }catch (Exception e){}
         // 绑定成功，设置已绑定flag，可以有效的减少不必要的绑定请求
         if (errorCode == 0) {
@@ -185,34 +186,12 @@ public class BaiduPushReceiver extends PushMessageReceiver {
 
     /**
      * 收到推送消息
-     * @param pushInfo
-     */
-    private void notifyMsg(String message) {
-        try {
-        	//由于可能在应用尚未启动时受到消息，所以可能推送服务尚未注册，故收不到消息
-        	showMsgInStatusBar(message);
-        	if (BaseApp.getAppContext() == null) {
-				return;
-			}
-        	
-        	//通知上层做推送处理 
-            PushService pushService = (PushService) BaseApp.getAppContext()
-                    .getSystemService(PushService.SERVICE_NAME);
-            if (pushService == null) {
-				return;
-			}
-            
-            pushService.onReceivePushInfo(message);
-        } catch (Exception e) {
-            LogUtil.e(TAG, e);
-        }
-    }
-
-    /**
-     * 显示通知
      * @param message
      */
-    public void showMsgInStatusBar(String message) {
-    	
+    private void notifyMsg(String message) {
+        Intent intent = new Intent(PushService.BROADCAST_PUSH);
+        intent.putExtra(PushService.ARGS_MSG, message);
+        MsgCenter.sendGlobalBroadcast(intent);
     }
+
 }
