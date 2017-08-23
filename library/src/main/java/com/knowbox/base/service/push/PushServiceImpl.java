@@ -9,11 +9,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
 
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
 import com.hyena.framework.datacache.BaseObject;
 import com.hyena.framework.datacache.DataAcquirer;
+import com.hyena.framework.utils.BaseApp;
 import com.hyena.framework.utils.MsgCenter;
+import com.igexin.sdk.PushManager;
 
 /**
  * 推送服务实现类
@@ -63,7 +63,8 @@ public abstract class PushServiceImpl implements PushService {
 	@Override
 	public void bind(Context context, String apiKey) {
 		try {
-			PushManager.startWork(context, PushConstants.LOGIN_TYPE_API_KEY, apiKey);
+			PushManager.getInstance().initialize(BaseApp.getAppContext(), GetuiPushService.class);
+			PushManager.getInstance().registerPushIntentService(BaseApp.getAppContext(), GetuiPushIntentService.class);
 		} catch(Throwable e){}
 	}
 
@@ -96,7 +97,6 @@ public abstract class PushServiceImpl implements PushService {
 	}
 
 	public void unbind(Context context) {
-		PushManager.stopWork(context);
 	}
 
 	@Override
