@@ -14,7 +14,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <service android:name=".service.push.GetuiPushIntentService" />
-        <service android:name=".service.push.GetuiPushService" />
+        <service
+            android:name=".service.push.GetuiPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" />
         <!-- 播放语音的服务 -->
         <service android:name="com.hyena.framework.audio.MediaService" />
     </application>
