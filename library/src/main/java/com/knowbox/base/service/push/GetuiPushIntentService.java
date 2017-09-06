@@ -56,10 +56,12 @@ public class GetuiPushIntentService extends GTIntentService {
             LogUtil.e(TAG, "receiver payload = null");
         } else {
             String data = new String(payload);
+            LogUtil.d(TAG, "receiver payload package name : " + getPackageName());
             LogUtil.d(TAG, "receiver payload = " + data);
 
             Intent intent = new Intent(PushService.BROADCAST_PUSH);
             intent.putExtra(PushService.ARGS_MSG, data);
+            intent.setPackage(getPackageName());
             MsgCenter.sendGlobalBroadcast(intent);
 
         }
