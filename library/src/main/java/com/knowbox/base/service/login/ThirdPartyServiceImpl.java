@@ -21,12 +21,12 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
 
     @Override
     public void loginWX(Context context, ThirdPartyLoginListener listener) {
-        authorize(new Wechat(context), listener);
+        authorize(new Wechat(), listener);
     }
 
     @Override
     public void loginQQ(Context context, ThirdPartyLoginListener listener) {
-        authorize(new QZone(context), listener);
+        authorize(new QZone(), listener);
     }
 
     /**
@@ -35,7 +35,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
      * @param listener
      */
     private void authorize(Platform plat, final ThirdPartyLoginListener listener) {
-        if(plat.isValid()) {
+        if(plat.isAuthValid()) {
             String userId = plat.getDb().getUserId();
             if (!TextUtils.isEmpty(userId)) {
                 return;
