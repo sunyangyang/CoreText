@@ -25,6 +25,9 @@ import com.hyena.framework.servcie.BaseServiceManager;
 import com.hyena.framework.servcie.ServiceProvider;
 import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.coretext.DefaultBlockBuilder;
+import com.knowbox.base.service.log.LogService;
+import com.knowbox.base.service.log.LogServiceImpl;
+import com.knowbox.base.service.log.db.LogTable;
 
 /**
  * Created by yangzc on 17/2/15.
@@ -51,9 +54,10 @@ public class App extends BaseApp {
                 return UrlTask.createUrlTask(downloadItem);
             }
         });
-        DataBaseManager.getDataBaseManager().registDataBase(new BaseDataBaseHelper(this, "base", 1) {
+        DataBaseManager.getDataBaseManager().registDataBase(new BaseDataBaseHelper(this, "base", 2) {
             @Override
             public void initTablesImpl(DataBaseHelper dataBaseHelper) {
+                addTable(LogTable.class, new LogTable(dataBaseHelper));
             }
         });
         CYBlockProvider.getBlockProvider().registerBlockBuilder(new DefaultBlockBuilder());
@@ -68,6 +72,12 @@ public class App extends BaseApp {
         public ServiceManager() {
             super();
             initFrameServices();
+            registService(LogService.SERVICE_NAME, new LogServiceImpl() {
+                @Override
+                public String getRecordLogUrl() {
+                    return "http://shark.bpcoder.com:8866/data/data/dot-log";
+                }
+            });
         }
     }
 

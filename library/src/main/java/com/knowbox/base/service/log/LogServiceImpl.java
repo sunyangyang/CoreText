@@ -6,13 +6,14 @@ import com.hyena.framework.bean.KeyValuePair;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.config.FrameworkConfig;
 import com.hyena.framework.database.DataBaseManager;
-import com.hyena.framework.datacache.BaseObject;
 import com.hyena.framework.datacache.DataAcquirer;
 import com.hyena.framework.network.NetworkProvider;
 import com.hyena.framework.network.NetworkSensor;
+import com.hyena.framework.security.MD5Util;
 import com.hyena.framework.servcie.action.IOHandlerService;
 import com.hyena.framework.utils.AppPreferences;
 import com.hyena.framework.utils.BaseApp;
+import com.knowbox.base.online.OnlineLogInfo;
 import com.knowbox.base.service.log.db.LogItem;
 import com.knowbox.base.service.log.db.LogTable;
 
@@ -131,6 +132,9 @@ public abstract class LogServiceImpl implements LogService {
             int logCount = table.getCount(null, null);
             debug("Offline log count: " + logCount);
             long lastTs = AppPreferences.getLongValue("LOG_LAST_TS");
+            if (lastTs <= 0) {
+                lastTs = System.currentTimeMillis();
+            }
             if (logCount > mLogCount || (System.currentTimeMillis() - lastTs) > mInterval) {//如果数据大于100条则开始同步离线日志
                 List<LogItem> items = table.rawQuery("select * from log order by " + BaseColumns._ID + " asc limit " + mLogCount);
                 List<LogItem> uploadItem = new ArrayList<LogItem>();
@@ -182,15 +186,46 @@ public abstract class LogServiceImpl implements LogService {
      * @return 是否成功
      */
     public boolean sendData(List<String> logs) {
+        debug("sendData ...... ");
         JSONArray jsonItem = new JSONArray();
         for (int i = 0; i < logs.size(); i++) {
             jsonItem.put(logs.get(i));
         }
         ArrayList<KeyValuePair> params = new ArrayList<KeyValuePair>();
+        String timeTime = System.currentTimeMillis() + "";
         params.add(new KeyValuePair("data", jsonItem.toString()));
-        BaseObject result = new DataAcquirer<BaseObject>()
-                .post(getRecordLogUrl(), params, new BaseObject());
+        params.add(new KeyValuePair("timestamp", timeTime));
+        params.add(new KeyValuePair("code", MD5Util.encode(jsonItem.toString() + timeTime + "4e0c58ffb5d0996eac59e5a768bc1bc1")));
+        OnlineLogInfo result = new DataAcquirer<OnlineLogInfo>()
+                .post(getRecordLogUrl(), params, new OnlineLogInfo());
+        if (result.isAvailable()) {
+            if (result.mNumber > 0)
+                this.mLogCount = result.mNumber;
+            if (result.mSize > 0)
+                this.mBufferSize = result.mSize * 1024;
+            if (result.mInterval > 0)
+                this.mInterval = result.mInterval * 1000;
+            scheduleNext();
+        }
         return result.isAvailable();
+    }
+
+    /**
+     * 开启下次检查
+     */
+    private void scheduleNext() {
+        IOHandlerService service = (IOHandlerService) BaseApp.getAppContext()
+                .getSystemService(IOHandlerService.SERVICE_NAME_IO);
+        debug("scheduleNext, interval:" + mInterval);
+        if (service == null)
+            return;
+        service.postDelay(new Runnable() {
+            @Override
+            public void run() {
+                debug("execute schedule");
+                checkOfflineLog();
+            }
+        }, mInterval + 1000);
     }
 
     //================处理在线日志部分================
