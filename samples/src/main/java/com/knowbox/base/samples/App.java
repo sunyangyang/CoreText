@@ -14,7 +14,6 @@ import com.hyena.framework.config.FrameworkConfig;
 import com.hyena.framework.database.BaseDataBaseHelper;
 import com.hyena.framework.database.DataBaseHelper;
 import com.hyena.framework.database.DataBaseManager;
-import com.hyena.framework.download.DownloadManager;
 import com.hyena.framework.download.Task;
 import com.hyena.framework.download.db.DownloadItem;
 import com.hyena.framework.download.task.TaskFactory;
@@ -25,8 +24,9 @@ import com.hyena.framework.servcie.BaseServiceManager;
 import com.hyena.framework.servcie.ServiceProvider;
 import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.coretext.DefaultBlockBuilder;
+import com.knowbox.base.service.log.BoxLogServerImpl;
+import com.knowbox.base.service.log.BoxLogService;
 import com.knowbox.base.service.log.LogService;
-import com.knowbox.base.service.log.LogServiceImpl;
 import com.knowbox.base.service.log.db.LogTable;
 
 /**
@@ -72,10 +72,26 @@ public class App extends BaseApp {
         public ServiceManager() {
             super();
             initFrameServices();
-            registService(LogService.SERVICE_NAME, new LogServiceImpl() {
+            registService(BoxLogService.SERVICE_NAME, new BoxLogServerImpl() {
+
                 @Override
-                public String getRecordLogUrl() {
-                    return "http://shark.bpcoder.com:8866/data/data/dot-log";
+                public String getUserId() {
+                    return null;
+                }
+
+                @Override
+                public String getProductId() {
+                    return null;
+                }
+
+                @Override
+                public String getAppSource() {
+                    return null;
+                }
+
+                @Override
+                public String getAppChannel() {
+                    return null;
                 }
             });
         }

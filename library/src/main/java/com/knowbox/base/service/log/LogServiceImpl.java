@@ -2,22 +2,16 @@ package com.knowbox.base.service.log;
 
 import android.provider.BaseColumns;
 
-import com.hyena.framework.bean.KeyValuePair;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.config.FrameworkConfig;
 import com.hyena.framework.database.DataBaseManager;
-import com.hyena.framework.datacache.DataAcquirer;
 import com.hyena.framework.network.NetworkProvider;
 import com.hyena.framework.network.NetworkSensor;
-import com.hyena.framework.security.MD5Util;
 import com.hyena.framework.servcie.action.IOHandlerService;
 import com.hyena.framework.utils.AppPreferences;
 import com.hyena.framework.utils.BaseApp;
-import com.knowbox.base.online.OnlineLogInfo;
 import com.knowbox.base.service.log.db.LogItem;
 import com.knowbox.base.service.log.db.LogTable;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +27,9 @@ public abstract class LogServiceImpl implements LogService {
     private LinkedBlockingDeque<String> mNetLogQueue = new LinkedBlockingDeque<String>();
 
     private LogThread mLogThread;
-    private int mLogCount = 100;
-    private long mBufferSize = 2 * 1024 * 1024;
-    private long mInterval = 24 * 3600 * 1000;
+    protected int mLogCount = 100;
+    protected long mBufferSize = 2 * 1024 * 1024;
+    protected long mInterval = 24 * 3600 * 1000;
 
     private volatile boolean mChecking = false;
 
@@ -185,35 +179,12 @@ public abstract class LogServiceImpl implements LogService {
      * @param logs 待发送数据
      * @return 是否成功
      */
-    public boolean sendData(List<String> logs) {
-        debug("sendData ...... ");
-        JSONArray jsonItem = new JSONArray();
-        for (int i = 0; i < logs.size(); i++) {
-            jsonItem.put(logs.get(i));
-        }
-        ArrayList<KeyValuePair> params = new ArrayList<KeyValuePair>();
-        String timeTime = System.currentTimeMillis() + "";
-        params.add(new KeyValuePair("data", jsonItem.toString()));
-        params.add(new KeyValuePair("timestamp", timeTime));
-        params.add(new KeyValuePair("code", MD5Util.encode(jsonItem.toString() + timeTime + "4e0c58ffb5d0996eac59e5a768bc1bc1")));
-        OnlineLogInfo result = new DataAcquirer<OnlineLogInfo>()
-                .post(getRecordLogUrl(), params, new OnlineLogInfo());
-        if (result.isAvailable()) {
-            if (result.mNumber > 0)
-                this.mLogCount = result.mNumber;
-            if (result.mSize > 0)
-                this.mBufferSize = result.mSize * 1024;
-            if (result.mInterval > 0)
-                this.mInterval = result.mInterval * 1000;
-            scheduleNext();
-        }
-        return result.isAvailable();
-    }
+    public abstract boolean sendData(List<String> logs);
 
     /**
      * 开启下次检查
      */
-    private void scheduleNext() {
+    protected void scheduleNext() {
         IOHandlerService service = (IOHandlerService) BaseApp.getAppContext()
                 .getSystemService(IOHandlerService.SERVICE_NAME_IO);
         debug("scheduleNext, interval:" + mInterval);
@@ -271,7 +242,7 @@ public abstract class LogServiceImpl implements LogService {
         }
     }
 
-    private void debug(String debug) {
+    protected void debug(String debug) {
         if (FrameworkConfig.getConfig().isDebug())
             LogUtil.v(TAG, debug);
     }
