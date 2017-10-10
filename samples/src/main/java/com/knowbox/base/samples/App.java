@@ -76,22 +76,22 @@ public class App extends BaseApp {
 
                 @Override
                 public String getUserId() {
-                    return null;
+                    return "12818406";
                 }
 
                 @Override
                 public String getProductId() {
-                    return null;
+                    return "2";
                 }
 
                 @Override
                 public String getAppSource() {
-                    return null;
+                    return "androidRCStudent";
                 }
 
                 @Override
                 public String getAppChannel() {
-                    return null;
+                    return "knowbox";
                 }
             });
         }

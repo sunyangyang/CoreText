@@ -3,6 +3,7 @@ package com.knowbox.base.service.log;
 import android.os.Build;
 
 import com.hyena.framework.bean.KeyValuePair;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.datacache.DataAcquirer;
 import com.hyena.framework.security.MD5Util;
 import com.hyena.framework.utils.BaseApp;
@@ -54,6 +55,7 @@ public abstract class BoxLogServerImpl extends LogServiceImpl implements BoxLogS
         debug("sendData ...... ");
         JSONArray jsonItem = new JSONArray();
         for (int i = 0; i < logs.size(); i++) {
+            debug("logContent: " + logs.get(i));
             jsonItem.put(logs.get(i));
         }
         ArrayList<KeyValuePair> params = new ArrayList<KeyValuePair>();
