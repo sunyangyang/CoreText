@@ -45,7 +45,8 @@ public class LatexBlock extends CYLatexBlock {
             return new FillInAtom(args[1], args[2], args[3]) {
                 @Override
                 public Box createFillInBox(TeXEnvironment env, int index, String clazz, Text ch) {
-                    return new BlankBox((TextEnv) env.getTag(), index, clazz, ch);
+                    LatexTag tag = (LatexTag) env.getTag();
+                    return new BlankBox(tag.mLatexBlock, tag.mTextEnv, index, clazz, ch);
                 }
             };
         }
@@ -54,8 +55,10 @@ public class LatexBlock extends CYLatexBlock {
 
     class BlankBox extends FillInBox {
 
-        public BlankBox(TextEnv textEnv, int tabId, String clazz, Text text) {
+        private CYLatexBlock mLatexBlock;
+        public BlankBox(CYLatexBlock latexBlock, TextEnv textEnv, int tabId, String clazz, Text text) {
             super(textEnv, tabId, clazz, text);
+            this.mLatexBlock = latexBlock;
             //latex size均为express
             if (textEnv.isEditable()) {
                 ((EditFace) getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
@@ -86,10 +89,12 @@ public class LatexBlock extends CYLatexBlock {
         private Rect mRect = new Rect();
         @Override
         public Rect getBlockRect() {
-            float scale =getScale();
-            RectF rect = getVisibleRect();
-            mRect.set((int)(rect.left * scale) + getX(), (int)(rect.top * scale) + getLineY(),
-                    (int)(rect.right * scale) + getX(), (int)(rect.bottom * scale) + getLineY());
+            RectF rectF = getVisibleRect();
+            float scale = getScale();
+            int offsetX = mLatexBlock.getX();
+            int offsetY = mLatexBlock.getLineY();
+            mRect.set((int)(rectF.left * scale) + offsetX, (int)(rectF.top * scale) + offsetY,
+                    (int)(rectF.right * scale) + offsetX, (int)(rectF.bottom * scale) + offsetY);
             return mRect;
         }
 
