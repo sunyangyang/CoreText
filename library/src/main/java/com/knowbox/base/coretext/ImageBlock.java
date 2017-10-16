@@ -188,7 +188,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     @Override
     public void retry() {
-        if (TextUtils.isEmpty(mUrl) || drawable != null) {
+        if (TextUtils.isEmpty(mUrl) || drawable != null || !(drawable instanceof BitmapDrawable)) {
             return;
         }
         ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);

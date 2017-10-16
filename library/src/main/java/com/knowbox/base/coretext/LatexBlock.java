@@ -1,5 +1,7 @@
 package com.knowbox.base.coretext;
 
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
@@ -79,6 +81,16 @@ public class LatexBlock extends CYLatexBlock {
             EditFace editFace = new EditFace(getTextEnv(), this);
             editFace.setClass("fillin");
             return editFace;
+        }
+
+        private Rect mRect = new Rect();
+        @Override
+        public Rect getBlockRect() {
+            float scale =getScale();
+            RectF rect = getVisibleRect();
+            mRect.set((int)(rect.left * scale) + getX(), (int)(rect.top * scale) + getLineY(),
+                    (int)(rect.right * scale) + getX(), (int)(rect.bottom * scale) + getLineY());
+            return mRect;
         }
 
         @Override
