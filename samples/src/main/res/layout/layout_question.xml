@@ -153,7 +153,7 @@
         <com.knowbox.base.coretext.QuestionTextView
             android:id="@+id/qtv_question"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </ScrollView>
 
 </RelativeLayout>
