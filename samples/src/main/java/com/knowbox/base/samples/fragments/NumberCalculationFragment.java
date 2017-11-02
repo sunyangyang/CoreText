@@ -14,9 +14,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.hyena.coretext.CYSinglePageView;
+import com.hyena.coretext.builder.IBlockMaker;
 import com.hyena.coretext.event.CYFocusEventListener;
+import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.app.adapter.SingleTypeAdapter;
+import com.knowbox.base.coretext.MatchBlock;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.samples.R;
 import com.knowbox.base.utils.DialogUtils;
@@ -115,7 +119,38 @@ public class NumberCalculationFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
             MyViewHolder holder = (MyViewHolder) viewHolder;
-            holder.textView.getBuilder(mList.get(i).question).setEditable(true).setDebug(false).build();
+            CYSinglePageView.Builder builder = holder.textView.getBuilder(holder.textView, i + "", mList.get(i).question);
+            builder.setEditable(true).setDebug(false).build();
+//            builder.setEditableValue(MatchBlock.MATCH_VALUE_ID, "{\n" +
+//                    "    \"rightAnswer\": {\n" +
+//                    "        \"1\": [\n" +
+//                    "            1\n" +
+//                    "        ],\n" +
+//                    "        \"2\": [\n" +
+//                    "            2\n" +
+//                    "        ],\n" +
+//                    "        \"3\": [\n" +
+//                    "            3\n" +
+//                    "        ],\n" +
+//                    "        \"4\": [\n" +
+//                    "            4\n" +
+//                    "        ]\n" +
+//                    "    },\n" +
+//                    "    \"userAnswer\": {\n" +
+//                    "        \"1\": [\n" +
+//                    "            2\n" +
+//                    "        ],\n" +
+//                    "        \"2\": [\n" +
+//                    "            1\n" +
+//                    "        ],\n" +
+//                    "        \"3\": [\n" +
+//                    "            3\n" +
+//                    "        ],\n" +
+//                    "        \"4\": [\n" +
+//                    "            4\n" +
+//                    "        ]\n" +
+//                    "    }\n" +
+//                    "}");
             holder.textView.clearFocus();
             holder.itemView.setTag(i);
             holder.textView.setFocusEventListener(mListener);

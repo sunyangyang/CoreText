@@ -100,11 +100,9 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
 //                    }
 //
 ////                data = data.replaceAll("\\\\", "");
-////                    Log.e("XXXXX", "data111 = " + data);
 //                    CYBlock block1 = maker1.getBlock(textEnv, "{" + data1 + "}");
 //                    if (block != null) {
 //                        attributedString.replaceBlock(start, end, block);
-//                        Log.e("XXXXX", "start = " + start + ", end = " + end);
 //                    }
 //                }
 //            } catch (Exception e) {
