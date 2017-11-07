@@ -64,6 +64,11 @@ public class MatchCell {
 
     }
 
+    /**
+     *
+     * @param text
+     * @return Point的X为宽度，Y为高度
+     */
     public Point initCellText(String text) {
         if (mTextEnv == null) {
             mTextEnv = new TableTextEnv(mMatchBlock.getTextEnv());
