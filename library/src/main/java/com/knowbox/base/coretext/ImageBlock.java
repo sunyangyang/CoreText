@@ -43,8 +43,10 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private String size;
 
     private static final int DP_38 = Const.DP_1 * 38;
+    private static final int DP_44 = Const.DP_1 * 44;
     private static final int DP_199 = Const.DP_1 * 199;
     private static final int DP_79 = Const.DP_1 * 79;
+    private static final int DP_105 = Const.DP_1 * 105;
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
@@ -93,9 +95,21 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
-            } else {
-                setWidth(DP_199);
+            } else if ("small_match_image".equals(size) || "small_category_image".equals(size)) {
+                setWidth(DP_44);
+                setHeight(DP_44);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
+            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size)) {
+                setWidth(DP_105);
                 setHeight(DP_79);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
+            } else {
+                setWidth((int) (width * mScale / 2));
+                setHeight((int) (height * mScale / 2));
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
@@ -115,19 +129,22 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     @Override
     public int getContentWidth() {
+        int width = super.getContentWidth();
         if ("big_image".equals(size)) {
-            return getTextEnv().getSuggestedPageWidth();
+            width = getTextEnv().getSuggestedPageWidth();
+        } else if ("mid_image".equals(size)) {
+            width = getTextEnv().getSuggestedPageWidth() / 2;
+            if (mWidth > width) {
+                width = getTextEnv().getSuggestedPageWidth();
+            }
         }
-        return super.getContentWidth();
+        mScale = width * 1.0f/mWidth;
+        return width;
     }
 
     @Override
     public int getContentHeight() {
-        if ("big_image".equals(size)) {
-            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/mWidth;
-            return (int) (mHeight * mScale);
-        }
-        return super.getContentHeight();
+        return (int) (mHeight * mScale);
     }
 
     @Override
