@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -43,8 +44,10 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private String size;
 
     private static final int DP_38 = Const.DP_1 * 38;
+    private static final int DP_44 = Const.DP_1 * 44;
     private static final int DP_199 = Const.DP_1 * 199;
     private static final int DP_79 = Const.DP_1 * 79;
+    private static final int DP_105 = Const.DP_1 * 105;
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
@@ -90,6 +93,18 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 setWidth(DP_38);
                 setHeight(DP_38);
                 setPadding(Const.DP_1 * 2, 0, Const.DP_1 * 2, 0);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
+            } else if ("small_match_image".equals(size) || "small_category_image".equals(size)) {
+                setWidth(DP_44);
+                setHeight(DP_44);
+                builder.showImageOnFail(R.drawable.block_image_fail_small);
+                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
+                builder.showImageOnLoading(R.drawable.image_loading);
+            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size)) {
+                setWidth(DP_105);
+                setHeight(DP_79);
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);

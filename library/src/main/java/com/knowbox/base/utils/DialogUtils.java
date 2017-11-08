@@ -17,7 +17,7 @@ import com.knowbox.base.app.BoxMessageFragment;
  * @author yangzc
  */
 public class DialogUtils {
-
+	public static int NUM = 0;
 	/**
 	 * 创建消息对话框
 	 * 
