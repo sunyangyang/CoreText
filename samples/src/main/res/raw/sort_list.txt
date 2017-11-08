@@ -1,0 +1,180 @@
+{
+    "questionList": [
+        {
+            "questionType": 12,
+            "shortQuestion": " ",
+            "questionId": "11111111111",
+            "questionItem": [
+                {
+                    "item": "12",
+                    "isRight": "N",
+                    "code": "A"
+                },
+                {
+                    "item": "13",
+                    "isRight": "N",
+                    "code": "B"
+                },
+                {
+                    "item": "14",
+                    "isRight": "N",
+                    "code": "C"
+                },
+                {
+                    "item": "21",
+                    "isRight": "N",
+                    "code": "D"
+                },
+                {
+                    "item": "22",
+                    "isRight": "N",
+                    "code": "E"
+                },
+                {
+                    "item": "23",
+                    "isRight": "N",
+                    "code": "F"
+                }
+            ],
+            "subject": 0,
+            "score": "1",
+            "isAdapt": 0,
+            "assistType": "1",
+            "sectionName": "",
+            "question": "#{\"type\":\"para_begin\",\"style\":\"math_category\"}##{\"type\":\"drag\",\"drag\":[{\"id\":1,\"content\":\"<21\"},{\"id\":2,\"content\":\">21\"}]}##{\"type\":\"para_end\"}#",
+            "rightAnswer": "[{ \"drop_id\" : 1, \"result\" : \"A|B|C\"]},{ \"drop_id\" : 2, \"result\" : \"E|F\"}]"
+        },
+        {
+            "questionType": 12,
+            "shortQuestion": " ",
+            "questionId": "11111111111",
+            "questionItem": [
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{1}{100}\"}#",
+                    "isRight": "N",
+                    "code": "A"
+                },
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{2}{100}\"}#",
+                    "isRight": "N",
+                    "code": "B"
+                },
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{3}{100}\"}#",
+                    "isRight": "N",
+                    "code": "C"
+                },
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{4}{100}\"}#",
+                    "isRight": "N",
+                    "code": "D"
+                },
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{7}{100}\"}#",
+                    "isRight": "N",
+                    "code": "E"
+                },
+                {
+                    "item": "#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{100}\"}#",
+                    "isRight": "N",
+                    "code": "F"
+                }
+            ],
+            "subject": 0,
+            "score": "1",
+            "isAdapt": 0,
+            "assistType": "1",
+            "sectionName": "",
+            "question": "#{\"type\":\"para_begin\",\"style\":\"math_category\"}##{\"type\":\"drag\",\"drag\":[{\"id\":1,\"content\":\"<0.04\"},{\"id\":2,\"content\":\">0.05\"}]}##{\"type\":\"para_end\"}#",
+            "rightAnswer": "[{ \"drop_id\" : 1, \"result\" : \"A|B|C\"]},{ \"drop_id\" : 2, \"result\" : \"E|F\"}]"
+        },
+        {
+            "questionType": 12,
+            "shortQuestion": " ",
+            "questionId": "11111111111",
+            "questionItem": [
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FuZGk1Dhhwgy_J0gEZT4d_NqJIEl\",\"size\":\"big_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "A"
+                },
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FmoL-kp7m1hxe65mS9WTw4BIX9sg\",\"size\":\"big_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "B"
+                },
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FsJ2RSD7VTZ9P4Vrs6-8D4mnZkp3\",\"size\":\"big_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "C"
+                },
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FsxDkpV1lsMJAWdlCewg-f6XeZDr\",\"size\":\"big_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "D"
+                },
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FnFzXdmxr6jsM1oGKH2oLEFP5M1X\",\"size\":\"big_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "E"
+                },
+                {
+                    "item": "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FrQY7k9jDZJZ0MdHxnWs4PwK1EnK\",\"size\":\"big_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "F"
+                }
+            ],
+            "subject": 0,
+            "score": "1",
+            "isAdapt": 0,
+            "assistType": "1",
+            "sectionName": "",
+            "question": "#{\"type\":\"para_begin\",\"style\":\"math_category\"}##{\"type\":\"drag\",\"drag\":[{\"id\":1,\"content\":\"111\"},{\"id\":2,\"content\":\"121\"}]}##{\"type\":\"para_end\"}#",
+            "rightAnswer": "[{ \"drop_id\" : 1, \"result\" : \"A|B|C\"]},{ \"drop_id\" : 2, \"result\" : \"E|F\"}]"
+        },
+        {
+            "questionType": 12,
+            "shortQuestion": " ",
+            "questionId": "11111111111",
+            "questionItem": [
+                {
+                    "item": "1#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FqitmdYW8ib4C1pnjobm699J3RBC\",\"size\":\"small_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "A"
+                },
+                {
+                    "item": "2#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/quiz/images/201605/230/dc77b491.png\",\"size\":\"small_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "B"
+                },
+                {
+                    "item": "3#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/quiz/images/201605/230/8261cbce.png\",\"size\":\"small_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "C"
+                },
+                {
+                    "item": "4#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/quiz/images/201605/230/4d0bff50.png\",\"size\":\"small_image\",\"id\":1}#",
+                    "isRight": "N",
+                    "code": "D"
+                },
+                {
+                    "item": "5#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FjaXQLhydBaDz-bEYxKLVnElf7LC\",\"size\":\"small_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "E"
+                },
+                {
+                    "item": "6#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FuR74wG9UfEZ1EAAh9E2uaTMnWtB\",\"size\":\"small_image\",\"id\":1}# ",
+                    "isRight": "N",
+                    "code": "F"
+                }
+            ],
+            "subject": 0,
+            "score": "1",
+            "isAdapt": 0,
+            "assistType": "1",
+            "sectionName": "",
+            "question": "#{\"type\":\"para_begin\",\"style\":\"math_category\"}##{\"type\":\"drag\",\"drag\":[{\"id\":1,\"content\":\"1231\"},{\"id\":2,\"content\":\"124124\"}]}##{\"type\":\"para_end\"}#",
+            "rightAnswer": "[{ \"drop_id\" : 1, \"result\" : \"A|B|C\"]},{ \"drop_id\" : 2, \"result\" : \"E|F\"}]"
+        }
+    ]
+}

@@ -14,6 +14,7 @@ import com.hyena.framework.servcie.ServiceProvider;
 import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;
+import com.knowbox.base.samples.fragments.NumberCalculationFragment;
 import com.knowbox.base.samples.fragments.QuestionFragment;
 import com.knowbox.base.service.log.BoxLogService;
 import com.knowbox.base.service.log.LogService;
@@ -38,7 +39,8 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.main, new SamplesVideoFragment());
 //        ft.replace(R.id.main, new QuestionListFragment());
-        ft.replace(R.id.main, new QuestionFragment());
+//        ft.replace(R.id.main, new QuestionFragment());
+        ft.replace(R.id.main, new NumberCalculationFragment());
         ft.commitAllowingStateLoss();
 
         BoxLogService logService = (BoxLogService) getSystemService(LogService.SERVICE_NAME);

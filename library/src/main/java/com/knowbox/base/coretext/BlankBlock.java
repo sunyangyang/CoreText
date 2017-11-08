@@ -5,6 +5,7 @@
 package com.knowbox.base.coretext;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
@@ -48,6 +49,12 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 4;
             } else if ("big_img_blank".equals(getSize())) {
                 mTextLength = 8;
+            } else if ("number".equals(getSize())) {
+                mTextLength = 2;
+            } else if ("right_number".equals(getSize())) {
+                mTextLength = 3;
+            } else if ("flag".equals(getSize())) {
+                mTextLength = 1;
             } else {
                 mTextLength = 20;
             }
@@ -60,6 +67,12 @@ public class BlankBlock extends CYEditBlock {
                 } else if ("express".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
+                } else if ("number".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 20);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 20);
+                } else if ("flag".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 14);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 14);
                 }
                 ((EditFace)getEditFace()).updateEnv();
                 setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
@@ -147,8 +160,17 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 130;
                 this.mHeight = 60;
             } else if ("big_img_blank".equals(size)) {
-                this.mWidth = 160;
+                this.mWidth = Const.DP_1 * 20;
                 this.mHeight = 60;
+            } else if ("right_number".equals(size)) {
+                this.mWidth = Const.DP_1 * 27;//padding 为1dp
+                this.mHeight = Const.DP_1 * 18;
+            } else if ("number".equals(size)) {
+                this.mWidth = Const.DP_1 * 18;//padding 为1dp
+                this.mHeight = Const.DP_1 * 18;
+            } else if ("flag".equals(size)) {
+                this.mWidth = Const.DP_1 * 12;//padding 为1dp
+                this.mHeight = Const.DP_1 * 12;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
