@@ -109,8 +109,8 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
             } else {
-                setWidth(DP_199);
-                setHeight(DP_79);
+                setWidth((int) (width * mScale / 2));
+                setHeight((int) (height * mScale / 2));
                 builder.showImageOnFail(R.drawable.block_image_fail_small);
                 builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
                 builder.showImageOnLoading(R.drawable.image_loading);
@@ -130,19 +130,22 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     @Override
     public int getContentWidth() {
+        int width = super.getContentWidth();
         if ("big_image".equals(size)) {
-            return getTextEnv().getSuggestedPageWidth();
+            width = getTextEnv().getSuggestedPageWidth();
+        } else if ("mid_image".equals(size)) {
+            width = getTextEnv().getSuggestedPageWidth() / 2;
+            if (mWidth > width) {
+                width = getTextEnv().getSuggestedPageWidth();
+            }
         }
-        return super.getContentWidth();
+        mScale = width * 1.0f/mWidth;
+        return width;
     }
 
     @Override
     public int getContentHeight() {
-        if ("big_image".equals(size)) {
-            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/mWidth;
-            return (int) (mHeight * mScale);
-        }
-        return super.getContentHeight();
+        return (int) (mHeight * mScale);
     }
 
     @Override

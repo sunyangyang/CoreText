@@ -134,6 +134,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         initVideoView(context);
     }
 
+    public void setEnableTextureView(boolean enable) {
+        this.enableTextureView = enable;
+    }
+
     // REMOVED: onMeasure
     // REMOVED: onInitializeAccessibilityEvent
     // REMOVED: onInitializeAccessibilityNodeInfo
