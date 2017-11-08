@@ -6,3 +6,4 @@ build/
 .gradle/
 .DS_Store
 shells/moveaar.sh
+shells/sunMoveaar.sh
