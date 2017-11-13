@@ -43,6 +43,8 @@ public class MatchCell {
     private int mFillColor;
     private int mFillLightColor;
     private int mCorner = Const.DP_1 * 7;
+    private float mOffsetX;
+    private float mOffsetY;
 
     public MatchCell(final MatchBlock matchBlock, int maxWidth, int id, boolean multiSelect, boolean isLeft,
                      Paint borderPaint, Paint fillPaint,
@@ -166,15 +168,15 @@ public class MatchCell {
         return mIsLeft;
     }
 
-    public boolean findCell(MatchCell cell) {
-        if (cell == null) {
-            return false;
-        }
-        if (cell.getId() == mId && cell.getIsLeft() == mIsLeft) {
-            return true;
-        }
-        return false;
-    }
+//    public boolean findCell(MatchCell cell) {
+//        if (cell == null) {
+//            return false;
+//        }
+//        if (cell.getId() == mId && cell.getIsLeft() == mIsLeft) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public boolean findFocusCell(MatchCell cell) {
         if (cell == null) {
@@ -242,8 +244,10 @@ public class MatchCell {
         return false;
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, int offsetX, int offsetY) {
         if (mPageBlock != null) {
+            mOffsetX = offsetX;
+            mOffsetY = offsetY;
             if (mIsFocus) {
                 mBorderPaint.setColor(mBorderLightColor);
                 mFillPaint.setColor(mFillLightColor);
@@ -254,9 +258,10 @@ public class MatchCell {
                 mBorderPaint.setColor(mBorderColor);
                 mFillPaint.setColor(mFillColor);
             }
+            canvas.save();
+            canvas.translate(mOffsetX, mOffsetY);
             canvas.drawRoundRect(mRectF, mCorner, mCorner, mBorderPaint);
             canvas.drawRoundRect(mRectF, mCorner, mCorner, mFillPaint);
-            canvas.save();
             //这里一定要用pageblock中的getWidth 和 getHeight 方法
             canvas.translate(mRectF.left + (mRectF.width() - mPageBlock.getWidth()) * 1.f / 2, mRectF.top + (mRectF.height() - mPageBlock.getHeight()) * 1.f / 2);
             mPageBlock.draw(canvas);
