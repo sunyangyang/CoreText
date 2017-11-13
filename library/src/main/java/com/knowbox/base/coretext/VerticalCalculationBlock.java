@@ -118,315 +118,315 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         //右边最多3个数字，取最大
         mRightCellRectWidth = (int) PaintManager.getInstance().getWidth(mNormalTextPaint, "123");
         mRightFlagCellWidth = PaintManager.getInstance().getHeight(mNormalTextPaint);
-        String[] content1 ={
-                "{\n" +
-                        "    \"type\": \"shushi\",\n" +
-                        "    \"left_column\": 4,\n" +
-                        "    \"right_column\": 5,\n" +
-                        "    \"row\": 5,\n" +
-                        "    \"content\": [\n" +
-                        "        {\n" +
-                        "            \"method\": \"multiplication\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"2\",\n" +
-                        "                        \"5\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"×\",\n" +
-                        "                        \"\",\n" +
-                        "                        \"1\",\n" +
-                        "                        \"6\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ],\n" +
-                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"1\",\n" +
-                        "                        \"blank"+mIds[1]+"\",\n" +
-                        "                        \"blank"+mIds[2]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"25\",\n" +
-                        "                        \"x\",\n" +
-                        "                        \"6\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[3]+"\"\n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[4]+"\",\n" +
-                        "                        \"blank"+mIds[5]+"\",\n" +
-                        "                        \"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"blank"+mIds[6]+"\",\n" +
-                        "                        \"+\",\n" +
-                        "                        \"blank"+mIds[7]+"\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[8]+"\"\n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        },\n" +
-                        "       {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[9]+"\",\n" +
-                        "                        \"blank"+mIds[10]+"\",\n" +
-                        "                        \"blank"+mIds[11]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}",//TODO 临时变量，记得删除
-                "{\n" +
-                        "    \"type\": \"shushi\",\n" +
-                        "    \"left_column\": 4,\n" +
-                        "    \"right_column\": 5,\n" +
-                        "    \"row\": 5,\n" +
-                        "    \"content\": [\n" +
-                        "        {\n" +
-                        "            \"method\": \"plus\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"2\",\n" +
-                        "                        \"5\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"+\",\n" +
-                        "                        \"\",\n" +
-                        "                        \"1\",\n" +
-                        "                        \"6\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ],\n" +
-                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"1\",\n" +
-                        "                        \"blank"+mIds[1]+"\",\n" +
-                        "                        \"blank"+mIds[2]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"25\",\n" +
-                        "                        \"x\",\n" +
-                        "                        \"6\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[3]+"\"\n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[4]+"\",\n" +
-                        "                        \"blank"+mIds[5]+"\",\n" +
-                        "                        \"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"blank"+mIds[6]+"\",\n" +
-                        "                        \"+\",\n" +
-                        "                        \"blank"+mIds[7]+"\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[8]+"\"\n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ],\n" +
-                        "            \"carry_flag\":[\"blank"+mIds[12]+"\",\"1\"]\n" +
-                        "        },\n" +
-                        "       {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[9]+"\",\n" +
-                        "                        \"blank"+mIds[10]+"\",\n" +
-                        "                        \"blank"+mIds[11]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}",//TODO 临时变量，记得删除
-                "{\n" +
-                        "    \"type\": \"shushi\",\n" +
-                        "    \"left_column\": 4,\n" +
-                        "    \"right_column\": 5,\n" +
-                        "    \"row\": 5,\n" +
-                        "    \"content\": [\n" +
-                        "        {\n" +
-                        "            \"method\": \"minus\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"2\",\n" +
-                        "                        \"5\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"-\",\n" +
-                        "                        \"\",\n" +
-                        "                        \"1\",\n" +
-                        "                        \"6\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ],\n" +
-                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"1\",\n" +
-                        "                        \"blank"+mIds[1]+"\",\n" +
-                        "                        \"blank"+mIds[2]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"25\",\n" +
-                        "                        \"-\",\n" +
-                        "                        \"6\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[3]+"\"\n" +
-                        "                    ]\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[4]+"\",\n" +
-                        "                        \"blank"+mIds[5]+"\",\n" +
-                        "                        \"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"blank"+mIds[6]+"\",\n" +
-                        "                        \"+\",\n" +
-                        "                        \"blank"+mIds[7]+"\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank"+mIds[8]+"\"\n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ],\n" +
-                        "            \"carry_flag\":[\"blank"+mIds[12]+"\",\"1\"]\n" +
-                        "        },\n" +
-                        "       {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank"+mIds[9]+"\",\n" +
-                        "                        \"blank"+mIds[10]+"\",\n" +
-                        "                        \"blank"+mIds[11]+"\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}",//TODO 临时变量，记得删除
-                "{\n" +
-                        "    \"type\": \"shushi\",\n" +
-                        "    \"left_column\": 3,\n" +
-                        "    \"right_column\": 5,\n" +
-                        "    \"row\": 4,\n" +
-                        "    \"divide_pair\": [[\"2\", \"5 \"], [\"6\"]]," +
-                        "    \"quotient\":[\"blank" + mIds[0] + "\"]," +
-                        "    \"content\": [\n" +
-                        "        {\n" +
-                        "            \"method\": \"divide\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"2\",\n" +
-                        "                        \"4\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"blank" + mIds[6] + "\",\n" +
-                        "                        \"+\",\n" +
-                        "                        \"blank" + mIds[7] + "\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank" + mIds[8] + "\"\n" +
-                        "                        \n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"method\": \"\",\n" +
-                        "            \"members\": [\n" +
-                        "                {\n" +
-                        "                    \"value\": [\n" +
-                        "                        \"blank" + mIds[1] + "\"\n" +
-                        "                    ],\n" +
-                        "                    \"explain\": [\n" +
-                        "                        \"25\",\n" +
-                        "                        \"-\",\n" +
-                        "                        \"24\",\n" +
-                        "                        \"=\",\n" +
-                        "                        \"blank" + mIds[3] + "\"\n" +
-                        "                    ]\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}"};//TODO 临时变量，记得删除
-        JSONObject object = null;
-        try {
-            object = new JSONObject(content1[DialogUtils.NUM]);
-            DialogUtils.NUM++;
-            if (DialogUtils.NUM > 3) {
-                DialogUtils.NUM = 0;
-            }
-        } catch (JSONException e) {
-
-        }
-        if (object == null) {
-            return;
-        }
-        addList(object, textEnv);
+//        String[] content1 ={
+//                "{\n" +
+//                        "    \"type\": \"shushi\",\n" +
+//                        "    \"left_column\": 4,\n" +
+//                        "    \"right_column\": 5,\n" +
+//                        "    \"row\": 5,\n" +
+//                        "    \"content\": [\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"multiplication\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"2\",\n" +
+//                        "                        \"5\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"×\",\n" +
+//                        "                        \"\",\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"6\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ],\n" +
+//                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"blank"+mIds[1]+"\",\n" +
+//                        "                        \"blank"+mIds[2]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"25\",\n" +
+//                        "                        \"x\",\n" +
+//                        "                        \"6\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[3]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[4]+"\",\n" +
+//                        "                        \"blank"+mIds[5]+"\",\n" +
+//                        "                        \"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"blank"+mIds[6]+"\",\n" +
+//                        "                        \"+\",\n" +
+//                        "                        \"blank"+mIds[7]+"\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[8]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        },\n" +
+//                        "       {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[9]+"\",\n" +
+//                        "                        \"blank"+mIds[10]+"\",\n" +
+//                        "                        \"blank"+mIds[11]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        }\n" +
+//                        "    ]\n" +
+//                        "}",//TODO 临时变量，记得删除
+//                "{\n" +
+//                        "    \"type\": \"shushi\",\n" +
+//                        "    \"left_column\": 4,\n" +
+//                        "    \"right_column\": 5,\n" +
+//                        "    \"row\": 5,\n" +
+//                        "    \"content\": [\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"plus\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"2\",\n" +
+//                        "                        \"5\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"+\",\n" +
+//                        "                        \"\",\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"6\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ],\n" +
+//                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"blank"+mIds[1]+"\",\n" +
+//                        "                        \"blank"+mIds[2]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"25\",\n" +
+//                        "                        \"x\",\n" +
+//                        "                        \"6\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[3]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[4]+"\",\n" +
+//                        "                        \"blank"+mIds[5]+"\",\n" +
+//                        "                        \"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"blank"+mIds[6]+"\",\n" +
+//                        "                        \"+\",\n" +
+//                        "                        \"blank"+mIds[7]+"\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[8]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ],\n" +
+//                        "            \"carry_flag\":[\"blank"+mIds[12]+"\",\"1\"]\n" +
+//                        "        },\n" +
+//                        "       {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[9]+"\",\n" +
+//                        "                        \"blank"+mIds[10]+"\",\n" +
+//                        "                        \"blank"+mIds[11]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        }\n" +
+//                        "    ]\n" +
+//                        "}",//TODO 临时变量，记得删除
+//                "{\n" +
+//                        "    \"type\": \"shushi\",\n" +
+//                        "    \"left_column\": 4,\n" +
+//                        "    \"right_column\": 5,\n" +
+//                        "    \"row\": 5,\n" +
+//                        "    \"content\": [\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"minus\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"2\",\n" +
+//                        "                        \"5\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"-\",\n" +
+//                        "                        \"\",\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"6\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ],\n" +
+//                        "            \"carry_flag\":[\"blank"+mIds[0]+"\",\"1\"]\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"1\",\n" +
+//                        "                        \"blank"+mIds[1]+"\",\n" +
+//                        "                        \"blank"+mIds[2]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"25\",\n" +
+//                        "                        \"-\",\n" +
+//                        "                        \"6\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[3]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                },\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[4]+"\",\n" +
+//                        "                        \"blank"+mIds[5]+"\",\n" +
+//                        "                        \"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"blank"+mIds[6]+"\",\n" +
+//                        "                        \"+\",\n" +
+//                        "                        \"blank"+mIds[7]+"\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank"+mIds[8]+"\"\n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ],\n" +
+//                        "            \"carry_flag\":[\"blank"+mIds[12]+"\",\"1\"]\n" +
+//                        "        },\n" +
+//                        "       {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank"+mIds[9]+"\",\n" +
+//                        "                        \"blank"+mIds[10]+"\",\n" +
+//                        "                        \"blank"+mIds[11]+"\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        }\n" +
+//                        "    ]\n" +
+//                        "}",//TODO 临时变量，记得删除
+//                "{\n" +
+//                        "    \"type\": \"shushi\",\n" +
+//                        "    \"left_column\": 3,\n" +
+//                        "    \"right_column\": 5,\n" +
+//                        "    \"row\": 4,\n" +
+//                        "    \"divide_pair\": [[\"2\", \"5 \"], [\"6\"]]," +
+//                        "    \"quotient\":[\"blank" + mIds[0] + "\"]," +
+//                        "    \"content\": [\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"divide\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"2\",\n" +
+//                        "                        \"4\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"blank" + mIds[6] + "\",\n" +
+//                        "                        \"+\",\n" +
+//                        "                        \"blank" + mIds[7] + "\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank" + mIds[8] + "\"\n" +
+//                        "                        \n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "            \"method\": \"\",\n" +
+//                        "            \"members\": [\n" +
+//                        "                {\n" +
+//                        "                    \"value\": [\n" +
+//                        "                        \"blank" + mIds[1] + "\"\n" +
+//                        "                    ],\n" +
+//                        "                    \"explain\": [\n" +
+//                        "                        \"25\",\n" +
+//                        "                        \"-\",\n" +
+//                        "                        \"24\",\n" +
+//                        "                        \"=\",\n" +
+//                        "                        \"blank" + mIds[3] + "\"\n" +
+//                        "                    ]\n" +
+//                        "                }\n" +
+//                        "            ]\n" +
+//                        "        }\n" +
+//                        "    ]\n" +
+//                        "}"};//TODO 临时变量，记得删除
+//        JSONObject object = null;
+//        try {
+//            object = new JSONObject(content[DialogUtils.NUM]);
+//            DialogUtils.NUM++;
+//            if (DialogUtils.NUM > 3) {
+//                DialogUtils.NUM = 0;
+//            }
+//        } catch (JSONException e) {
+//
+//        }
+//        if (object == null) {
+//            return;
+//        }
+//        addList(object, textEnv);
     }
 
     private void addList(JSONObject object, TextEnv textEnv) {

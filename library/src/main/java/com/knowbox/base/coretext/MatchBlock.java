@@ -3,6 +3,7 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Log;
@@ -79,6 +80,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
 
     public MatchBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        setIsInMonopolyRow(true);
         try {
             JSONObject object = new JSONObject(content);
             JSONArray leftArray = object.optJSONArray("left");
@@ -295,13 +297,13 @@ public class MatchBlock extends CYPlaceHolderBlock {
             leftMultiSelect = false;
             rightMultiSelect = false;
         }
-
+        Rect rect = getContentRect();
         for (int i = 0; i < mLeftList.size(); i++) {
             MatchInfo info = mLeftList.get(i);
             mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
                     mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             Point point = mLeftCells[i].initCellText(info.content);
-            mRectangles[0][i] = new RectF(mPadding, 0, point.x, point.y);
+            mRectangles[0][i] = new RectF(mPadding + rect.left, rect.top, point.x, point.y);
             if (point.x > mLeftMaxWidth) {
                 mLeftMaxWidth = point.x;
             }
@@ -317,7 +319,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mRightCells[i] = new MatchCell(this, mCellMaxWidth, info.id, rightMultiSelect, false, mBorderPaint, mFillPaint,
                     mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             Point point = mRightCells[i].initCellText(info.content);
-            mRectangles[1][i] = new RectF(getContentWidth() - mPadding - point.x, 0,
+            mRectangles[1][i] = new RectF(rect.left + getContentWidth() - mPadding - point.x, rect.top,
                     getContentWidth() - mPadding, point.y);
             if (point.x > mRightMaxWidth) {
                 mRightMaxWidth = point.x;
@@ -357,7 +359,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     if (i == longSide) {
                         if (j == 0) {
 //                            float height = rectangles[j].height();
-                            rectangles[j].top = mPadding;
+                            rectangles[j].top = mPadding + rect.top;
                             rectangles[j].bottom = rectangles[j].top + height;
                         }
                         if (j > 0) {
@@ -368,7 +370,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     } else {
                         if (j == 0) {
 //                            float height = rectangles[j].height();
-                            rectangles[j].top = shortInterval + mPadding;
+                            rectangles[j].top = shortInterval + mPadding + rect.top;
                             rectangles[j].bottom = rectangles[j].top + height;
                         } else {
 //                            float height = rectangles[j].height();
@@ -378,7 +380,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     }
                 } else {
                     if (j == 0) {
-                        rectangles[j].top = mPadding;
+                        rectangles[j].top = mPadding + rect.top;
                         rectangles[j].bottom = rectangles[j].top + height;
                     } else {
 //                        float height = rectangles[j].height();
@@ -618,6 +620,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        Rect rect = getContentRect();
         if (mLeftCells == null || mRightCells == null) {
             return;
         }
@@ -625,21 +628,21 @@ public class MatchBlock extends CYPlaceHolderBlock {
             if (mLeftCells[i] == null) {
                 continue;
             }
-            mLeftCells[i].draw(canvas);
+            mLeftCells[i].draw(canvas, rect.left, rect.top);
         }
 
         for (int i = 0; i < mRightCells.length; i++) {
             if (mRightCells[i] == null) {
                 continue;
             }
-            mRightCells[i].draw(canvas);
+            mRightCells[i].draw(canvas, rect.left, rect.top);
         }
         for (int i = 0; i < mList.size(); i++) {
             MyMatchStatus status = mList.get(i);
-            mLeftPoint.x = (int) status.cells[0].getRectF().right;
-            mRightPoint.x = (int) status.cells[1].getRectF().left;
-            mLeftPoint.y = (int) status.cells[0].getRectF().centerY();
-            mRightPoint.y = (int) status.cells[1].getRectF().centerY();
+            mLeftPoint.x = (int) status.cells[0].getRectF().right + rect.left;
+            mRightPoint.x = (int) status.cells[1].getRectF().left + rect.left;
+            mLeftPoint.y = (int) status.cells[0].getRectF().centerY() + rect.top;
+            mRightPoint.y = (int) status.cells[1].getRectF().centerY() + rect.top;
             //因为list已经保存了配对的cell， mFocusCell和mMatchCell 同时存在时，正在动画效果，故去除完整的线
             if (mFocusCell != null && mMatchCell != null) {
                 if (mFocusCell.getIsLeft()) {
@@ -662,9 +665,9 @@ public class MatchBlock extends CYPlaceHolderBlock {
             canvas.drawLine(mLeftPoint.x, mLeftPoint.y, mRightPoint.x, mRightPoint.y, mLinePaint);
         }
         if (mStatus == MatchType.Add) {
-            canvas.drawLine(mStartPoint.x, mStartPoint.y, mAnimationLine[0], mAnimationLine[1], mLinePaint);
+            canvas.drawLine(mStartPoint.x + rect.left, mStartPoint.y + rect.top, mAnimationLine[0] + rect.left, mAnimationLine[1] + rect.top, mLinePaint);
         } else {
-            canvas.drawLine(mAnimationLine[0], mAnimationLine[1], mEndPoint.x, mEndPoint.y, mLinePaint);
+            canvas.drawLine(mAnimationLine[0] + rect.left, mAnimationLine[1] + rect.top, mEndPoint.x + rect.left, mEndPoint.y + rect.top, mLinePaint);
         }
 
 
