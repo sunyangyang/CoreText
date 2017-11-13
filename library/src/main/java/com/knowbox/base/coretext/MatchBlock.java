@@ -297,13 +297,12 @@ public class MatchBlock extends CYPlaceHolderBlock {
             leftMultiSelect = false;
             rightMultiSelect = false;
         }
-        Rect rect = getContentRect();
         for (int i = 0; i < mLeftList.size(); i++) {
             MatchInfo info = mLeftList.get(i);
             mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
                     mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             Point point = mLeftCells[i].initCellText(info.content);
-            mRectangles[0][i] = new RectF(mPadding + rect.left, rect.top, point.x, point.y);
+            mRectangles[0][i] = new RectF(mPadding, 0, point.x, point.y);
             if (point.x > mLeftMaxWidth) {
                 mLeftMaxWidth = point.x;
             }
@@ -319,7 +318,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mRightCells[i] = new MatchCell(this, mCellMaxWidth, info.id, rightMultiSelect, false, mBorderPaint, mFillPaint,
                     mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             Point point = mRightCells[i].initCellText(info.content);
-            mRectangles[1][i] = new RectF(rect.left + getContentWidth() - mPadding - point.x, rect.top,
+            mRectangles[1][i] = new RectF(getContentWidth() - mPadding - point.x, 0,
                     getContentWidth() - mPadding, point.y);
             if (point.x > mRightMaxWidth) {
                 mRightMaxWidth = point.x;
@@ -359,7 +358,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     if (i == longSide) {
                         if (j == 0) {
 //                            float height = rectangles[j].height();
-                            rectangles[j].top = mPadding + rect.top;
+                            rectangles[j].top = mPadding;
                             rectangles[j].bottom = rectangles[j].top + height;
                         }
                         if (j > 0) {
@@ -370,7 +369,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     } else {
                         if (j == 0) {
 //                            float height = rectangles[j].height();
-                            rectangles[j].top = shortInterval + mPadding + rect.top;
+                            rectangles[j].top = shortInterval + mPadding;
                             rectangles[j].bottom = rectangles[j].top + height;
                         } else {
 //                            float height = rectangles[j].height();
@@ -380,7 +379,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     }
                 } else {
                     if (j == 0) {
-                        rectangles[j].top = mPadding + rect.top;
+                        rectangles[j].top = mPadding;
                         rectangles[j].bottom = rectangles[j].top + height;
                     } else {
 //                        float height = rectangles[j].height();
