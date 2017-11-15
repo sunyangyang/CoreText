@@ -30,11 +30,13 @@ import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.ToastUtils;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
+import com.knowbox.base.utils.UIUtils;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.helpers.Util;
 
 import java.io.File;
 
@@ -78,8 +80,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         mBitmap = getStartPlayBitmap();
         if (mBitmap != null) {
-            setWidth(mBitmap.getWidth());
-            setHeight(mBitmap.getHeight() + getPaddingTop() + getPaddingBottom());
+            setWidth(UIUtils.dip2px(mBitmap.getWidth() / 2));
+            setHeight(UIUtils.dip2px(mBitmap.getHeight() / 2) + getPaddingTop() + getPaddingBottom());
         } else {
             throw new RuntimeException("start play bitmap must be not null!!!");
         }
@@ -153,11 +155,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
     protected void drawBitmap(Canvas canvas, Bitmap bitmap) {
         if (bitmap == null || bitmap.isRecycled())
             return;
-
-        float left = mContentRect.left + (mContentRect.width() - bitmap.getWidth())/2;
-        float top = mContentRect.top + (mContentRect.height() - bitmap.getHeight())/2;
-        float right = left + bitmap.getWidth();
-        float bottom = top + bitmap.getHeight();
+//当前图片都是2倍下的，所以暂时用这种法子来保证一致
+        float left = mContentRect.left + (mContentRect.width() - UIUtils.dip2px(mBitmap.getWidth() / 2))/2;
+        float top = mContentRect.top + (mContentRect.height() - UIUtils.dip2px(mBitmap.getHeight() / 2))/2;
+        float right = left + UIUtils.dip2px(mBitmap.getWidth() / 2);
+        float bottom = top + UIUtils.dip2px(mBitmap.getHeight() / 2);
         mRect.set(left, top, right, bottom);
         canvas.drawBitmap(bitmap, null, mRect, mPaint);
     }
@@ -250,7 +252,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         super.stop();
         if (mPlayBusService != null) {
             mPlayBusService.getPlayerBusServiceObserver()
-                    .removemPlayStatusChangeListener(mPlayStatusChangeListener);
+                    .removePlayStatusChangeListener(mPlayStatusChangeListener);
         }
         if (mDownloadManager != null) {
             mDownloadManager.removeTaskListener(mTaskListener);

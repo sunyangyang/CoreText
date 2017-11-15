@@ -11,12 +11,13 @@ import com.knowbox.base.service.log.db.LogTable;
  */
 public abstract class BoxDBHelper extends BaseDataBaseHelper {
 
-    public BoxDBHelper(Context context, String name, int version) {
-        super(context, name, version);
+
+    public BoxDBHelper(Context context, String name, int version, int baseVersion) {
+        super(context, name, version, baseVersion);
     }
 
     @Override
-    public void initTables(DataBaseHelper db) {
+    public void initTablesImpl(DataBaseHelper db) {
         super.initTables(db);
         addTable(LogTable.class, new LogTable(db));
     }

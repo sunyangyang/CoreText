@@ -42,7 +42,6 @@ public class App extends BaseApp {
         LogUtil.v("yangzc", "pid: " + Process.myPid());
         //初始化底层服务配置
         FrameworkConfig.init(this).setAppRootDir(Environment.getExternalStorageDirectory())
-                .setGetEncodeKey("acd2469c596a553d44b50c26b4094f46")
                 .setDebug(true);
         //注册网络服务
         NetworkProvider.getNetworkProvider().registNetworkSensor(new DefaultNetworkSensor());
@@ -54,7 +53,7 @@ public class App extends BaseApp {
                 return UrlTask.createUrlTask(downloadItem);
             }
         });
-        DataBaseManager.getDataBaseManager().registDataBase(new BaseDataBaseHelper(this, "base", 2) {
+        DataBaseManager.getDataBaseManager().registDataBase(new BaseDataBaseHelper(this, "base", 2, 1) {
             @Override
             public void initTablesImpl(DataBaseHelper dataBaseHelper) {
                 addTable(LogTable.class, new LogTable(dataBaseHelper));
