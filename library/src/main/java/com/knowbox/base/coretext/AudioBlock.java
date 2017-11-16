@@ -111,7 +111,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                 } else if (status == Task.STATUS_COMPLETED) {
                     if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri)) {
                         play();
-                        onPlayingStateChange(mIsPlaying, mSongUrl);
+                        onPlayingStateChange(true, mSongUrl);
                     }
                 }
             }
