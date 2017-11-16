@@ -125,7 +125,7 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
                     info.start = i;
                 }
                 stack.push(flag);
-            } else if (flag.equals("}#")) {
+            } else if (flag.equals("}#") || flag.equals("#}")) {
                 stack.pop();
                 if (stack.isEmpty()) {
                     if (info != null) {
@@ -146,5 +146,4 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
         public int start;
         public int end;
     }
-
 }
