@@ -103,7 +103,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
             Task task = mDownloadManager.getTaskById(taskId);
             if (task != null) {
                 int status = task.getStatus();
-                Log.e("XXXXX", "status = " + status + ", mIsPlaying = " + mIsPlaying);
                 if (status == Task.STATUS_ADVANCING
                         || status == Task.STATUS_READY
                         || status == Task.STATUS_STARTED) {
@@ -111,6 +110,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     onDownloadStateChange(true, mSongUrl, Task.TaskListener.REASON_SUCCESS);
                 } else if (status == Task.STATUS_COMPLETED) {
                     if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri)) {
+                        play();
                         onPlayingStateChange(mIsPlaying, mSongUrl);
                     }
                 }
@@ -253,6 +253,11 @@ public class AudioBlock extends CYPlaceHolderBlock {
     public void stop() {
         super.stop();
         if (mPlayBusService != null) {
+            try {
+                mPlayBusService.pause();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mPlayBusService.getPlayerBusServiceObserver()
                     .removePlayStatusChangeListener(mPlayStatusChangeListener);
         }
