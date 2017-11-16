@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 
@@ -102,6 +103,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
             Task task = mDownloadManager.getTaskById(taskId);
             if (task != null) {
                 int status = task.getStatus();
+                Log.e("XXXXX", "status = " + status + ", mIsPlaying = " + mIsPlaying);
                 if (status == Task.STATUS_ADVANCING
                         || status == Task.STATUS_READY
                         || status == Task.STATUS_STARTED) {
@@ -109,7 +111,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     onDownloadStateChange(true, mSongUrl, Task.TaskListener.REASON_SUCCESS);
                 } else if (status == Task.STATUS_COMPLETED) {
                     if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri)) {
-                        onPlayingStateChange(true, mSongUrl);
+                        onPlayingStateChange(mIsPlaying, mSongUrl);
                     }
                 }
             }

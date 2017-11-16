@@ -39,8 +39,8 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.main, new SamplesVideoFragment());
 //        ft.replace(R.id.main, new QuestionListFragment());
-//        ft.replace(R.id.main, new QuestionFragment());
-        ft.replace(R.id.main, new NumberCalculationFragment());
+        ft.replace(R.id.main, new QuestionFragment());
+//        ft.replace(R.id.main, new NumberCalculationFragment());
         ft.commitAllowingStateLoss();
 
         BoxLogService logService = (BoxLogService) getSystemService(LogService.SERVICE_NAME);
