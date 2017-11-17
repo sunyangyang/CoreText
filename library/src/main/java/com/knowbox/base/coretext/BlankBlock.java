@@ -12,6 +12,7 @@ import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.PaintManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -142,7 +143,9 @@ public class BlankBlock extends CYEditBlock {
             }
         } else {
             if ("letter".equals(size)) {
-                this.mWidth = 32 * Const.DP_1;
+                int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text));
+                this.mWidth = width + Const.DP_1 * 10;
                 this.mHeight = 40 * Const.DP_1;
             } else if ("line".equals(size)) {
                 this.mWidth = 265 * Const.DP_1;
