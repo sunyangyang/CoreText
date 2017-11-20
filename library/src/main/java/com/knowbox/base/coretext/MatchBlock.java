@@ -72,6 +72,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     private int mRightMaxHeight = 0;
     private boolean mIsNeedInvalidate = true;
     private boolean mCanOperate = true;
+    private int mLineMargin = Const.DP_1 * 5;
 
     public enum MatchType {
         Add,
@@ -473,11 +474,11 @@ public class MatchBlock extends CYPlaceHolderBlock {
                                 mMatchCell.setFocus(true);
                                 //startPoint 和 endPoint 为动画需要
                                 if (mFocusCell.getIsLeft()) {
-                                    mStartPoint.x = (int) mFocusCell.getRectF().right;
-                                    mEndPoint.x = (int) mMatchCell.getRectF().left;
+                                    mStartPoint.x = (int) mFocusCell.getRectF().right + mLineMargin;
+                                    mEndPoint.x = (int) mMatchCell.getRectF().left - mLineMargin;
                                 } else {
-                                    mStartPoint.x = (int) mFocusCell.getRectF().left;
-                                    mEndPoint.x = (int) mMatchCell.getRectF().right;
+                                    mStartPoint.x = (int) mFocusCell.getRectF().left - mLineMargin;
+                                    mEndPoint.x = (int) mMatchCell.getRectF().right + mLineMargin;
                                 }
                                 mStartPoint.y = (int) mFocusCell.getRectF().centerY();
                                 mEndPoint.y = (int) mMatchCell.getRectF().centerY();
@@ -638,8 +639,8 @@ public class MatchBlock extends CYPlaceHolderBlock {
         }
         for (int i = 0; i < mList.size(); i++) {
             MyMatchStatus status = mList.get(i);
-            mLeftPoint.x = (int) status.cells[0].getRectF().right + rect.left;
-            mRightPoint.x = (int) status.cells[1].getRectF().left + rect.left;
+            mLeftPoint.x = (int) status.cells[0].getRectF().right + mLineMargin + rect.left;
+            mRightPoint.x = (int) status.cells[1].getRectF().left - mLineMargin + rect.left;
             mLeftPoint.y = (int) status.cells[0].getRectF().centerY() + rect.top;
             mRightPoint.y = (int) status.cells[1].getRectF().centerY() + rect.top;
             //因为list已经保存了配对的cell， mFocusCell和mMatchCell 同时存在时，正在动画效果，故去除完整的线
