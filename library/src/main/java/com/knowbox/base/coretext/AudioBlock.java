@@ -88,7 +88,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         this.mDownloadManager = DownloadManager.getDownloadManager();
         mDownloadManager.addTaskListener(mTaskListener);
 
-        mBitmap = getStartPlayBitmap(content);
+        mBitmap = getStartPlayBitmap();
         if (mBitmap != null) {
             setWidth(mBitmap.getWidth());
             setHeight(mBitmap.getHeight() + getPaddingTop() + getPaddingBottom());
@@ -133,7 +133,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         mListener = listener;
     }
 
-    protected Bitmap getStartPlayBitmap(String content) {
+    protected Bitmap getStartPlayBitmap() {
         return mPlayingBitmap[2];
     }
 
@@ -153,7 +153,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
         return mPlayingBitmap;
     }
 
-    protected Bitmap[] getDownloadBitmaps(String content) {
+    protected Bitmap[] getDownloadBitmaps() {
         return mDownloadBitmap;
     }
 
@@ -421,7 +421,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     mCurrentAnim.cancel();
                 }
                 if (isDownloading()) {
-                    mCurrentAnim = ValueAnimator.ofInt(0, getDownloadBitmaps(getContent()).length);
+                    mCurrentAnim = ValueAnimator.ofInt(0, getDownloadBitmaps().length);
                     mCurrentAnim.setRepeatCount(ValueAnimator.INFINITE);
                     mCurrentAnim.setDuration(1000);
                     mCurrentAnim.setInterpolator(new LinearInterpolator());
@@ -432,7 +432,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
                         @Override
                         public void onAnimationEnd(Animator animator) {
-                            mBitmap = getStartPlayBitmap(getContent());
+                            mBitmap = getStartPlayBitmap();
                             postInvalidateThis();
                         }
 
@@ -441,7 +441,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
                         @Override
                         public void onAnimationCancel(Animator animator) {
-                            mBitmap = getStartPlayBitmap(getContent());
+                            mBitmap = getStartPlayBitmap();
                             postInvalidateThis();
                         }
 
@@ -449,7 +449,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             Integer index = (Integer) valueAnimator.getAnimatedValue();
                             if (mIndex != index) {
-                                mBitmap = getDownloadBitmaps(getContent())[index];
+                                mBitmap = getDownloadBitmaps()[index];
                                 postInvalidateThis();
                                 this.mIndex = index;
                             }
@@ -483,7 +483,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
                         @Override
                         public void onAnimationEnd(Animator animator) {
-                            mBitmap = getStartPlayBitmap(getContent());
+                            mBitmap = getStartPlayBitmap();
                             postInvalidateThis();
                         }
 
@@ -492,7 +492,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
                         @Override
                         public void onAnimationCancel(Animator animator) {
-                            mBitmap = getStartPlayBitmap(getContent());
+                            mBitmap = getStartPlayBitmap();
                             postInvalidateThis();
                         }
                         @Override
