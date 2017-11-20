@@ -52,6 +52,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     private int mBorderLightColor;
     private int mFillColor;
     private int mFillLightColor;
+    private int mCommonColor;
     private int mErrorColor;
     private int mRightColor;
     private int mTotalHeight;
@@ -267,6 +268,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
         mFillLightColor = 0x6644cdfc;
         mRightColor = 0xff44cdfc;
         mErrorColor = 0xffd8453b;
+        mCommonColor = 0xffb6c6d4;
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setColor(mBorderColor);
@@ -657,13 +659,19 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     }
                 }
             }
-            if (status.isRight) {
-                mLinePaint.setColor(mRightColor);
+            if (mCanOperate) {
+                mLinePaint.setColor(mCommonColor);
             } else {
-                mLinePaint.setColor(mErrorColor);
+                if (status.isRight) {
+                    mLinePaint.setColor(mRightColor);
+                } else {
+                    mLinePaint.setColor(mErrorColor);
+                }
             }
             canvas.drawLine(mLeftPoint.x, mLeftPoint.y, mRightPoint.x, mRightPoint.y, mLinePaint);
         }
+
+        mLinePaint.setColor(mCommonColor);
         if (mStatus == MatchType.Add) {
             canvas.drawLine(mStartPoint.x + rect.left, mStartPoint.y + rect.top, mAnimationLine[0] + rect.left, mAnimationLine[1] + rect.top, mLinePaint);
         } else {
