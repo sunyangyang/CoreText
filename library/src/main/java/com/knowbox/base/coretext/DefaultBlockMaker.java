@@ -54,7 +54,9 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if ("para_end".equals(type)) {
             return (T) new CYStyleEndBlock(textEnv, data);
         } else if ("audio".equals(type)) {
-            return (T) new AudioBlock(textEnv, data);
+            AudioBlock block = new AudioBlock(textEnv, data);
+            block.init(data);
+            return (T) block;
         } else if ("fill_img".equals(type)) {
             return (T) new ImageHollowBlock(textEnv, data);
         } else if ("under_begin".equals(type)) {

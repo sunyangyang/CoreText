@@ -31,7 +31,7 @@ import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.ToastUtils;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.knowbox.base.R;
-import com.knowbox.base.utils.UIUtils;
+import com.knowbox.base.service.audio.AudioListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 
@@ -57,18 +57,27 @@ public class AudioBlock extends CYPlaceHolderBlock {
     int mProgress = 0;
     private Bitmap mBitmap;
 
+    private AudioListener mListener = null;
+
     private static String mPlayingSongUri = "";
+
+    public AudioBlock(TextEnv textEnv, String content, boolean autoPlay) {
+        super(textEnv, content);
+    }
 
     public AudioBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        init(content);
     }
 
     public static void clear() {
         mPlayingSongUri = "";
     }
 
-    private void init(String content) {
+    public void init(String content) {
+        init(content, true);
+    }
+
+    public void init(String content, boolean autoPlay) {
         audioManager = (AudioManager) getTextEnv().getContext()
                 .getSystemService(Context.AUDIO_SERVICE);
         mPlayBusService = (PlayerBusService) getTextEnv().getContext()
@@ -81,8 +90,8 @@ public class AudioBlock extends CYPlaceHolderBlock {
 
         mBitmap = getStartPlayBitmap(content);
         if (mBitmap != null) {
-            setWidth(UIUtils.dip2px(mBitmap.getWidth() / 2));
-            setHeight(UIUtils.dip2px(mBitmap.getHeight() / 2) + getPaddingTop() + getPaddingBottom());
+            setWidth(mBitmap.getWidth());
+            setHeight(mBitmap.getHeight() + getPaddingTop() + getPaddingBottom());
         } else {
             throw new RuntimeException("start play bitmap must be not null!!!");
         }
@@ -97,10 +106,6 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     mSongUrl += "?tag=" + getTextEnv().getTag();
                 }
             }
-            boolean shouldPlay = true;
-            if (!TextUtils.isEmpty(json.optString("style"))) {
-                shouldPlay = "math_reading".equals(json.optString("style")) ? false : true;
-            }
 //            mSongUrl = "https://striker-hz.oss-cn-hangzhou.aliyuncs.com/10/0i/c1/d915c76a271045185cf1e38d9217cc?OSSAccessKeyId=FvPoWjsunFA24f2d&Expires=1487302462&Signature=fRcFULiOn2KK9odzBVecpD%2F0guY%3D&response-content-disposition=attachment%3B%20filename%3D%22%3F%3F%3F%3F%3F%3F%3Fv2.8.0%3F%3F%3F%3F(%3F%3F).docx%22%3B%20filename*%3DUTF-8%27%27%25E9%2580%259F%25E7%25AE%2597%25E7%259B%2592%25E5%25AD%2590%25E8%2580%2581%25E5%25B8%2588%25E7%25AB%25AFv2.8.0%25E9%259C%2580%25E6%25B1%2582%25E6%2596%2587%25E6%25A1%25A3%2528%25E6%259B%25B4%25E6%2596%25B0%2529.docx&filekey=100ic1d915c76a271045185cf1e38d9217cc";
 
             String taskId = mDownloadManager.buildTaskId(mSongUrl);
@@ -113,7 +118,7 @@ public class AudioBlock extends CYPlaceHolderBlock {
                     mProgress = task.getProgress();
                     onDownloadStateChange(true, mSongUrl, Task.TaskListener.REASON_SUCCESS);
                 } else if (status == Task.STATUS_COMPLETED) {
-                    if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri) && shouldPlay) {
+                    if (mSongUrl != null && mSongUrl.equals(mPlayingSongUri) && autoPlay) {
                         play();
                         onPlayingStateChange(true, mSongUrl);
                     }
@@ -122,6 +127,10 @@ public class AudioBlock extends CYPlaceHolderBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setListener(AudioListener listener) {
+        mListener = listener;
     }
 
     protected Bitmap getStartPlayBitmap(String content) {
@@ -161,11 +170,10 @@ public class AudioBlock extends CYPlaceHolderBlock {
     protected void drawBitmap(Canvas canvas, Bitmap bitmap) {
         if (bitmap == null || bitmap.isRecycled())
             return;
-//当前图片都是2倍下的，所以暂时用这种法子来保证一致
-        float left = mContentRect.left + (mContentRect.width() - UIUtils.dip2px(mBitmap.getWidth() / 2))/2;
-        float top = mContentRect.top + (mContentRect.height() - UIUtils.dip2px(mBitmap.getHeight() / 2))/2;
-        float right = left + UIUtils.dip2px(mBitmap.getWidth() / 2);
-        float bottom = top + UIUtils.dip2px(mBitmap.getHeight() / 2);
+        float left = mContentRect.left + (mContentRect.width() - mBitmap.getWidth())/2;
+        float top = mContentRect.top + (mContentRect.height() - mBitmap.getHeight())/2;
+        float right = left + mBitmap.getWidth();
+        float bottom = top + mBitmap.getHeight();
         mRect.set(left, top, right, bottom);
         canvas.drawBitmap(bitmap, null, mRect, mPaint);
     }
@@ -221,6 +229,9 @@ public class AudioBlock extends CYPlaceHolderBlock {
             } else {
                 AudioBlock.mPlayingSongUri = mSongUrl;
                 download();
+            }
+            if (mListener != null) {
+                mListener.play();
             }
         }
     }
