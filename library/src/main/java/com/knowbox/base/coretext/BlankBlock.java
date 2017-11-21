@@ -33,8 +33,10 @@ public class BlankBlock extends CYEditBlock {
 
     private String mDefaultText;
     private int mTextLength = 16;
+    private TextEnv mTextEnv;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        mTextEnv = textEnv;
         init(content);
     }
 
@@ -146,6 +148,9 @@ public class BlankBlock extends CYEditBlock {
                 int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 this.mWidth = width + Const.DP_1 * 10;
+                if (this.mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
+                    this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                }
                 this.mHeight = 40 * Const.DP_1;
             } else if ("line".equals(size)) {
                 this.mWidth = 265 * Const.DP_1;
