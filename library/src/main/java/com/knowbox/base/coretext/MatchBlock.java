@@ -272,7 +272,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setColor(mBorderColor);
-        mBorderPaint.setStrokeWidth(Const.DP_1 * 2);
+        mBorderPaint.setStrokeWidth(Const.DP_1 * 1);
         mBorderPaint.setStyle(Paint.Style.STROKE);
 
 
