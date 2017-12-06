@@ -20,15 +20,12 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
 import com.hyena.framework.clientlog.LogUtil;
+import com.hyena.framework.imageloader.ImageLoader;
+import com.hyena.framework.imageloader.base.IDisplayer;
+import com.hyena.framework.imageloader.base.LoadedFrom;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ViewScaleType;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +33,7 @@ import org.json.JSONObject;
 /**
  * Created by yangzc on 17/2/6.
  */
-public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
+public class ImageBlock extends CYImageBlock {
 
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -50,9 +47,10 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
-    private DisplayImageOptions options;
     protected Drawable drawable = null;
-    protected ImageAware mImageAware;
+    protected IDisplayer mDisplayer;
+    protected int mLoadingResId, mErrorResId;
+    private boolean isSuccess = false;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -78,46 +76,38 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
             this.size = size;
-            DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
-            builder.cacheInMemory(true);
-            builder.cacheOnDisk(true);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (width * mScale));
                 setHeight((int) (height * mScale));
-                builder.showImageOnFail(R.drawable.block_image_fail_big);
-                builder.showImageForEmptyUri(R.drawable.block_image_fail_big);
-                builder.showImageOnLoading(R.drawable.image_loading);
+                this.mLoadingResId = R.drawable.image_loading;
+                this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
                 setWidth(DP_38);
                 setHeight(DP_38);
                 setPadding(Const.DP_1 * 2, 0, Const.DP_1 * 2, 0);
-                builder.showImageOnFail(R.drawable.block_image_fail_small);
-                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.image_loading);
+                this.mLoadingResId = R.drawable.image_loading;
+                this.mErrorResId = R.drawable.block_image_fail_small;
             } else if ("small_match_image".equals(size) || "small_category_image".equals(size)) {
                 setWidth(DP_44);
                 setHeight(DP_44);
-                builder.showImageOnFail(R.drawable.block_image_fail_small);
-                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.image_loading);
+                this.mLoadingResId = R.drawable.image_loading;
+                this.mErrorResId = R.drawable.block_image_fail_small;
             }  else if ("big_match_image".equals(size) || "big_category_image".equals(size)) {
                 setWidth(DP_112);
                 setHeight(DP_84);
-                builder.showImageOnFail(R.drawable.block_image_fail_small);
-                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.image_loading);
+                this.mLoadingResId = R.drawable.image_loading;
+                this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
                 setWidth((int) (width * mScale / 2));
                 setHeight((int) (height * mScale / 2));
-                builder.showImageOnFail(R.drawable.block_image_fail_small);
-                builder.showImageForEmptyUri(R.drawable.block_image_fail_small);
-                builder.showImageOnLoading(R.drawable.image_loading);
+                this.mLoadingResId = R.drawable.image_loading;
+                this.mErrorResId = R.drawable.block_image_fail_small;
             }
             this.mUrl = url;
-            mImageAware = new ThisImageAware();
+            mDisplayer = new ThisImageAware();
             LogUtil.v("yangzc", url);
-            ImageLoader.getInstance().displayImage(url, mImageAware, options = builder.build(), this);
+            ImageLoader.getImageLoader().loadImage(context, url, mDisplayer, mLoadingResId, mErrorResId, this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -163,7 +153,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
     private RectF mRect = new RectF();
     @Override
     public void draw(Canvas canvas) {
-        tryLoadFromCache();
+//        tryLoadFromCache();
         if (drawable != null) {
             Rect rect= getContentRect();
             if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
@@ -188,33 +178,18 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
         }
     }
 
-    private boolean isSuccess = false;
-    private void tryLoadFromCache() {
-        if (isSuccess)
-            return;
-        String key = mUrl + "_" + mImageAware.getWidth() + "x" + mImageAware.getHeight();
-        Bitmap bitmap = ImageLoader.getInstance().getMemoryCache().get(key);
-        if (bitmap != null && !bitmap.isRecycled()) {
-            isSuccess = true;
-            drawable = new BitmapDrawable(getTextEnv().getContext()
-                    .getResources(), bitmap);
-        } else {
-            isSuccess = false;
-        }
-    }
-
     @Override
     public void retry() {
-        if (TextUtils.isEmpty(mUrl) || drawable != null || !(drawable instanceof BitmapDrawable)) {
+        if (TextUtils.isEmpty(mUrl) || isSuccess()) {
             return;
         }
-        ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);
+        ImageLoader.getImageLoader().loadImage(getTextEnv().getContext(), mUrl, mDisplayer, mLoadingResId, mErrorResId, this);
     }
 
     @Override
     public void restart() {
         super.restart();
-        ImageLoader.getInstance().displayImage(mUrl, mImageAware, options, this);
+        ImageLoader.getImageLoader().loadImage(getTextEnv().getContext(), mUrl, mDisplayer, mLoadingResId, mErrorResId, this);
     }
 
     @Override
@@ -224,7 +199,7 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
 
     private Rect mImageRect = new Rect();
     /* ImageAware实现 */
-    private class ThisImageAware implements ImageAware {
+    private class ThisImageAware implements IDisplayer {
         private int width, height;
         public ThisImageAware() {
             this.width = ImageBlock.this.getWidth();
@@ -252,11 +227,6 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
         }
 
         @Override
-        public ViewScaleType getScaleType() {
-            return ViewScaleType.FIT_INSIDE;
-        }
-
-        @Override
         public View getWrappedView() {
             return null;
         }
@@ -271,49 +241,37 @@ public class ImageBlock extends CYImageBlock implements ImageLoadingListener {
             return TextUtils.isEmpty(mUrl)?super.hashCode():mUrl.hashCode();
         }
 
+        @Override
+        public Object getTag() {
+            return null;
+        }
+
         private void setImageDrawableInfo(Drawable drawable) {
             ImageBlock.this.drawable = drawable;
             postInvalidate();
         }
 
         @Override
-        public boolean setImageDrawable(Drawable drawable) {
+        public void setImageDrawable(Drawable drawable) {
             if (drawable != null)
                 setImageDrawableInfo(drawable);
-            return true;
         }
 
         @Override
-        public boolean setImageBitmap(Bitmap bitmap) {
+        public void setImageBitmap(Bitmap bitmap, LoadedFrom from) {
             setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
                     .getResources(), bitmap));
-            return true;
         }
     };
 
     @Override
+    public void onLoadComplete(String imageUrl, Bitmap bitmap, Object tag) {
+        super.onLoadComplete(imageUrl, bitmap, tag);
+        isSuccess = (bitmap != null && !bitmap.isRecycled());
+    }
+
+    @Override
     public boolean isSuccess() {
         return isSuccess;
-    }
-
-    /* 回调部分 */
-    @Override
-    public void onLoadingStarted(String s, View view) {
-        LogUtil.v("yangzc", "onLoadingStarted: " + s);
-    }
-
-    @Override
-    public void onLoadingFailed(String s, View view, FailReason failReason) {
-        LogUtil.v("yangzc", "onLoadingFailed: " + s);
-    }
-
-    @Override
-    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-        LogUtil.v("yangzc", "onLoadingComplete: " + s);
-    }
-
-    @Override
-    public void onLoadingCancelled(String s, View view) {
-        LogUtil.v("yangzc", "onLoadingCancelled: " + s);
     }
 }
