@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
@@ -80,9 +81,9 @@ public class MatchBlock extends CYPlaceHolderBlock {
         Remove
     }
 
+
     public MatchBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        setIsInMonopolyRow(true);
         try {
             JSONObject object = new JSONObject(content);
             JSONArray leftArray = object.optJSONArray("left");
@@ -135,6 +136,14 @@ public class MatchBlock extends CYPlaceHolderBlock {
         } catch (Exception e) {
         }
 
+    }
+
+    @Override
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
+        if (style != null) {
+            getTextEnv().setFontSize(style.getTextSize());
+        }
     }
 
     private void refreshLayout(int id, String content) {
@@ -259,6 +268,11 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mAnimationEnd = false;
             postInvalidateStatus();
         }
+    }
+
+    @Override
+    public int getLineHeight() {
+        return getContentHeight();
     }
 
     private void init() {
