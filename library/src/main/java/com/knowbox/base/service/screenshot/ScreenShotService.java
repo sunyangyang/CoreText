@@ -9,6 +9,6 @@ import android.app.Activity;
 
 public interface ScreenShotService {
 
-	public File takeScreenShot(Activity activity, String destDir);
+	File takeScreenShot(Activity activity, String destDir);
 	
 }

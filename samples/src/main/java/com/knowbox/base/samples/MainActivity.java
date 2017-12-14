@@ -1,5 +1,6 @@
 package com.knowbox.base.samples;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +45,7 @@ public class MainActivity extends FragmentActivity {
 ////        ft.replace(R.id.main, new NumberCalculationFragment());
         ft.commitAllowingStateLoss();
 
-        BoxLogService logService = (BoxLogService) getSystemService(LogService.SERVICE_NAME);
+        @SuppressLint("WrongConstant") BoxLogService logService = (BoxLogService) getSystemService(LogService.SERVICE_NAME);
         logService.sendNetLog("b_sync_math_start_click", "{\"questionId\":747743,\"spendTime\":5886}", "", "");
 
         MsgCenter.registerGlobalReceiver(receiver, new IntentFilter("action.push"));

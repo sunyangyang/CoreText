@@ -151,11 +151,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/latex_bottom">
-
-        <com.knowbox.base.coretext.QuestionTextView
-            android:id="@+id/qtv_question"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical"
+            >
+            <com.knowbox.base.coretext.QuestionTextView
+                android:id="@+id/qtv_question"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
     </ScrollView>
 
 </RelativeLayout>
