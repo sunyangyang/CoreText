@@ -666,7 +666,10 @@ public class MatchBlock extends CYPlaceHolderBlock {
 //                mRectangles[1][i].left = mRectangles[1][i].right - mRightMaxWidth;
 //            }
 //        }
+
+        //重置
         initCellRect();
+
         boolean hasFind = false;
         if (mFocusCell != null) {
             for (int i = 0; i < mLeftCells.length; i++) {
@@ -688,6 +691,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                 }
             }
         }
+
         if (mList.size() > 0) {
             for (int i = 0; i < mList.size(); i++) {
                 MyMatchStatus status = mList.get(i);
