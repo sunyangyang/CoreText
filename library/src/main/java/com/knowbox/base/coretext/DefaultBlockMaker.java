@@ -65,9 +65,9 @@ public class DefaultBlockMaker implements IBlockMaker {
             return (T) new CYStyleEndBlock(textEnv, data);
         } else if ("latex".equals(type)) {
             return (T) new LatexBlock(textEnv, data);
-        }/** else if ("shushi".equals(type)) {
+        } else if ("shushi".equals(type)) {
             return (T) new VerticalCalculationBlock(textEnv, data);
-        }**/ else if ("match".equals(type)) {
+        } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
         }
         return null;
