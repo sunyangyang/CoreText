@@ -102,7 +102,7 @@ public class BlankBlock extends CYEditBlock {
                 return;
 
             getTextEnv().setEditableValue(getTabId(), text);
-            if (!getTextEnv().isEditable() || "express".equals(size)) {
+            if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size)) {
                 updateSize();
                 requestLayout();
             } else {
