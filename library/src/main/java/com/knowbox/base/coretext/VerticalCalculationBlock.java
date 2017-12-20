@@ -5,29 +5,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
-import com.knowbox.base.utils.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by sunyangyang on 2017/10/11.
@@ -49,7 +42,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mCellRectHeight;
     private CalculationStyle[] mStyle;
     private String[][] mValues;
-    private String[][] mCarryFlag;
+    private String[][] mFlag;
     private NumberCell[][] mLeftCells;
     private int[] mHorizontalLines;
     private int[] mHorizontalLinesHeight;
@@ -154,7 +147,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
 
         mValues = new String[mRows][mLeftColumns];
-        mCarryFlag = new String[mRows][mLeftColumns];
+        mFlag = new String[mRows][mLeftColumns];
 
         //单独设置除法
         mLineStartX = PaintManager.getInstance().getHeight(mSmallTextPaint);
@@ -260,19 +253,22 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
                 row++;
             }
-            JSONArray carryArray = jsonObject.optJSONArray("carry_flag");
-            if (carryArray != null) {
-                int carryLength = carryArray.length();
+            JSONArray flagArray = jsonObject.optJSONArray("carry_flag");
+            if (flagArray == null) {
+                flagArray = jsonObject.optJSONArray("borrow_flag");
+            }
+            if (flagArray != null) {
+                int carryLength = flagArray.length();
                 if (mStyle[i] == CalculationStyle.Multiplication || mStyle[i] == CalculationStyle.Plus) {
                     for (int k = carryLength - 1; k >= 0; k--) {
-                        mCarryFlag[mHorizontalLines[i] - 1][mLeftColumns - carryLength + k] = carryArray.optString(k);
+                        mFlag[mHorizontalLines[i] - 1][mLeftColumns - carryLength + k] = flagArray.optString(k);
                     }
                 } else {
                     for (int k = carryLength - 1; k >= 0; k--) {
                         if (i == 0) {
-                            mCarryFlag[i][mLeftColumns - carryLength + k] = carryArray.optString(k);
+                            mFlag[i][mLeftColumns - carryLength + k] = flagArray.optString(k);
                         } else {
-                            mCarryFlag[mHorizontalLines[i - 1]][mLeftColumns - carryLength + k] = carryArray.optString(k);
+                            mFlag[mHorizontalLines[i - 1]][mLeftColumns - carryLength + k] = flagArray.optString(k);
                         }
                     }
                 }
@@ -290,7 +286,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 int topMargin;
                 if (k == mHorizontalLines[linesPosition - 1] - (arrayLength + topLines) &&
                         mStyle[i] == CalculationStyle.Minus &&
-                        (carryArray != null && carryArray.length() > 0)) {
+                        (flagArray != null && flagArray.length() > 0)) {
                     mCellRectHeight = NUMBER_RECT_SIZE + FLAG_RECT_SIZE + RECT_PADDING_SIZE;
                     topMargin = Const.DP_1 * 20;
                 } else {
@@ -299,13 +295,13 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 }
 
                 for (int j = 0; j < mLeftColumns; j++) {
-                    if (TextUtils.isEmpty(mValues[k][j]) && TextUtils.isEmpty(mCarryFlag[k][j])) {
+                    if (TextUtils.isEmpty(mValues[k][j]) && TextUtils.isEmpty(mFlag[k][j])) {
                         mLeftCells[k][j] = null;
                         continue;
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mCarryFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin);
+                            mStyle[i], mValues[k][j], mFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
