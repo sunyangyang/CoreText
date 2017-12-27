@@ -345,7 +345,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
     @Override
     public int getContentWidth() {
-        return mCellRectWidth * mLeftColumns + Const.DP_1 * 20;
+        return getTextEnv().getSuggestedPageWidth();
     }
 
     @Override
@@ -433,25 +433,29 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         Rect rect = getContentRect();
         canvas.save();
-        canvas.translate(rect.left + (getTextEnv().getSuggestedPageWidth() - getContentWidth()) / 2, rect.top);
-        drawLeft(canvas);
+        int offsetX = (getTextEnv().getSuggestedPageWidth() - mLeftColumns * mCellRectWidth) / 2;
+        if (offsetX <= 0) {
+            offsetX = 0;
+        }
+        canvas.translate(rect.left + offsetX, rect.top);
+        drawLeft(canvas, offsetX);
         for (int i = 0; i < mHorizontalLines.length - 1; i++) {//去除最后一行
-            canvas.drawLine(mLineStartX, mHorizontalLinesHeight[i] + mOffsetTop, getContentWidth() + 20, mHorizontalLinesHeight[i] + mOffsetTop, mLinePaint);
+            canvas.drawLine(mLineStartX, mHorizontalLinesHeight[i] + mOffsetTop, mLeftColumns * mCellRectWidth, mHorizontalLinesHeight[i] + mOffsetTop, mLinePaint);
         }
         if (mStyle[0] == CalculationStyle.Divide) {
             canvas.drawPath(mPath, mDividerPaint);
-            canvas.drawLine(mDividerEndX, mDividerY, getContentWidth() + 20, mDividerY, mDividerPaint);
+            canvas.drawLine(mDividerEndX, mDividerY, mLeftColumns * mCellRectWidth, mDividerY, mDividerPaint);
         }
         canvas.restore();
     }
 
-    private void drawLeft(Canvas canvas) {
+    private void drawLeft(Canvas canvas, int offsetX) {
         for (int i = 0; i < mLeftCells.length; i++) {
             NumberCell rows[] = mLeftCells[i];
             for (int j = 0; j < rows.length; j++) {
                 NumberCell cell = mLeftCells[i][j];
                 if (cell != null) {
-                    cell.draw(canvas);
+                    cell.draw(canvas, offsetX);
                 }
             }
         }

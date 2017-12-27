@@ -40,9 +40,9 @@ public class NumberCell {
     private String mValue;
     private String mFlag;
     private float mDelOffset;
-    private Canvas mCanvas;
     private int mNumberId;
     private int mFlagId;
+    private int mOffsetX;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
                       String value, String flag, int row, int column, Paint valuePaint,
@@ -161,14 +161,11 @@ public class NumberCell {
         }
     }
 
-    public void draw(Canvas canvas) {
-        mCanvas = canvas;
+    public void draw(Canvas canvas, int offsetX) {
+        mOffsetX = offsetX;
         if (mValueRect != null) {
             if (mValueBlock != null) {
-                canvas.save();
-//                canvas.translate(mValueRect.left, mValueRect.top);
                 mValueBlock.draw(canvas);
-                canvas.restore();
             } else {
                 if ("del0".equals(mValue)) {
                     canvas.drawText(
@@ -194,10 +191,7 @@ public class NumberCell {
 
         if (mFlagRect != null) {
             if (mFlagBlock != null) {
-                canvas.save();
-//                canvas.translate(mFlagRect.left, mFlagRect.top);
                 mFlagBlock.draw(canvas);
-                canvas.restore();
             } else {
                 canvas.drawText(mFlag,
                         mFlagRect.left + mFlagLeftOffset,
@@ -205,8 +199,6 @@ public class NumberCell {
                         mFlagPaint);
             }
         }
-
-
     }
 
     public Rect getRect() {
@@ -214,9 +206,11 @@ public class NumberCell {
     }
 
     public ICYEditable findICYEditable(float x, float y) {
-        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x), (int) (y))) {
+        Log.e("XXXXX", "x = " + x + ", y = " + y + ", mOffsetX = " + mOffsetX);
+        Log.e("XXXXX", "value = " + mValue + ", rect = " + mValueRect.left + ", " + mValueRect.top + ", " + mValueRect.right + ", " + mValueRect.bottom);
+        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mFlagBlock;
-        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x), (int) (y))) {
+        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mValueBlock;
         }
         return null;
@@ -225,10 +219,4 @@ public class NumberCell {
     public List<ICYEditable> findAllICYEditable() {
         return mList;
     }
-
-    public void setText(int id, EditableValue value) {
-
-        draw(mCanvas);
-    }
-
 }
