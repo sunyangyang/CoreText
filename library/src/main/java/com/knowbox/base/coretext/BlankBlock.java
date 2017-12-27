@@ -169,7 +169,7 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 130;
                 this.mHeight = 60;
             } else if ("big_img_blank".equals(size)) {
-                this.mWidth = Const.DP_1 * 20;
+                this.mWidth = 160;
                 this.mHeight = 60;
             } else if ("number".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;//init中设置了margin，加上margin的宽度
@@ -255,6 +255,13 @@ public class BlankBlock extends CYEditBlock {
 
     public double getOffsetY() {
         return mOffsetY;
+    }
+
+    public boolean isSingleBlank() {
+        if (mTextLength == 1) {
+            return true;
+        }
+        return false;
     }
 
 }

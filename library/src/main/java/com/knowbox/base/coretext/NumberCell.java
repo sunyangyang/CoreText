@@ -24,8 +24,8 @@ public class NumberCell {
     private Rect mRect;
     private Rect mValueRect;
     private Rect mFlagRect;
-    private int mSideWidth = VerticalCalculationBlock.NUMBER_RECT_SIZE;
-    private int mFlagSideWidth = VerticalCalculationBlock.FLAG_RECT_SIZE;
+    private int mSideWidth;
+    private int mFlagSideWidth;
     private float mValueLeftOffset;
     private float mFlagLeftOffset;
     private float mValueTopOffset;
@@ -40,13 +40,19 @@ public class NumberCell {
     private String mValue;
     private String mFlag;
     private float mDelOffset;
+    private Canvas mCanvas;
+    private int mNumberId;
+    private int mFlagId;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
                       String value, String flag, int row, int column, Paint valuePaint,
-                      Paint flagPaint, Paint blankPaint, int valueTopMargin, int valueLeftMargin) {
+                      Paint flagPaint, Paint blankPaint, int valueTopMargin, int valueLeftMargin,
+                      int sideWidth, int flagSideWidth) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
+        mSideWidth = sideWidth;
+        mFlagSideWidth = flagSideWidth;
         mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mValuePaint.set(valuePaint);
         mFlagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -104,7 +110,8 @@ public class NumberCell {
                 mFlagBlock.setFocusable(true);
                 mFlagBlock.setFocus(false);
                 mFlagBlock.setEditable(true);
-                mFlagBlock.setLineY(mFlagRect.height() / 2);
+                mFlagBlock.setX(mFlagRect.left + mFlagRect.width() / 2);
+                mFlagBlock.setLineY(mFlagRect.top + mFlagRect.height() / 2);
             }
         }
 
@@ -135,11 +142,13 @@ public class NumberCell {
                 String[] ids = mValue.split("k");
                 mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
                 mValueBlock = new BlankBlock(textEnv, mValueContent);
+
                 mValueBlock.setTabId(Integer.valueOf(ids[1]));
                 mValueBlock.setFocusable(true);
                 mValueBlock.setFocus(false);
                 mValueBlock.setEditable(true);
-                mValueBlock.setLineY(mValueRect.height() / 2);
+                mValueBlock.setX(mValueRect.left + mValueRect.width() / 2);
+                mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
             }
         }
 
@@ -153,10 +162,11 @@ public class NumberCell {
     }
 
     public void draw(Canvas canvas) {
+        mCanvas = canvas;
         if (mValueRect != null) {
             if (mValueBlock != null) {
                 canvas.save();
-                canvas.translate(mValueRect.left, mValueRect.top);
+//                canvas.translate(mValueRect.left, mValueRect.top);
                 mValueBlock.draw(canvas);
                 canvas.restore();
             } else {
@@ -185,7 +195,7 @@ public class NumberCell {
         if (mFlagRect != null) {
             if (mFlagBlock != null) {
                 canvas.save();
-                canvas.translate(mFlagRect.left, mFlagRect.top);
+//                canvas.translate(mFlagRect.left, mFlagRect.top);
                 mFlagBlock.draw(canvas);
                 canvas.restore();
             } else {
@@ -204,9 +214,9 @@ public class NumberCell {
     }
 
     public ICYEditable findICYEditable(float x, float y) {
-        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x - mFlagRect.left), (int) (y - mFlagRect.top))) {
+        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x), (int) (y))) {
             return mFlagBlock;
-        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mValueRect.left), (int) (y - mValueRect.top))) {
+        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x), (int) (y))) {
             return mValueBlock;
         }
         return null;
@@ -214,6 +224,11 @@ public class NumberCell {
 
     public List<ICYEditable> findAllICYEditable() {
         return mList;
+    }
+
+    public void setText(int id, EditableValue value) {
+
+        draw(mCanvas);
     }
 
 }

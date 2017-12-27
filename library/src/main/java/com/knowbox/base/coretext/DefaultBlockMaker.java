@@ -1,5 +1,7 @@
 package com.knowbox.base.coretext;
 
+import android.util.Log;
+
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
@@ -17,6 +19,7 @@ import org.json.JSONObject;
  */
 
 public class DefaultBlockMaker implements IBlockMaker {
+    int count = 0;
 
     @Override
     public CYTextBlock buildTextBlock(TextEnv textEnv, String s) {
@@ -41,6 +44,7 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if("img".equals(type)) {
             return (T) new ImageBlock(textEnv, data);
         } else if("P".equals(type)) {
+            count++;
             return (T) new CYBreakLineBlock(textEnv, data);
         } else if ("para_begin".equals(type)) {
             return (T) new ParagraphBlock(textEnv, data) {
@@ -65,9 +69,9 @@ public class DefaultBlockMaker implements IBlockMaker {
             return (T) new CYStyleEndBlock(textEnv, data);
         } else if ("latex".equals(type)) {
             return (T) new LatexBlock(textEnv, data);
-        }/** else if ("shushi".equals(type)) {
+        } else if ("shushi".equals(type)) {
             return (T) new VerticalCalculationBlock(textEnv, data);
-        }**/ else if ("match".equals(type)) {
+        } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
         }
         return null;

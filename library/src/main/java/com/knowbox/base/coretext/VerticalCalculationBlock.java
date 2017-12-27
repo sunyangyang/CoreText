@@ -7,12 +7,14 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
 
 import org.json.JSONArray;
@@ -27,11 +29,15 @@ import java.util.List;
  */
 
 public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYEditableGroup {
-    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;
-    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;
-    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;
+    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;//16
+    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;//
+    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;//20
     public static final int FLAG_RECT_SIZE = Const.DP_1 * 16;
     public static final int RECT_PADDING_SIZE = Const.DP_1 * 4;
+    private float mScale = 1.0f;
+    private float mFlagScale = 1.37f;
+    public static final int SCALE = Integer.MAX_VALUE;
+
     private int mLeftColumns = 5;
     private int mRows;
     private Paint mNormalTextPaint;
@@ -53,6 +59,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mDividerY;
     private Paint mDividerPaint;
     private int mContentHeight;
+    private float mNumberPaintSize = NUMBER_PAINT_SIZE;//16
+    private float mFlagPaintSize = FLAG_PAINT_SIZE;//
+    private int mNumberRectSize = NUMBER_RECT_SIZE;//20
+    private int mFlagRectSize = FLAG_RECT_SIZE;
+    private int mRectPaddingSize = RECT_PADDING_SIZE;
 
     public enum CalculationStyle {
         Plus,
@@ -67,17 +78,33 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     }
 
     private void init(TextEnv textEnv, String content) {
-        setAlignStyle(AlignStyle.Style_MONOPOLY);
+        EditableValue value = textEnv.getEditableValue(SCALE);
+        try {
+            if (value != null) {
+                mScale = Float.parseFloat(value.getValue());
+            }
+        } catch (Exception e) {
+
+        }
+        if (mScale >= 1) {
+            mFlagScale = 1.f;
+        }
+
+        mNumberPaintSize = NUMBER_PAINT_SIZE * mScale;
+        mFlagPaintSize = FLAG_PAINT_SIZE * mScale * mFlagScale;
+        mNumberRectSize = (int) (NUMBER_RECT_SIZE * mScale);
+        mFlagRectSize = (int) (FLAG_RECT_SIZE * mScale * mFlagScale);
+
         mNormalTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mNormalTextPaint.setStrokeWidth(Const.DP_1);
         mNormalTextPaint.setStyle(Paint.Style.FILL);
-        mNormalTextPaint.setTextSize(NUMBER_PAINT_SIZE);
+        mNormalTextPaint.setTextSize(mNumberPaintSize);
         mNormalTextPaint.setColor(0xff333333);
 
         mSmallTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mSmallTextPaint.setStrokeWidth(Const.DP_1);
         mSmallTextPaint.setStyle(Paint.Style.FILL);
-        mSmallTextPaint.setTextSize(FLAG_PAINT_SIZE);
+        mSmallTextPaint.setTextSize(mFlagPaintSize);
         mSmallTextPaint.setColor(0xff333333);
 
         mBlankPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -95,8 +122,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mDividerPaint.setStyle(Paint.Style.STROKE);
         mDividerPaint.setColor(0xff333333);
 
-        mCellRectWidth = NUMBER_RECT_SIZE + Const.DP_1 * 10;
-        mCellRectHeight = NUMBER_RECT_SIZE + Const.DP_1 * 10;
+        mCellRectWidth = mNumberRectSize + Const.DP_1 * 10;
+        mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
         JSONObject object = null;
         try {
             content = content.replaceAll("#\\{", "");
@@ -196,7 +223,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             JSONArray carryArray = jsonObject.optJSONArray("carry_flag");
             if (method.equals("multiplication") || method.equals("plus")) {
                 if (carryArray != null && carryArray.length() > 0) {
-                    mCellRectWidth = NUMBER_RECT_SIZE + Const.DP_1 * 20;
+                    mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;
                     leftMargin = Const.DP_1 * 20;
                 }
             }
@@ -239,7 +266,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                         maxDigits = valueLength;
                     }
                     for (int k = valueLength - 1; k >= 0; k--) {
-                        mValues[row + topLines][mLeftColumns - valueLength + k] = valueArray.optString(k);
+                        if (mLeftColumns - valueLength + k >= 0) {
+                            mValues[row + topLines][mLeftColumns - valueLength + k] = valueArray.optString(k);
+                        }
                     }
                 }
 
@@ -287,11 +316,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 if (k == mHorizontalLines[linesPosition - 1] - (arrayLength + topLines) &&
                         mStyle[i] == CalculationStyle.Minus &&
                         (flagArray != null && flagArray.length() > 0)) {
-                    mCellRectHeight = NUMBER_RECT_SIZE + FLAG_RECT_SIZE + RECT_PADDING_SIZE;
+                    mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
                     topMargin = Const.DP_1 * 20;
                 } else {
                     topMargin = Const.DP_1 * 10;
-                    mCellRectHeight = NUMBER_RECT_SIZE + Const.DP_1 * 10;
+                    mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
                 }
 
                 for (int j = 0; j < mLeftColumns; j++) {
@@ -301,7 +330,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin);
+                            mStyle[i], mValues[k][j], mFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
@@ -404,7 +433,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         Rect rect = getContentRect();
         canvas.save();
-        canvas.translate(rect.left, rect.top);
+        canvas.translate(rect.left + (getTextEnv().getSuggestedPageWidth() - getContentWidth()) / 2, rect.top);
         drawLeft(canvas);
         for (int i = 0; i < mHorizontalLines.length - 1; i++) {//去除最后一行
             canvas.drawLine(mLineStartX, mHorizontalLinesHeight[i] + mOffsetTop, getContentWidth() + 20, mHorizontalLinesHeight[i] + mOffsetTop, mLinePaint);
