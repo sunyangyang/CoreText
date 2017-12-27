@@ -110,7 +110,7 @@ public class NumberCell {
                 mFlagBlock.setFocusable(true);
                 mFlagBlock.setFocus(false);
                 mFlagBlock.setEditable(true);
-                mFlagBlock.setX(mFlagRect.left + mFlagRect.width() / 2);
+                mFlagBlock.setX(mFlagRect.left);
                 mFlagBlock.setLineY(mFlagRect.top + mFlagRect.height() / 2);
             }
         }
@@ -147,7 +147,7 @@ public class NumberCell {
                 mValueBlock.setFocusable(true);
                 mValueBlock.setFocus(false);
                 mValueBlock.setEditable(true);
-                mValueBlock.setX(mValueRect.left + mValueRect.width() / 2);
+                mValueBlock.setX(mValueRect.left);
                 mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
             }
         }
