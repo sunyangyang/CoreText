@@ -81,6 +81,7 @@ public class NumberCell {
 
                 }
                 if (id > 0 && textEnv.getEditableValue(id) != null) {
+                    mFlagId = id;
                     EditableValue ev = textEnv.getEditableValue(id);
                     mFlagPaint.setColor(ev.getColor());
                     mFlag = ev.getValue();
@@ -104,6 +105,11 @@ public class NumberCell {
 
             if (mFlag.contains("blank")) {
                 String[] ids = mFlag.split("k");
+                try {
+                    mFlagId = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
                 mFlagContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
                 mFlagBlock = new BlankBlock(textEnv, mFlagContent);
                 mFlagBlock.setTabId(Integer.valueOf(ids[1]));
@@ -127,6 +133,7 @@ public class NumberCell {
 
                 }
                 if (id > 0 && textEnv.getEditableValue(id) != null) {
+                    mNumberId = id;
                     EditableValue ev = textEnv.getEditableValue(id);
                     mValuePaint.setColor(ev.getColor());
                     mValue = ev.getValue();
@@ -140,6 +147,11 @@ public class NumberCell {
 
             if (mValue.contains("blank")) {
                 String[] ids = mValue.split("k");
+                try {
+                    mNumberId = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
                 mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
                 mValueBlock = new BlankBlock(textEnv, mValueContent);
 
@@ -206,8 +218,6 @@ public class NumberCell {
     }
 
     public ICYEditable findICYEditable(float x, float y) {
-        Log.e("XXXXX", "x = " + x + ", y = " + y + ", mOffsetX = " + mOffsetX);
-        Log.e("XXXXX", "value = " + mValue + ", rect = " + mValueRect.left + ", " + mValueRect.top + ", " + mValueRect.right + ", " + mValueRect.bottom);
         if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mFlagBlock;
         } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
@@ -218,5 +228,21 @@ public class NumberCell {
 
     public List<ICYEditable> findAllICYEditable() {
         return mList;
+    }
+
+    public boolean getValue(int id, EditableValue ev) {
+        return (id == mNumberId && (mValuePaint.getColor() != ev.getColor() || mValue != ev.getValue())) ||
+                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != ev.getValue()));
+    }
+
+    public void setValue(int id, String value, int color) {
+        if (id == mNumberId) {
+            mValue = value;
+            mValuePaint.setColor(color);
+        } else {
+            mFlag = value;
+            mFlagPaint.setColor(color);
+        }
+
     }
 }

@@ -64,6 +64,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mNumberRectSize = NUMBER_RECT_SIZE;//20
     private int mFlagRectSize = FLAG_RECT_SIZE;
     private int mRectPaddingSize = RECT_PADDING_SIZE;
+    private TextEnv.EditableValueChangeListener mListener;
 
     public enum CalculationStyle {
         Plus,
@@ -74,6 +75,20 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
     public VerticalCalculationBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        if (mListener == null) {
+            mListener = new TextEnv.EditableValueChangeListener() {
+                @Override
+                public void setEditableValue(int i, String s) {
+//                    setText(s);
+                }
+
+                @Override
+                public void setEditableValue(int i, EditableValue editableValue) {
+                    setText(i, editableValue);
+                }
+            };
+        }
+        textEnv.setEditableValueChangeListener(mListener);
         init(textEnv, content);
     }
 
@@ -464,5 +479,155 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     @Override
     public int getLineHeight() {
         return getContentHeight();
+    }
+
+    public void setText(int id, EditableValue editableValue) {
+        boolean refresh = false;
+        if (mLeftCells != null) {
+            for (int i = 0; i < mLeftCells.length; i++) {
+                NumberCell rows[] = mLeftCells[i];
+                for (int j = 0; j < rows.length; j++) {
+                    NumberCell cell = mLeftCells[i][j];
+                    if (cell != null) {
+                        if (cell.getValue(id, editableValue)) {
+                            refresh = true;
+                            cell.setValue(id, editableValue.getValue(), editableValue.getColor());
+                        }
+                    }
+                }
+            }
+            if (refresh) {
+                postInvalidateThis();
+            }
+        }
+    }
+
+    public void setText(String content) {
+        boolean refresh = false;
+        if (mLeftCells != null) {
+            for (int i = 0; i < mLeftCells.length; i++) {
+                NumberCell rows[] = mLeftCells[i];
+                for (int j = 0; j < rows.length; j++) {
+                    NumberCell cell = mLeftCells[i][j];
+                    if (cell != null) {
+
+                    }
+                }
+            }
+            if (refresh) {
+                postInvalidateThis();
+            }
+        }
+        JSONObject object = null;
+        try {
+            object = new JSONObject(content);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (object == null) {
+            return;
+        }
+
+        JSONArray array = object.optJSONArray("content");
+        if (array == null) {
+            return;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject jsonObject = array.optJSONObject(i);
+            int row = 0;
+            JSONArray jsonArray = jsonObject.optJSONArray("members");
+            if (jsonArray == null) {
+                return;
+            }
+            int linesPosition = 0;
+            int topLines = 0;
+            //除法多了被除数、除数和商两行
+            JSONArray quotientArray = object.optJSONArray("quotient");
+            if (quotientArray != null) {
+                topLines = 2;
+                mRows += topLines;
+            }
+            //计算横线的位置
+            int arrayLength = jsonArray.length();
+            if (linesPosition > 0) {
+                mHorizontalLines[linesPosition] = mHorizontalLines[linesPosition - 1] + arrayLength;
+            } else {
+                mHorizontalLines[linesPosition] = arrayLength + topLines;
+            }
+            linesPosition++;
+
+            for (int j = 0; j < arrayLength; j++) {
+                JSONObject memberObject = jsonArray.optJSONObject(j);
+                JSONArray valueArray = memberObject.optJSONArray("value");
+                if (valueArray != null) {
+                    int valueLength = valueArray.length();
+                    for (int k = valueLength - 1; k >= 0; k--) {
+                        if (mLeftColumns - valueLength + k >= 0) {
+                            mValues[row + topLines][mLeftColumns - valueLength + k] = valueArray.optString(k);
+                        }
+                    }
+                }
+                row++;
+            }
+            JSONArray flagArray = jsonObject.optJSONArray("carry_flag");
+            if (flagArray == null) {
+                flagArray = jsonObject.optJSONArray("borrow_flag");
+            }
+            if (flagArray != null) {
+                int carryLength = flagArray.length();
+                if (mStyle[i] == CalculationStyle.Multiplication || mStyle[i] == CalculationStyle.Plus) {
+                    for (int k = carryLength - 1; k >= 0; k--) {
+                        mFlag[mHorizontalLines[i] - 1][mLeftColumns - carryLength + k] = flagArray.optString(k);
+                    }
+                } else {
+                    for (int k = carryLength - 1; k >= 0; k--) {
+                        if (i == 0) {
+                            mFlag[i][mLeftColumns - carryLength + k] = flagArray.optString(k);
+                        } else {
+                            mFlag[mHorizontalLines[i - 1]][mLeftColumns - carryLength + k] = flagArray.optString(k);
+                        }
+                    }
+                }
+
+            }
+            //linesPosition 在之前++过
+            int k;
+            if (linesPosition - 1 == 0) {
+                k = mHorizontalLines[linesPosition - 1] - (arrayLength + topLines);
+            } else {
+                k = mHorizontalLines[linesPosition - 1] - arrayLength;
+            }
+            for (; k < mHorizontalLines[linesPosition - 1]; k++) {
+                //每行高度保持一致，有无借位
+                int topMargin;
+                if (k == mHorizontalLines[linesPosition - 1] - (arrayLength + topLines) &&
+                        mStyle[i] == CalculationStyle.Minus &&
+                        (flagArray != null && flagArray.length() > 0)) {
+                    mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
+                    topMargin = Const.DP_1 * 20;
+                } else {
+                    topMargin = Const.DP_1 * 10;
+                    mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                }
+
+                for (int j = 0; j < mLeftColumns; j++) {
+                    if (TextUtils.isEmpty(mValues[k][j]) && TextUtils.isEmpty(mFlag[k][j])) {
+                        mLeftCells[k][j] = null;
+                        continue;
+                    }
+//                    mLeftCells[k][j].setValue(mValues[k][j], mFlag[k][j]);
+//                    = new NumberCell(textEnv,
+//                            new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
+//                            mStyle[i], mValues[k][j], mFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize);
+                }
+                mContentHeight += mCellRectHeight;
+                if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
+                    mHorizontalLinesHeight[i] = mContentHeight;//使用i,
+                    mContentHeight += Const.DP_1 * 2;//线宽
+                }
+            }
+        }
+
+
     }
 }
