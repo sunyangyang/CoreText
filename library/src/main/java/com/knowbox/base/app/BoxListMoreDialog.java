@@ -136,9 +136,9 @@ public class BoxListMoreDialog<T extends BaseUIFragmentHelper> extends DialogFra
 			mListView.setOnItemClickListener(listener);
 		}
 	}
-	
+
 	@Override
-	protected int getWinsHorizonallMarginDp() {
+	protected int getWinsHorizontalMarginDp() {
 		return 0;
 	}
 }

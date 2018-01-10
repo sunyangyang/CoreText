@@ -71,7 +71,7 @@ public class App extends BaseApp {
         public ServiceManager() {
             super();
             initFrameServices();
-            registService(BoxLogService.SERVICE_NAME, new BoxLogServerImpl() {
+            registerService(BoxLogService.SERVICE_NAME, new BoxLogServerImpl() {
 
                 @Override
                 public String getUserId() {

@@ -2,28 +2,20 @@ package com.knowbox.base.samples.fragments;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.hyena.coretext.CYSinglePageView;
-import com.hyena.coretext.builder.IBlockMaker;
 import com.hyena.coretext.event.CYFocusEventListener;
-import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.app.adapter.SingleTypeAdapter;
-import com.knowbox.base.coretext.MatchBlock;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.samples.R;
-import com.knowbox.base.utils.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,17 +57,13 @@ public class NumberCalculationFragment extends Fragment {
             JSONObject object = new JSONObject(content);
             JSONArray array = object.optJSONArray("questionList");
 
-            for (int i = 0; i < 10; i++) {
-                JSONObject jsonObject = array.optJSONObject(DialogUtils.NUM);
-                String question = jsonObject.optString("question");
-                Item item = new Item();
-                item.question = question;
-                DialogUtils.NUM++;
-                if (DialogUtils.NUM > array.length() - 1) {
-                    DialogUtils.NUM = 0;
-                }
-                mList.add(item);
-            }
+//            for (int i = 0; i < 10; i++) {
+//                JSONObject jsonObject = array.optJSONObject(DialogUtils.NUM);
+//                String question = jsonObject.optString("question");
+//                Item item = new Item();
+//                item.question = question;
+//                mList.add(item);
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

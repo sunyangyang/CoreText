@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.hyena.framework.app.fragment.AnimType;
 import com.hyena.framework.app.fragment.BaseUIFragmentHelper;
 import com.hyena.framework.app.fragment.DialogFragment;
 import com.hyena.framework.utils.UIUtils;
@@ -35,7 +36,7 @@ public class BoxMessageFragment<T extends BaseUIFragmentHelper> extends
 			int titleIconResId, String title, View contentView,
 			String confirmTxt, String cancelTxt) {
 		BoxMessageFragment<?> fragment = BoxMessageFragment.newFragment(
-				activity, BoxMessageFragment.class, null);
+				activity, BoxMessageFragment.class);
 		fragment.setAnimationType(AnimType.ANIM_NONE);
 		fragment.setSlideable(false);
 		fragment.setTitleStyle(STYLE_NO_TITLE);
@@ -45,7 +46,7 @@ public class BoxMessageFragment<T extends BaseUIFragmentHelper> extends
 		fragment.setTitleIconResId(titleIconResId);
 
 		fragment.setContent(contentView);
-		fragment.setBtns(confirmTxt, cancelTxt);
+		fragment.setButtons(confirmTxt, cancelTxt);
 		fragment.setCanceledOnTouchOutside(true);
 		return fragment;
 	}
