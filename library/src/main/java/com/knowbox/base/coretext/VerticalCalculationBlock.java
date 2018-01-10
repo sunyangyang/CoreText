@@ -5,11 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
@@ -17,10 +14,8 @@ import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.knowbox.base.utils.DialogUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
