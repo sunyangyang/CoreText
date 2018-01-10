@@ -5,5 +5,6 @@ out/
 build/
 .gradle/
 .DS_Store
+local.properties
 shells/moveaar.sh
 shells/sunMoveaar.sh
