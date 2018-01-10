@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
 
 import java.util.ArrayList;
@@ -22,17 +25,13 @@ public class NumberCell {
     private Rect mValueRect;
     private Rect mFlagRect;
     private int mSideWidth;
-    private float mValueContentWidth;
     private int mFlagSideWidth;
-    private int mColumn;
-    private int mRow;
-    private float mValueOffset;
-    private float mSingleValueOffset;
-    private float mSingleValueSideWidth;
-    private float mFlagOffset;
+    private float mValueLeftOffset;
+    private float mFlagLeftOffset;
+    private float mValueTopOffset;
+    private float mFlagTopOffset;
     private Paint mValuePaint;
     private Paint mFlagPaint;
-    private Paint mBlankPaint;
     List<ICYEditable> mList = new ArrayList<ICYEditable>();
     private BlankBlock mValueBlock;
     private BlankBlock mFlagBlock;
@@ -40,71 +39,128 @@ public class NumberCell {
     private String mFlagContent;
     private String mValue;
     private String mFlag;
+    private float mDelOffset;
+    private int mNumberId;
+    private int mFlagId;
+    private int mOffsetX;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
                       String value, String flag, int row, int column, Paint valuePaint,
-                      Paint flagPaint, Paint blankPaint, boolean isLeft) {
+                      Paint flagPaint, Paint blankPaint, int valueTopMargin, int valueLeftMargin,
+                      int sideWidth, int flagSideWidth) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
-        mValuePaint = valuePaint;
-        mFlagPaint = flagPaint;
-        mBlankPaint = blankPaint;
-        mColumn = column;
-        mRow = row;
-        mSideWidth = PaintManager.getInstance().getHeight(valuePaint);
-        mFlagSideWidth = PaintManager.getInstance().getHeight(flagPaint);
-        mSingleValueSideWidth = PaintManager.getInstance().getWidth(valuePaint, "9");
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(Color.GREEN);
-        if (!TextUtils.isEmpty(value)) {
-            String size = "number";
-            if (!isLeft) {
-                mValueRect = rect;
-                size = "right_number";
-            } else {
-                mValueRect = new Rect(rect.left + mFlagSideWidth, rect.top + mFlagSideWidth, rect.right, rect.bottom);
-            }
-            mValueOffset = (mValueRect.width() - PaintManager.getInstance().getWidth(mValuePaint, value)) / 2;
-            mSingleValueOffset = (mValueRect.width() - mSingleValueSideWidth) / 2;
-
-            if (value.contains("blank")) {
-                String[] ids = value.split("k");
-                mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
-                mValueBlock = new BlankBlock(textEnv, mValueContent);
-                mValueBlock.setTabId(Integer.valueOf(ids[1]));
-                mValueBlock.setFocusable(true);
-                mValueBlock.setFocus(false);
-                mValueBlock.setEditable(true);
-                if (!isLeft) {
-                    mValueBlock.setLineY(mValueRect.height() + mValueBlock.getContentRect().top - 10);
-                } else {
-                    mValueBlock.setLineY(mSideWidth + mValueBlock.getContentRect().top - 10);
-                }
-
-            }
+        mSideWidth = sideWidth;
+        mFlagSideWidth = flagSideWidth;
+        mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mValuePaint.set(valuePaint);
+        mFlagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mFlagPaint.set(flagPaint);
+        int flagLeftMargin = 0;
+        int flagTopMargin = 0;
+        if (valueLeftMargin > mFlagSideWidth) {
+            flagLeftMargin = (valueLeftMargin - mFlagSideWidth) / 2;
         }
 
+        if (valueTopMargin > mFlagSideWidth) {
+            flagTopMargin = (valueTopMargin - mFlagSideWidth) / 2;
+        }
 
-        if (!TextUtils.isEmpty(flag)) {
+        mDelOffset = (PaintManager.getInstance().getWidth(mValuePaint, "0") - PaintManager.getInstance().getWidth(mValuePaint, "\\")) / 2.f;
+
+        if (!TextUtils.isEmpty(mFlag)) {
+            Rect textRect = new Rect();
+            mFlagPaint.getTextBounds(mFlag, 0, 1, textRect);
+            if (mFlag.contains("blank")) {
+                String[] ids = mFlag.split("k");
+                int id = -1;
+                try {
+                    id = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
+                if (id > 0 && textEnv.getEditableValue(id) != null) {
+                    mFlagId = id;
+                    EditableValue ev = textEnv.getEditableValue(id);
+                    mFlagPaint.setColor(ev.getColor());
+                    mFlag = ev.getValue();
+                }
+            }
+
             if (style == VerticalCalculationBlock.CalculationStyle.Plus ||
                     style == VerticalCalculationBlock.CalculationStyle.Multiplication) {
-                mFlagRect = new Rect(rect.left, rect.bottom - mFlagSideWidth, rect.left + mFlagSideWidth, rect.bottom);
+                mFlagRect = new Rect(rect.left + flagLeftMargin,
+                        rect.bottom - mFlagSideWidth - Const.DP_1,
+                        rect.left + flagLeftMargin + mFlagSideWidth,
+                        rect.bottom - Const.DP_1);
             } else {
-                mFlagRect = new Rect((int) (rect.left + mFlagSideWidth  + (mSideWidth - mFlagSideWidth) / 2),
-                        rect.top, (int) (rect.left + mFlagSideWidth  + (mSideWidth + mFlagSideWidth) / 2), rect.top + mFlagSideWidth);
+                mFlagRect = new Rect((int) (rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2),
+                        rect.top + flagTopMargin,
+                        (int) (rect.left + valueLeftMargin + (mSideWidth + mFlagSideWidth) / 2),
+                        rect.top + flagTopMargin + mFlagSideWidth);
             }
-            mFlagOffset = (mFlagRect.width() - PaintManager.getInstance().getWidth(flagPaint, "9")) / 2;
-            if (flag.contains("blank")) {
-                String[] ids = flag.split("k");
+            mFlagLeftOffset = (mFlagRect.width() - textRect.width()) / 2.f;
+            mFlagTopOffset = (mFlagRect.height() - textRect.height()) / 2.f;
+
+            if (mFlag.contains("blank")) {
+                String[] ids = mFlag.split("k");
+                try {
+                    mFlagId = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
                 mFlagContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
                 mFlagBlock = new BlankBlock(textEnv, mFlagContent);
                 mFlagBlock.setTabId(Integer.valueOf(ids[1]));
                 mFlagBlock.setFocusable(true);
                 mFlagBlock.setFocus(false);
                 mFlagBlock.setEditable(true);
-                mFlagBlock.setLineY(mFlagSideWidth + mFlagBlock.getContentRect().top - 10);
+                mFlagBlock.setX(mFlagRect.left);
+                mFlagBlock.setLineY(mFlagRect.top + mFlagRect.height() / 2);
+            }
+        }
+
+        if (!TextUtils.isEmpty(mValue)) {
+            Rect textRect = new Rect();
+            mValuePaint.getTextBounds(mValue, 0, 1, textRect);
+            if (mValue.contains("blank")) {
+                String[] ids = mValue.split("k");
+                int id = -1;
+                try {
+                    id = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
+                if (id > 0 && textEnv.getEditableValue(id) != null) {
+                    mNumberId = id;
+                    EditableValue ev = textEnv.getEditableValue(id);
+                    mValuePaint.setColor(ev.getColor());
+                    mValue = ev.getValue();
+                }
+            }
+            String size = "number";
+            mValueRect = new Rect(rect.left + valueLeftMargin, rect.top + valueTopMargin,
+                    rect.left + valueLeftMargin + mSideWidth, rect.top + valueTopMargin + mSideWidth);
+            mValueLeftOffset = (mValueRect.width() - textRect.width()) / 2.f;
+            mValueTopOffset = (mValueRect.height() - textRect.height()) / 2.f;
+
+            if (mValue.contains("blank")) {
+                String[] ids = mValue.split("k");
+                try {
+                    mNumberId = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
+
+                }
+                mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
+                mValueBlock = new BlankBlock(textEnv, mValueContent);
+
+                mValueBlock.setTabId(Integer.valueOf(ids[1]));
+                mValueBlock.setFocusable(true);
+                mValueBlock.setFocus(false);
+                mValueBlock.setEditable(true);
+                mValueBlock.setX(mValueRect.left);
+                mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
             }
         }
 
@@ -117,41 +173,44 @@ public class NumberCell {
         }
     }
 
-
-
-    Paint mPaint;
-    public void draw(Canvas canvas) {
-        canvas.drawRect(mRect, mPaint);
+    public void draw(Canvas canvas, int offsetX) {
+        mOffsetX = offsetX;
         if (mValueRect != null) {
             if (mValueBlock != null) {
-                canvas.save();
-                canvas.translate(mValueRect.left, mValueRect.top);
                 mValueBlock.draw(canvas);
-                canvas.restore();
             } else {
-                canvas.drawText(
-                        mValue,
-                        mValueRect.left + mValueOffset,
-                        mValueRect.bottom - 10,
-                        mValuePaint);
+                if ("del0".equals(mValue)) {
+                    canvas.drawText(
+                            "0",
+                            mValueRect.left + mValueLeftOffset,
+                            mValueRect.bottom - mValueTopOffset,
+                            mValuePaint);
+                    canvas.drawText(
+                            "\\",
+                            mValueRect.left + mValueLeftOffset + mDelOffset,
+                            mValueRect.bottom - mValueTopOffset,
+                            mValuePaint);
+                } else {
+                    canvas.drawText(
+                            mValue,
+                            mValueRect.left + mValueLeftOffset,
+                            mValueRect.bottom - mValueTopOffset,
+                            mValuePaint);
+                }
+
             }
         }
 
         if (mFlagRect != null) {
             if (mFlagBlock != null) {
-                canvas.save();
-                canvas.translate(mFlagRect.left, mFlagRect.top);
                 mFlagBlock.draw(canvas);
-                canvas.restore();
             } else {
                 canvas.drawText(mFlag,
-                        mFlagRect.left + mFlagOffset,
-                        mFlagRect.bottom - 10,
+                        mFlagRect.left + mFlagLeftOffset,
+                        mFlagRect.bottom - mFlagTopOffset,
                         mFlagPaint);
             }
         }
-
-
     }
 
     public Rect getRect() {
@@ -159,9 +218,9 @@ public class NumberCell {
     }
 
     public ICYEditable findICYEditable(float x, float y) {
-        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x - mFlagRect.left), (int) (y - mFlagRect.top))) {
+        if (mFlagBlock != null && mFlagBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mFlagBlock;
-        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mValueRect.left), (int) (y - mValueRect.top))) {
+        } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mValueBlock;
         }
         return null;
@@ -171,4 +230,19 @@ public class NumberCell {
         return mList;
     }
 
+    public boolean getValue(int id, EditableValue ev) {
+        return (id == mNumberId && (mValuePaint.getColor() != ev.getColor() || mValue != ev.getValue())) ||
+                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != ev.getValue()));
+    }
+
+    public void setValue(int id, String value, int color) {
+        if (id == mNumberId) {
+            mValue = value;
+            mValuePaint.setColor(color);
+        } else {
+            mFlag = value;
+            mFlagPaint.setColor(color);
+        }
+
+    }
 }

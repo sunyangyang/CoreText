@@ -63,7 +63,10 @@ public class MatchCell {
         mBorderLightColor = borderLightColor;
         mFillColor = fillColor;
         mFillLightColor = fillLightColor;
+    }
 
+    public void setMaxWidth(int maxWidth) {
+        mMaxWidth = maxWidth;
     }
 
     /**
@@ -74,8 +77,6 @@ public class MatchCell {
     public Point initCellText(String text) {
         if (mTextEnv == null) {
             mTextEnv = new TableTextEnv(mMatchBlock.getTextEnv());
-            mTextEnv.setSuggestedPageWidth(mMaxWidth);
-            mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
             mTextEnv.getEventDispatcher().addLayoutEventListener(new CYLayoutEventListener() {
                 @Override
                 public void doLayout(boolean force) {
@@ -92,6 +93,8 @@ public class MatchCell {
                 }
             });
         }
+        mTextEnv.setSuggestedPageWidth(mMaxWidth - Const.DP_1 * 20);
+        mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         CYPageBlock pageBlock = null;
         List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
         if (blocks != null && !blocks.isEmpty()) {
@@ -107,7 +110,7 @@ public class MatchCell {
             }
         }
         if (pageBlock != null) {
-            return new Point(Math.min(pageBlock.getWidth(), mMaxWidth), pageBlock.getHeight());
+            return new Point(Math.min(pageBlock.getWidth() + Const.DP_1 * 20, mMaxWidth), pageBlock.getHeight());
         } else {
             return new Point();
         }
@@ -135,7 +138,7 @@ public class MatchCell {
                 }
             });
         }
-        mTextEnv.setSuggestedPageWidth((int) rectF.width());
+        mTextEnv.setSuggestedPageWidth((int) rectF.width() - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight((int) rectF.height());
         List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
         if (blocks != null && !blocks.isEmpty()) {
@@ -147,7 +150,7 @@ public class MatchCell {
                 int topPadding = Const.DP_1 * 10;
                 int rightPadding = Const.DP_1 * 20;
                 int bottomPadding = Const.DP_1 * 10;
-                mPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+//                mPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
             }
         }
     }

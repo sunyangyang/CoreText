@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.servcie.IServiceManager;
@@ -15,8 +16,8 @@ import com.hyena.framework.servcie.ServiceProvider;
 import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;
-import com.knowbox.base.samples.fragments.NumberCalculationFragment;
 import com.knowbox.base.samples.fragments.QuestionFragment;
+import com.knowbox.base.samples.fragments.NumberCalculationFragment;
 import com.knowbox.base.service.log.BoxLogService;
 import com.knowbox.base.service.log.LogService;
 import com.knowbox.base.service.push.GetuiPushIntentService;
@@ -38,16 +39,22 @@ public class MainActivity extends FragmentActivity {
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GetuiPushIntentService.class);
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.replace(R.id.main, new SamplesVideoFragment());
-//        ft.replace(R.id.main, new QuestionListFragment());
+////        ft.replace(R.id.main, new SamplesVideoFragment());
+////        ft.replace(R.id.main, new QuestionListFragment());
         ft.replace(R.id.main, new QuestionFragment());
-//        ft.replace(R.id.main, new NumberCalculationFragment());
+////        ft.replace(R.id.main, new NumberCalculationFragment());
         ft.commitAllowingStateLoss();
 
         @SuppressLint("WrongConstant") BoxLogService logService = (BoxLogService) getSystemService(LogService.SERVICE_NAME);
         logService.sendNetLog("b_sync_math_start_click", "{\"questionId\":747743,\"spendTime\":5886}", "", "");
 
         MsgCenter.registerGlobalReceiver(receiver, new IntentFilter("action.push"));
+        findViewById(R.id.txt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testShare();
+            }
+        });
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {

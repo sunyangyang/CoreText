@@ -92,6 +92,14 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
 
         double x = json.optDouble("x_pos")/100;
         double y = json.optDouble("y_pos")/100;
+        if (x * getContentWidth() + blankBlock.getWidth() > getContentWidth()) {
+            x = (getContentWidth() - blankBlock.getWidth()) * 1.0f / getContentWidth();
+        }
+
+        if (y * getContentHeight() + blankBlock.getHeight() > getContentHeight()) {
+            y = (getContentHeight() - blankBlock.getHeight()) * 1.0f / getContentHeight();
+        }
+
         blankBlock.setOffset(x, y);
         return blankBlock;
     }

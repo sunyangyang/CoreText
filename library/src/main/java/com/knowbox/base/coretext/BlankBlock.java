@@ -4,6 +4,8 @@
 
 package com.knowbox.base.coretext;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,11 +32,14 @@ public class BlankBlock extends CYEditBlock {
     private int mWidth, mHeight;
 
     private double mOffsetX, mOffsetY;
+    private final int mMargin = Const.DP_1 * 3;
 
     private String mDefaultText;
     private int mTextLength = 16;
+    private TextEnv mTextEnv;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        mTextEnv = textEnv;
         init(content);
     }
 
@@ -51,9 +56,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("big_img_blank".equals(getSize())) {
                 mTextLength = 8;
             } else if ("number".equals(getSize())) {
-                mTextLength = 2;
-            } else if ("right_number".equals(getSize())) {
-                mTextLength = 3;
+                mTextLength = 1;
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
             } else {
@@ -69,11 +72,11 @@ public class BlankBlock extends CYEditBlock {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
                 } else if ("number".equals(size)) {
-                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 20);
-                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 20);
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.NUMBER_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.NUMBER_PAINT_SIZE);
                 } else if ("flag".equals(size)) {
-                    ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 14);
-                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 14);
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                 }
                 ((EditFace)getEditFace()).updateEnv();
                 setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
@@ -82,7 +85,7 @@ public class BlankBlock extends CYEditBlock {
                 setPadding(Const.DP_1, Const.DP_1, Const.DP_1, Const.DP_1);
             }
             ((EditFace)getEditFace()).setClass(mClass);
-            setMargin(Const.DP_1 * 3, Const.DP_1 * 3);
+            setMargin(mMargin, mMargin);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -99,7 +102,7 @@ public class BlankBlock extends CYEditBlock {
                 return;
 
             getTextEnv().setEditableValue(getTabId(), text);
-            if (!getTextEnv().isEditable() || "express".equals(size)) {
+            if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size)) {
                 updateSize();
                 requestLayout();
             } else {
@@ -145,7 +148,10 @@ public class BlankBlock extends CYEditBlock {
             if ("letter".equals(size)) {
                 int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                this.mWidth = width + Const.DP_1 * 10;
+                this.mWidth = width;
+                if (this.mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
+                    this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                }
                 this.mHeight = 40 * Const.DP_1;
             } else if ("line".equals(size)) {
                 this.mWidth = 265 * Const.DP_1;
@@ -163,17 +169,14 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 130;
                 this.mHeight = 60;
             } else if ("big_img_blank".equals(size)) {
-                this.mWidth = Const.DP_1 * 20;
+                this.mWidth = 160;
                 this.mHeight = 60;
-            } else if ("right_number".equals(size)) {
-                this.mWidth = Const.DP_1 * 27;//padding 为1dp
-                this.mHeight = Const.DP_1 * 18;
             } else if ("number".equals(size)) {
-                this.mWidth = Const.DP_1 * 18;//padding 为1dp
-                this.mHeight = Const.DP_1 * 18;
+                this.mWidth = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;//init中设置了margin，加上margin的宽度
+                this.mHeight = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;
             } else if ("flag".equals(size)) {
-                this.mWidth = Const.DP_1 * 12;//padding 为1dp
-                this.mHeight = Const.DP_1 * 12;
+                this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+                this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
@@ -252,6 +255,13 @@ public class BlankBlock extends CYEditBlock {
 
     public double getOffsetY() {
         return mOffsetY;
+    }
+
+    public boolean isSingleBlank() {
+        if (mTextLength == 1) {
+            return true;
+        }
+        return false;
     }
 
 }

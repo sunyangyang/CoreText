@@ -77,7 +77,6 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
                     if (maker == null) {
                         maker = this;
                     }
-
                     CYBlock block = maker.getBlock(textEnv, "{" + data + "}");
                     if (block != null) {
                         attributedString.replaceBlock(start, end, block);

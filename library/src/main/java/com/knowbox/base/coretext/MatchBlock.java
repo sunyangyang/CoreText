@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
@@ -74,15 +75,18 @@ public class MatchBlock extends CYPlaceHolderBlock {
     private boolean mIsNeedInvalidate = true;
     private boolean mCanOperate = true;
     private int mLineMargin = Const.DP_1 * 5;
+    private TextEnv mTextEnv;
+    private boolean mIsFirstTime = true;
 
     public enum MatchType {
         Add,
         Remove
     }
 
+
     public MatchBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        setIsInMonopolyRow(true);
+        mTextEnv = textEnv;
         try {
             JSONObject object = new JSONObject(content);
             JSONArray leftArray = object.optJSONArray("left");
@@ -135,6 +139,14 @@ public class MatchBlock extends CYPlaceHolderBlock {
         } catch (Exception e) {
         }
 
+    }
+
+    @Override
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
+        if (style != null) {
+            getTextEnv().setFontSize(style.getTextSize());
+        }
     }
 
     private void refreshLayout(int id, String content) {
@@ -261,6 +273,11 @@ public class MatchBlock extends CYPlaceHolderBlock {
         }
     }
 
+    @Override
+    public int getLineHeight() {
+        return getContentHeight();
+    }
+
     private void init() {
         mBorderColor = 0xffe3ebf4;
         mBorderLightColor = 0xff44cdfc;
@@ -286,8 +303,17 @@ public class MatchBlock extends CYPlaceHolderBlock {
         mFillPaint.setStrokeWidth(Const.DP_1);
         mFillPaint.setStyle(Paint.Style.FILL);
 
-
         mPadding = (int) mBorderPaint.getStrokeWidth() + 1;
+        initCellRect();
+        mLeftCells[0].setFocus(true);
+        mFocusCell = mLeftCells[0];
+        for (int i = 0; i < mRightList.size(); i++) {
+            mRightCells[i].setWait(true);
+        }
+
+    }
+
+    private void initCellRect() {
         boolean leftMultiSelect = true;//表示左边的比较少，可以多次选择
         boolean rightMultiSelect = true;//表示右边的比较少，可以多次选择
         if (mLeftList.size() > mRightList.size()) {
@@ -305,7 +331,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
                     mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             Point point = mLeftCells[i].initCellText(info.content);
-            mRectangles[0][i] = new RectF(mPadding, 0, point.x, point.y);
+            mRectangles[0][i] = new RectF(mPadding, 0, point.x + mPadding, point.y);
             if (point.x > mLeftMaxWidth) {
                 mLeftMaxWidth = point.x;
             }
@@ -313,8 +339,6 @@ public class MatchBlock extends CYPlaceHolderBlock {
                 mLeftMaxHeight = point.y;
             }
         }
-
-        mLeftHeight = mLeftMaxHeight * mLeftList.size();
 
         for (int i = 0; i < mRightList.size(); i++) {
             MatchInfo info = mRightList.get(i);
@@ -331,7 +355,39 @@ public class MatchBlock extends CYPlaceHolderBlock {
             }
         }
 
+        //当左右间距小于中间设置的最小间距时候，重新计算高和宽
+        if (mLeftMaxWidth + mRightMaxWidth > getContentWidth() - mInterval) {
+            if (mLeftMaxWidth == mCellMaxWidth) {
+                mLeftMaxWidth = Math.min((getContentWidth() - mInterval) / 2, mCellMaxWidth);
+            }
+            if (mRightMaxWidth == mCellMaxWidth) {
+                mRightMaxWidth = Math.min((getContentWidth() - mInterval) / 2, mCellMaxWidth);
+            }
+            for (int i = 0; i < mLeftList.size(); i++) {
+                MatchInfo info = mLeftList.get(i);
+                mLeftCells[i].setMaxWidth(mLeftMaxWidth);
+                Point point = mLeftCells[i].initCellText(info.content);
+                mRectangles[0][i] = new RectF(mPadding, 0, mLeftMaxWidth + mPadding, point.y);
+                if (point.y > mLeftMaxHeight) {
+                    mLeftMaxHeight = point.y;
+                }
+            }
+
+            for (int i = 0; i < mRightList.size(); i++) {
+                MatchInfo info = mRightList.get(i);
+                mRightCells[i].setMaxWidth(mRightMaxWidth);
+                Point point = mRightCells[i].initCellText(info.content);
+                mRectangles[1][i] = new RectF(getContentWidth() - mPadding - mRightMaxWidth, 0,
+                        getContentWidth() - mPadding, point.y);
+                if (point.y > mRightMaxHeight) {
+                    mRightMaxHeight = point.y;
+                }
+            }
+        }
+
+        mLeftHeight = mLeftMaxHeight * mLeftList.size();
         mRightHeight = mRightMaxHeight * mRightList.size();
+
 
         int shortInterval;//高度大的一方间距已经定好了，这个是高度小的一方的间距
         int longSide;//0表示高度大的一方为左边，1为右边
@@ -349,6 +405,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mTotalHeight = mRightHeight + (mRightList.size() - 1) * mVerticalInterval + mPadding;
             shortInterval = mVerticalInterval;
         }
+
         //最初按照同列不同高度来算，后来改为同列同高度，不过暂时不更改计算方法，防止后面UI变动
         for (int i = 0; i < 2; i++) {
             RectF[] rectangles = mRectangles[i];
@@ -410,13 +467,6 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mRightCells[i].setCellText(info.content, mRectangles[1][i]);
             mRightCells[i].setRectF(mRectangles[1][i]);
         }
-
-        mLeftCells[0].setFocus(true);
-        mFocusCell = mLeftCells[0];
-        for (int i = 0; i < mRightList.size(); i++) {
-            mRightCells[i].setWait(true);
-        }
-
     }
 
     @Override
@@ -426,7 +476,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
 
     @Override
     public int getContentWidth() {
-        return getTextEnv().getSuggestedPageWidth();
+        return getTextEnv().getSuggestedPageWidth() - getMarginLeft() - getMarginRight();
     }
 
     @Override
@@ -608,12 +658,55 @@ public class MatchBlock extends CYPlaceHolderBlock {
     public void onMeasure() {
         super.onMeasure();
         //设置了margin等参数时候，getContentWidth宽度会变小，触发relayout，所以要把右侧的cell重新布置
-        for (int i = 0; i < mRectangles[1].length; i++) {
-            if (mRectangles[1][i] == null) {
-                continue;
-            } else {
-                mRectangles[1][i].right = getContentWidth() - mPadding;
-                mRectangles[1][i].left = mRectangles[1][i].right - mRightMaxWidth;
+//        for (int i = 0; i < mRectangles[1].length; i++) {
+//            if (mRectangles[1][i] == null) {
+//                continue;
+//            } else {
+//                mRectangles[1][i].right = getContentWidth() - mPadding;
+//                mRectangles[1][i].left = mRectangles[1][i].right - mRightMaxWidth;
+//            }
+//        }
+
+        //重置
+        initCellRect();
+
+        boolean hasFind = false;
+        if (mFocusCell != null) {
+            for (int i = 0; i < mLeftCells.length; i++) {
+                if (mFocusCell.getId() == mLeftCells[i].getId()) {
+                    mFocusCell = mLeftCells[i];
+                    mLeftCells[i].setFocus(true);
+                    hasFind = true;
+                    break;
+                }
+            }
+            if (!hasFind) {
+                for (int i = 0; i < mRightCells.length; i++) {
+                    if (mFocusCell.getId() == mRightCells[i].getId()) {
+                        mFocusCell = mRightCells[i];
+                        mRightCells[i].setFocus(true);
+                        hasFind = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (mList.size() > 0) {
+            for (int i = 0; i < mList.size(); i++) {
+                MyMatchStatus status = mList.get(i);
+                for (int j = 0; j < mLeftCells.length; j++) {
+                    if (status.cells[0].getId() == mLeftCells[j].getId()) {
+                        status.cells[0] = mLeftCells[j];
+                        break;
+                    }
+                }
+                for (int j = 0; j < mRightCells.length; j++) {
+                    if (status.cells[1].getId() == mRightCells[j].getId()) {
+                        status.cells[1] = mRightCells[j];
+                        break;
+                    }
+                }
             }
         }
         postInvalidateThis();

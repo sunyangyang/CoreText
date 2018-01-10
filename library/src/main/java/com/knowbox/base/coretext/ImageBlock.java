@@ -7,6 +7,7 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -74,7 +75,7 @@ public class ImageBlock extends CYImageBlock {
             int height = MathUtils.valueOfInt(heightPx);
             this.mWidth = (width == 0 ? 680: width);
             this.mHeight = (height == 0 ? 270 : height);
-            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f/width;
+            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / width;
             this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
@@ -83,8 +84,8 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
-                setWidth(DP_38);
-                setHeight(DP_38);
+                setWidth(DP_44);
+                setHeight(DP_44);
                 setPadding(Const.DP_1 * 2, 0, Const.DP_1 * 2, 0);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
@@ -128,12 +129,15 @@ public class ImageBlock extends CYImageBlock {
                 width = getTextEnv().getSuggestedPageWidth();
             }
         }
-        mScale = width * 1.0f/mWidth;
+        mScale = width * 1.0f / mWidth;
         return width;
     }
 
     @Override
     public int getContentHeight() {
+        if ("small_image".equals(size)) {
+            return super.getContentHeight();
+        }
         return (int) (mHeight * mScale);
     }
 
@@ -161,10 +165,12 @@ public class ImageBlock extends CYImageBlock {
                     //按照图片的高度缩放
                     int width = (int) (rect.height() * 1.0f * drawable.getIntrinsicWidth() / drawable.getIntrinsicHeight());
                     mImageRect.set(rect.left + (rect.width() - width) / 2, rect.top, rect.right - (rect.width() - width) / 2, rect.bottom);
-                } else {
+                } else if (rect.width() * drawable.getIntrinsicHeight() < rect.height() * drawable.getIntrinsicWidth()) {
                     //按照图片的宽度缩放
                     int height = (int) (rect.width() * 1.0f * drawable.getIntrinsicHeight() / drawable.getIntrinsicWidth());
                     mImageRect.set(rect.left, rect.top + (rect.height() - height) / 2, rect.right, rect.bottom - (rect.height() - height) / 2);
+                } else {
+                    mImageRect.set(rect);
                 }
             } else {
                 mImageRect.set(rect);
