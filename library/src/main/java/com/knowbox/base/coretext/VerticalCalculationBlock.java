@@ -80,7 +80,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             mListener = new TextEnv.EditableValueChangeListener() {
                 @Override
                 public void setEditableValue(int i, String s) {
-//                    setText(s);
+
                 }
 
                 @Override
