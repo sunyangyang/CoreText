@@ -93,7 +93,7 @@ public class ImageBlock extends CYImageBlock {
                 setHeight(DP_44);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
-            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size) || "choice_image".equals(size)) {
+            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size)) {
                 setWidth(DP_110);
                 setHeight(DP_83);
                 this.mLoadingResId = R.drawable.image_loading;
