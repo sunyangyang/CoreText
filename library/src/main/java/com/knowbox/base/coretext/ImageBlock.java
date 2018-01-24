@@ -7,7 +7,6 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -43,8 +42,8 @@ public class ImageBlock extends CYImageBlock {
     private static final int DP_38 = Const.DP_1 * 38;
     private static final int DP_44 = Const.DP_1 * 44;
     private static final int DP_199 = Const.DP_1 * 199;
-    private static final int DP_84 = Const.DP_1 * 84;
-    private static final int DP_112 = Const.DP_1 * 112;
+    private static final int DP_83 = Const.DP_1 * 83;
+    private static final int DP_110 = Const.DP_1 * 110;
 
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
@@ -94,9 +93,9 @@ public class ImageBlock extends CYImageBlock {
                 setHeight(DP_44);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
-            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size)) {
-                setWidth(DP_112);
-                setHeight(DP_84);
+            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size) || "choice_image".equals(size)) {
+                setWidth(DP_110);
+                setHeight(DP_83);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
