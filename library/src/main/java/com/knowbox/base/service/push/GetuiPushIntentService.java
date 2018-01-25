@@ -11,6 +11,7 @@ import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
+import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.knowbox.base.R;
@@ -84,6 +85,16 @@ public class GetuiPushIntentService extends GTIntentService {
         } else if ((action == PushConsts.THIRDPART_FEEDBACK)) {
             feedbackResult((FeedbackCmdMessage) cmdMessage);
         }
+    }
+
+    @Override
+    public void onNotificationMessageArrived(Context context, GTNotificationMessage gtNotificationMessage) {
+
+    }
+
+    @Override
+    public void onNotificationMessageClicked(Context context, GTNotificationMessage gtNotificationMessage) {
+
     }
 
     private void setTagResult(SetTagCmdMessage setTagCmdMsg) {
