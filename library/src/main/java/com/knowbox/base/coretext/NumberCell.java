@@ -84,40 +84,42 @@ public class NumberCell {
                     mFlagId = id;
                     EditableValue ev = textEnv.getEditableValue(id);
                     mFlagPaint.setColor(ev.getColor());
-                    mFlag = ev.getValue();
+                    mFlag = ev.getValue();//有可能为null
                 }
             }
 
-            if (style == VerticalCalculationBlock.CalculationStyle.Plus ||
-                    style == VerticalCalculationBlock.CalculationStyle.Multiplication) {
-                mFlagRect = new Rect(rect.left + flagLeftMargin,
-                        rect.bottom - mFlagSideWidth - Const.DP_1,
-                        rect.left + flagLeftMargin + mFlagSideWidth,
-                        rect.bottom - Const.DP_1);
-            } else {
-                mFlagRect = new Rect((int) (rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2),
-                        rect.top + flagTopMargin,
-                        (int) (rect.left + valueLeftMargin + (mSideWidth + mFlagSideWidth) / 2),
-                        rect.top + flagTopMargin + mFlagSideWidth);
-            }
-            mFlagLeftOffset = (mFlagRect.width() - textRect.width()) / 2.f;
-            mFlagTopOffset = (mFlagRect.height() - textRect.height()) / 2.f;
-
-            if (mFlag.contains("blank")) {
-                String[] ids = mFlag.split("k");
-                try {
-                    mFlagId = Integer.valueOf(ids[1]);
-                } catch (Exception e) {
-
+            if (!TextUtils.isEmpty(mFlag)) {
+                if (style == VerticalCalculationBlock.CalculationStyle.Plus ||
+                        style == VerticalCalculationBlock.CalculationStyle.Multiplication) {
+                    mFlagRect = new Rect(rect.left + flagLeftMargin,
+                            rect.bottom - mFlagSideWidth - Const.DP_1,
+                            rect.left + flagLeftMargin + mFlagSideWidth,
+                            rect.bottom - Const.DP_1);
+                } else {
+                    mFlagRect = new Rect((int) (rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2),
+                            rect.top + flagTopMargin,
+                            (int) (rect.left + valueLeftMargin + (mSideWidth + mFlagSideWidth) / 2),
+                            rect.top + flagTopMargin + mFlagSideWidth);
                 }
-                mFlagContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
-                mFlagBlock = new BlankBlock(textEnv, mFlagContent);
-                mFlagBlock.setTabId(Integer.valueOf(ids[1]));
-                mFlagBlock.setFocusable(true);
-                mFlagBlock.setFocus(false);
-                mFlagBlock.setEditable(true);
-                mFlagBlock.setX(mFlagRect.left);
-                mFlagBlock.setLineY(mFlagRect.top + mFlagRect.height() / 2);
+                mFlagLeftOffset = (mFlagRect.width() - textRect.width()) / 2.f;
+                mFlagTopOffset = (mFlagRect.height() - textRect.height()) / 2.f;
+
+                if (mFlag.contains("blank")) {
+                    String[] ids = mFlag.split("k");
+                    try {
+                        mFlagId = Integer.valueOf(ids[1]);
+                    } catch (Exception e) {
+
+                    }
+                    mFlagContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
+                    mFlagBlock = new BlankBlock(textEnv, mFlagContent);
+                    mFlagBlock.setTabId(Integer.valueOf(ids[1]));
+                    mFlagBlock.setFocusable(true);
+                    mFlagBlock.setFocus(false);
+                    mFlagBlock.setEditable(true);
+                    mFlagBlock.setX(mFlagRect.left);
+                    mFlagBlock.setLineY(mFlagRect.top + mFlagRect.height() / 2);
+                }
             }
         }
 
@@ -136,31 +138,34 @@ public class NumberCell {
                     mNumberId = id;
                     EditableValue ev = textEnv.getEditableValue(id);
                     mValuePaint.setColor(ev.getColor());
-                    mValue = ev.getValue();
+                    mValue = ev.getValue();//有可能为null
                 }
             }
-            String size = "number";
-            mValueRect = new Rect(rect.left + valueLeftMargin, rect.top + valueTopMargin,
-                    rect.left + valueLeftMargin + mSideWidth, rect.top + valueTopMargin + mSideWidth);
-            mValueLeftOffset = (mValueRect.width() - textRect.width()) / 2.f;
-            mValueTopOffset = (mValueRect.height() - textRect.height()) / 2.f;
 
-            if (mValue.contains("blank")) {
-                String[] ids = mValue.split("k");
-                try {
-                    mNumberId = Integer.valueOf(ids[1]);
-                } catch (Exception e) {
+            if (!TextUtils.isEmpty(mValue)) {
+                String size = "number";
+                mValueRect = new Rect(rect.left + valueLeftMargin, rect.top + valueTopMargin,
+                        rect.left + valueLeftMargin + mSideWidth, rect.top + valueTopMargin + mSideWidth);
+                mValueLeftOffset = (mValueRect.width() - textRect.width()) / 2.f;
+                mValueTopOffset = (mValueRect.height() - textRect.height()) / 2.f;
 
+                if (mValue.contains("blank")) {
+                    String[] ids = mValue.split("k");
+                    try {
+                        mNumberId = Integer.valueOf(ids[1]);
+                    } catch (Exception e) {
+
+                    }
+                    mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
+                    mValueBlock = new BlankBlock(textEnv, mValueContent);
+
+                    mValueBlock.setTabId(Integer.valueOf(ids[1]));
+                    mValueBlock.setFocusable(true);
+                    mValueBlock.setFocus(false);
+                    mValueBlock.setEditable(true);
+                    mValueBlock.setX(mValueRect.left);
+                    mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
                 }
-                mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
-                mValueBlock = new BlankBlock(textEnv, mValueContent);
-
-                mValueBlock.setTabId(Integer.valueOf(ids[1]));
-                mValueBlock.setFocusable(true);
-                mValueBlock.setFocus(false);
-                mValueBlock.setEditable(true);
-                mValueBlock.setX(mValueRect.left);
-                mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
             }
         }
 

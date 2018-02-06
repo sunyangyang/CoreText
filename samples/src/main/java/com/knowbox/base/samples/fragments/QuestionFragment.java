@@ -285,6 +285,8 @@ public class QuestionFragment extends Fragment {
 
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#找规律填数。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://tikuqiniu.knowbox.cn/FoboBfCxqnh9GqZ2Chcqj8BW0kSa\",\"width\":\"681px\",\"height\":\"271px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"img_blank\",\"x_pos\":\"31.7\",\"class\":\"fillin\",\"y_pos\":\"23.2\"},{\"type\":\"blank\",\"id\":2,\"size\":\"img_blank\",\"x_pos\":\"50.4\",\"class\":\"fillin\",\"y_pos\":\"53.9\"},{\"type\":\"blank\",\"id\":3,\"size\":\"img_blank\",\"x_pos\":\"89.1\",\"class\":\"fillin\",\"y_pos\":\"53.9\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_audio\"}##{\"type\":\"audio\",\"style\":\"math_reading\",\"src\":\"https://tikuqiniu.knowbox.cn/ssyy20171111/824209.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#最大的两位数是#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#选择合适的句子补全对话。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Bill: 1.#{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"express\"}#\n#{\"type\":\"P\"}#Joy: Guess!\n#{\"type\":\"P\"}#Bill: What's the weather like?\n#{\"type\":\"P\"}#Joy: 2.#{\"type\":\"blank\",\"id\": 2,\"class\":\"fillin\",\"size\":\"express\"}#I can fly a kite in this season.\n#{\"type\":\"P\"}#Bill: 3.#{\"type\":\"blank\",\"id\": 3,\"class\":\"fillin\",\"size\":\"express\"}#\n#{\"type\":\"P\"}#Joy: No, it isn't.\n#{\"type\":\"P\"}#Bill: Is it spring?\n#{\"type\":\"P\"}#Joy: 4.#{\"type\":\"blank\",\"id\": 4,\"class\":\"fillin\",\"size\":\"express\"}##{\"type\":\"para_end\"}#";
+question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，按听到的内容连线。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_audio\"}##{\"type\":\"audio\",\"src\":\"https://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU1L1-12.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_matching\"}##{\"left\": [{\"id\": 1, \"content\": \"Amy\"}, {\"id\": 2, \"content\": \"Lingling\"}, {\"id\": 3, \"content\": \"Ms Smart\"}, {\"id\": 4, \"content\": \"Daming\"}, {\"id\": 5, \"content\": \"Sam\"}], \"type\": \"match\", \"right\": [{\"id\": 1, \"content\": \"swim\"}, {\"id\": 2, \"content\": \"play football\"}, {\"id\": 3, \"content\": \"ride a bike\"}, {\"id\": 4, \"content\": \"fly a kite\"}, {\"id\": 5, \"content\": \"make a model plane\"}]}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
         builder = textView.getBuilder(question);
 //        builder.setEditableValue(VerticalCalculationBlock.SCALE, 0.64 + "");
@@ -292,8 +294,8 @@ public class QuestionFragment extends Fragment {
 //        builder.setEditableValue(2, new EditableValue(0xffff6666, "5"));
 //        builder.setEditable(true).setEditableValue(1, "askfklanfklnncajlksnlajsdnflkasnflksanfaklsfnlaknfalksnfklanfkanfklasnfklvnldkvskldvndslkvsdkvnd");
         builder.build();
-        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1000"));
-        builder.setEditableValue(2, new EditableValue(0xffff6666, "5000"));
+//        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1000"));
+//        builder.setEditableValue(2, new EditableValue(0xffff6666, "5000"));
         return view;
     }
 

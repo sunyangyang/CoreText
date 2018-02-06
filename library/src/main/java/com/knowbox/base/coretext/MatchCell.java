@@ -51,7 +51,10 @@ public class MatchCell {
                      int borderColor,
                      int borderLightColor,
                      int fillColor,
-                     int fillLightColor) {
+                     int fillLightColor,
+                     boolean isMatch,
+                     boolean isWait,
+                     boolean isFocus) {
         mId = id;
         mMatchBlock = matchBlock;
         mMaxWidth = maxWidth;
@@ -63,6 +66,9 @@ public class MatchCell {
         mBorderLightColor = borderLightColor;
         mFillColor = fillColor;
         mFillLightColor = fillLightColor;
+        mIsMatch = isMatch;
+        mIsFocus = isFocus;
+        mIsWait = isWait;
     }
 
     public void setMaxWidth(int maxWidth) {
