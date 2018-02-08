@@ -13,12 +13,14 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.imageloader.ImageLoader;
 import com.hyena.framework.imageloader.base.IDisplayer;
@@ -26,6 +28,7 @@ import com.hyena.framework.imageloader.base.LoadedFrom;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
+import com.mob.tools.utils.LocationHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
  * Created by yangzc on 17/2/6.
  */
 public class ImageBlock extends CYImageBlock {
+    public static final int RETRY = Integer.MAX_VALUE;
 
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -51,10 +55,17 @@ public class ImageBlock extends CYImageBlock {
     protected IDisplayer mDisplayer;
     protected int mLoadingResId, mErrorResId;
     private boolean isSuccess = false;
+    private boolean isRetry = false;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         ImageFetcher.getImageFetcher();
+        EditableValue editableValue = textEnv.getEditableValue(RETRY);
+        try {
+            isRetry = Boolean.valueOf(editableValue.getValue());
+        } catch (Exception e) {
+
+        }
         init(textEnv.getContext(), content);
     }
 
@@ -252,7 +263,15 @@ public class ImageBlock extends CYImageBlock {
         }
 
         private void setImageDrawableInfo(Drawable drawable) {
-            ImageBlock.this.drawable = drawable;
+            if (!isRetry) {
+                ImageBlock.this.drawable = drawable;
+            } else {
+                if (isSuccess) {
+                    ImageBlock.this.drawable = drawable;
+                } else {
+                    retry();
+                }
+            }
             postInvalidate();
         }
 

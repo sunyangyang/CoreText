@@ -16,6 +16,9 @@ import com.hyena.coretext.builder.CYBlockProvider;
 import com.hyena.coretext.event.CYLayoutEventListener;
 import com.hyena.coretext.layout.CYHorizontalLayout;
 import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.EditableValue;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,16 +48,14 @@ public class MatchCell {
     private int mCorner = Const.DP_1 * 7;
     private float mOffsetX;
     private float mOffsetY;
+    private EditableValue mValue;
 
     public MatchCell(final MatchBlock matchBlock, int maxWidth, int id, boolean multiSelect, boolean isLeft,
                      Paint borderPaint, Paint fillPaint,
                      int borderColor,
                      int borderLightColor,
                      int fillColor,
-                     int fillLightColor,
-                     boolean isMatch,
-                     boolean isWait,
-                     boolean isFocus) {
+                     int fillLightColor) {
         mId = id;
         mMatchBlock = matchBlock;
         mMaxWidth = maxWidth;
@@ -66,9 +67,6 @@ public class MatchCell {
         mBorderLightColor = borderLightColor;
         mFillColor = fillColor;
         mFillLightColor = fillLightColor;
-        mIsMatch = isMatch;
-        mIsFocus = isFocus;
-        mIsWait = isWait;
     }
 
     public void setMaxWidth(int maxWidth) {
@@ -76,7 +74,6 @@ public class MatchCell {
     }
 
     /**
-     *
      * @param text
      * @return Point的X为宽度，Y为高度
      */
@@ -99,6 +96,19 @@ public class MatchCell {
                 }
             });
         }
+        boolean isImage = false;
+        try {
+            text = text.replaceAll("#", "");
+            JSONObject jsonObject = new JSONObject(text);
+            String type = jsonObject.optString("type");
+            if (type.equals("img")) {
+                jsonObject.put("src", "");
+            }
+            text = jsonObject.toString();
+            isImage = true;
+        } catch (Exception e) {
+
+        }
         mTextEnv.setSuggestedPageWidth(mMaxWidth - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         CYPageBlock pageBlock = null;
@@ -116,7 +126,9 @@ public class MatchCell {
             }
         }
         if (pageBlock != null) {
-            return new Point(Math.min(pageBlock.getWidth() + Const.DP_1 * 20, mMaxWidth), pageBlock.getHeight());
+            int width = Math.min(pageBlock.getWidth(), mMaxWidth);
+            int height = isImage ? pageBlock.getContentHeight() - Const.DP_1 * 30 : pageBlock.getHeight();
+            return new Point(width, height);
         } else {
             return new Point();
         }
@@ -124,7 +136,7 @@ public class MatchCell {
     }
 
 
-    public void setCellText(String text, RectF rectF) {
+    public void setCellText(final String text, RectF rectF) {
         mRectF = rectF;
         if (mTextEnv == null) {
             mTextEnv = new TableTextEnv(mMatchBlock.getTextEnv());
@@ -144,19 +156,20 @@ public class MatchCell {
                 }
             });
         }
+        if (mValue == null) {
+            mValue = new EditableValue();
+            mValue.setValue("true");
+        }
+        mTextEnv.setEditableValue(ImageBlock.RETRY, mValue);
         mTextEnv.setSuggestedPageWidth((int) rectF.width() - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight((int) rectF.height());
+
         List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
         if (blocks != null && !blocks.isEmpty()) {
             CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
             List<CYPageBlock> pages = layout.parse();
             if (pages != null && pages.size() > 0) {
                 mPageBlock = pages.get(0);
-                int leftPadding = Const.DP_1 * 20;
-                int topPadding = Const.DP_1 * 10;
-                int rightPadding = Const.DP_1 * 20;
-                int bottomPadding = Const.DP_1 * 10;
-//                mPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
             }
         }
     }
@@ -219,6 +232,7 @@ public class MatchCell {
 
     /**
      * 如果已经配对且为单选，返回true，表示不能被再次连线，但可取消，否则不论是否已经被连线，均可再次点击
+     *
      * @return
      */
     public boolean getMatch() {
@@ -230,6 +244,7 @@ public class MatchCell {
 
     /**
      * 设置等待状态，如果mIsWait == true，高亮
+     *
      * @param wait
      */
     public void setWait(boolean wait) {
@@ -239,6 +254,7 @@ public class MatchCell {
     public boolean getWait() {
         return mIsWait;
     }
+
     //Point传过来的x为左侧的ID，y为右侧ID
     public boolean findCellById(Point p) {
         if (mIsLeft) {

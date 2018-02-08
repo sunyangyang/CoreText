@@ -328,14 +328,10 @@ public class MatchBlock extends CYPlaceHolderBlock {
         }
         for (int i = 0; i < mLeftList.size(); i++) {
             MatchInfo info = mLeftList.get(i);
-            boolean isMatch = false, isWait = false, isFocus = false;
-            if (mLeftCells[i] != null) {
-                isMatch = mLeftCells[i].getMatch();
-                isWait = mLeftCells[i].getWait();
-                isFocus = mLeftCells[i].getFocus();
+            if (mLeftCells[i] == null) {
+                mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
+                        mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             }
-            mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
-                    mBorderColor, mBorderLightColor, mFillColor, mFillLightColor, isMatch, isWait, isFocus);
             Point point = mLeftCells[i].initCellText(info.content);
             mRectangles[0][i] = new RectF(mPadding, 0, point.x + mPadding, point.y);
             if (point.x > mLeftMaxWidth) {
@@ -348,14 +344,10 @@ public class MatchBlock extends CYPlaceHolderBlock {
 
         for (int i = 0; i < mRightList.size(); i++) {
             MatchInfo info = mRightList.get(i);
-            boolean isMatch = false, isWait = false, isFocus = false;
-            if (mRightCells[i] != null) {
-                isMatch = mRightCells[i].getMatch();
-                isWait = mRightCells[i].getWait();
-                isFocus = mRightCells[i].getFocus();
+            if (mRightCells[i] == null) {
+                mRightCells[i] = new MatchCell(this, mCellMaxWidth, info.id, rightMultiSelect, false, mBorderPaint, mFillPaint,
+                        mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             }
-            mRightCells[i] = new MatchCell(this, mCellMaxWidth, info.id, rightMultiSelect, false, mBorderPaint, mFillPaint,
-                    mBorderColor, mBorderLightColor, mFillColor, mFillLightColor, isMatch, isWait, isFocus);
             Point point = mRightCells[i].initCellText(info.content);
             mRectangles[1][i] = new RectF(getContentWidth() - mPadding - point.x, 0,
                     getContentWidth() - mPadding, point.y);
