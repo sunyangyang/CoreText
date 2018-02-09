@@ -49,7 +49,6 @@ public class MatchCell {
     private int mCorner = Const.DP_1 * 7;
     private float mOffsetX;
     private float mOffsetY;
-    private EditableValue mValue;
 
     public MatchCell(final MatchBlock matchBlock, int maxWidth, int id, boolean multiSelect, boolean isLeft,
                      Paint borderPaint, Paint fillPaint,
@@ -113,7 +112,7 @@ public class MatchCell {
         mTextEnv.setSuggestedPageWidth(mMaxWidth - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         if (mPerchPageBlock != null) {
-            mPageBlock.onMeasure();
+            mPerchPageBlock.onMeasure();
         } else {
             List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
             if (blocks != null && !blocks.isEmpty()) {
@@ -161,11 +160,6 @@ public class MatchCell {
                 }
             });
         }
-        if (mValue == null) {
-            mValue = new EditableValue();
-            mValue.setValue("true");
-        }
-        mTextEnv.setEditableValue(ImageBlock.RETRY, mValue);
         mTextEnv.setSuggestedPageWidth((int) rectF.width() - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight((int) rectF.height());
         if (mPageBlock != null) {
