@@ -36,6 +36,7 @@ public class MatchCell {
     private int mMaxWidth;
     private MatchBlock mMatchBlock;
     private CYPageBlock mPageBlock;
+    private CYPageBlock mPerchPageBlock;
     private TextEnv mTextEnv;
     private RectF mRectF = new RectF();
     private boolean mIsLeft;
@@ -111,23 +112,27 @@ public class MatchCell {
         }
         mTextEnv.setSuggestedPageWidth(mMaxWidth - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
-        CYPageBlock pageBlock = null;
-        List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
-        if (blocks != null && !blocks.isEmpty()) {
-            CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
-            List<CYPageBlock> pages = layout.parse();
-            if (pages != null && pages.size() > 0) {
-                pageBlock = pages.get(0);
-                int leftPadding = Const.DP_1 * 20;
-                int topPadding = Const.DP_1 * 10;
-                int rightPadding = Const.DP_1 * 20;
-                int bottomPadding = Const.DP_1 * 10;
-                pageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+        if (mPerchPageBlock != null) {
+            mPageBlock.onMeasure();
+        } else {
+            List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
+            if (blocks != null && !blocks.isEmpty()) {
+                CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
+                List<CYPageBlock> pages = layout.parse();
+                if (pages != null && pages.size() > 0) {
+                    mPerchPageBlock = pages.get(0);
+                    int leftPadding = Const.DP_1 * 20;
+                    int topPadding = Const.DP_1 * 10;
+                    int rightPadding = Const.DP_1 * 20;
+                    int bottomPadding = Const.DP_1 * 10;
+                    mPerchPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+                }
             }
         }
-        if (pageBlock != null) {
-            int width = Math.min(pageBlock.getWidth(), mMaxWidth);
-            int height = isImage ? pageBlock.getContentHeight() - Const.DP_1 * 30 : pageBlock.getHeight();
+
+        if (mPerchPageBlock != null) {
+            int width = Math.min(mPerchPageBlock.getWidth(), mMaxWidth);
+            int height = isImage ? mPerchPageBlock.getContentHeight() - Const.DP_1 * 30 : mPerchPageBlock.getHeight();
             return new Point(width, height);
         } else {
             return new Point();
@@ -163,13 +168,16 @@ public class MatchCell {
         mTextEnv.setEditableValue(ImageBlock.RETRY, mValue);
         mTextEnv.setSuggestedPageWidth((int) rectF.width() - Const.DP_1 * 20);
         mTextEnv.setSuggestedPageHeight((int) rectF.height());
-
-        List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
-        if (blocks != null && !blocks.isEmpty()) {
-            CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
-            List<CYPageBlock> pages = layout.parse();
-            if (pages != null && pages.size() > 0) {
-                mPageBlock = pages.get(0);
+        if (mPageBlock != null) {
+            mPageBlock.onMeasure();
+        } else {
+            List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
+            if (blocks != null && !blocks.isEmpty()) {
+                CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
+                List<CYPageBlock> pages = layout.parse();
+                if (pages != null && pages.size() > 0) {
+                    mPageBlock = pages.get(0);
+                }
             }
         }
     }

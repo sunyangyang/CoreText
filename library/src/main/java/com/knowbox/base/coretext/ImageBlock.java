@@ -13,10 +13,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
@@ -28,8 +26,6 @@ import com.hyena.framework.imageloader.base.LoadedFrom;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
-import com.mob.tools.utils.LocationHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -263,15 +259,7 @@ public class ImageBlock extends CYImageBlock {
         }
 
         private void setImageDrawableInfo(Drawable drawable) {
-            if (!isRetry) {
-                ImageBlock.this.drawable = drawable;
-            } else {
-                if (isSuccess) {
-                    ImageBlock.this.drawable = drawable;
-                } else {
-                    retry();
-                }
-            }
+            ImageBlock.this.drawable = drawable;
             postInvalidate();
         }
 
