@@ -36,7 +36,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     private List<MyMatchStatus> mList = new ArrayList<MyMatchStatus>();
     private List<MatchInfo> mLeftList = new ArrayList<MatchInfo>();
     private List<MatchInfo> mRightList = new ArrayList<MatchInfo>();
-    private final int mCellMaxWidth = Const.DP_1 * 120;//cell的最大宽度
+    private int mCellMaxWidth = Const.DP_1 * 120;//cell的最大宽度
     private final int mInterval = Const.DP_1 * 95;//横向的两列的间距
     private final int mVerticalInterval = Const.DP_1 * 20;//高度大的一列的纵向间距
     private MatchCell[] mLeftCells;
@@ -87,6 +87,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     public MatchBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mTextEnv = textEnv;
+        mCellMaxWidth = (getWidth() - mInterval) / 2;
         try {
             JSONObject object = new JSONObject(content);
             JSONArray leftArray = object.optJSONArray("left");
@@ -326,12 +327,15 @@ public class MatchBlock extends CYPlaceHolderBlock {
             leftMultiSelect = false;
             rightMultiSelect = false;
         }
+        mLeftMaxWidth = 0;
+        mRightMaxWidth = 0;
         for (int i = 0; i < mLeftList.size(); i++) {
             MatchInfo info = mLeftList.get(i);
             if (mLeftCells[i] == null) {
                 mLeftCells[i] = new MatchCell(this, mCellMaxWidth, info.id, leftMultiSelect, true, mBorderPaint, mFillPaint,
                         mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             }
+            mLeftCells[i].setMaxWidth(mCellMaxWidth);
             Point point = mLeftCells[i].initCellText(info.content);
             mRectangles[0][i] = new RectF(mPadding, 0, point.x + mPadding, point.y);
             if (point.x > mLeftMaxWidth) {
@@ -348,6 +352,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                 mRightCells[i] = new MatchCell(this, mCellMaxWidth, info.id, rightMultiSelect, false, mBorderPaint, mFillPaint,
                         mBorderColor, mBorderLightColor, mFillColor, mFillLightColor);
             }
+            mRightCells[i].setMaxWidth(mCellMaxWidth);
             Point point = mRightCells[i].initCellText(info.content);
             mRectangles[1][i] = new RectF(getContentWidth() - mPadding - point.x, 0,
                     getContentWidth() - mPadding, point.y);
@@ -662,18 +667,9 @@ public class MatchBlock extends CYPlaceHolderBlock {
     public void onMeasure() {
         super.onMeasure();
         //设置了margin等参数时候，getContentWidth宽度会变小，触发relayout，所以要把右侧的cell重新布置
-//        for (int i = 0; i < mRectangles[1].length; i++) {
-//            if (mRectangles[1][i] == null) {
-//                continue;
-//            } else {
-//                mRectangles[1][i].right = getContentWidth() - mPadding;
-//                mRectangles[1][i].left = mRectangles[1][i].right - mRightMaxWidth;
-//            }
-//        }
-
+        mCellMaxWidth = (getWidth() - mInterval) / 2;
         //重置
         initCellRect();
-
         boolean hasFind = false;
         if (mFocusCell != null) {
             for (int i = 0; i < mLeftCells.length; i++) {
