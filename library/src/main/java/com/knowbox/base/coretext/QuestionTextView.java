@@ -14,6 +14,8 @@ import com.hyena.coretext.blocks.CYLineBlock;
 import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYStyleStartBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
+import com.hyena.coretext.utils.Const;
+import com.hyena.coretext.utils.PaintManager;
 import com.knowbox.base.utils.CharacterUtils;
 
 import java.util.List;
@@ -35,17 +37,17 @@ public class QuestionTextView extends CYSinglePageView {
         super(context, attrs, defStyleAttr);
     }
 
-    private boolean isRebuild;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (isRebuild) {
-            return;
+        try {
+            if (isChineseParaText()) {
+                rebuild(getBuilder());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (isChineseParaText()) {
-            rebuild(getBuilder());
-        }
-        isRebuild = true;
+
     }
 
     private boolean isChineseParaText() {
@@ -53,7 +55,7 @@ public class QuestionTextView extends CYSinglePageView {
             return false;
         }
         List<CYBlock> blocks = getBuilder().getBlocks();
-        if (blocks != null) {
+        if (blocks != null && blocks.size() > 0) {
             CYBlock block = blocks.get(0);
             CYStyle style;
             if (block instanceof CYStyleStartBlock)
@@ -76,32 +78,37 @@ public class QuestionTextView extends CYSinglePageView {
         if (builder == null || builder.getBlocks() == null) {
             return;
         }
+        boolean isFirstCh = true;
         List<CYBlock> blocks = builder.getBlocks();
         for (int i = 0; i < blocks.size(); i++) {
             CYBlock mCur = blocks.get(i);
             if (mCur instanceof CYTextBlock) {
-                CYBlock prev = mCur.getPrevBlock();
-                if (prev != null && !(prev instanceof CYTextBlock)) {
-                    mCur.setMargin(mCur.getMarginLeft() + mCur.getWidth() * 2, mCur.getMarginRight());
+                if (isFirstCh) {
+                    mCur.setMargin(mCur.getWidth() * 2, 0);
                 }
+                isFirstCh = false;
             } else if (mCur instanceof CYBreakLineBlock) {
                 CYBlock nextBlock = mCur.getNextBlock();
-                if (nextBlock != null && nextBlock instanceof CYTextBlock) {
-                    nextBlock.setPadding(nextBlock.getPaddingLeft(), nextBlock.getPaddingTop() + nextBlock.getLineHeight(), nextBlock.getPaddingRight(),nextBlock.getPaddingBottom());
+                if (nextBlock != null) {
+                    nextBlock.setPadding(0, 30 * Const.DP_1, 0, 0);
                 }
+                isFirstCh = true;
             }
         }
         doLayout(true);
         try {
-            rebuildPunctuation(builder);
+            rebuildPunctuation(0, builder);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void rebuildPunctuation(CYSinglePageView.Builder builder) {
+    private void rebuildPunctuation(int index, CYSinglePageView.Builder builder) {
         List<CYBlock> blocks = builder.getBlocks();
-        for (int i = 0; i < blocks.size(); i++) {
+        if (index == blocks.size() - 1) {
+            return;
+        }
+        for (int i = index; i < blocks.size(); i++) {
             CYBlock mCur = blocks.get(i);
             if (mCur instanceof CYTextBlock) {
                 CYLineBlock line = (CYLineBlock) mCur.getParent();
@@ -109,17 +116,16 @@ public class QuestionTextView extends CYSinglePageView {
                     CYBlock mNext = mCur.getNextBlock();
                     if (mNext != null && mNext instanceof CYTextBlock) {
                         CYTextBlock nextText = (CYTextBlock) mNext;
-                        if (CharacterUtils.isSymbol(nextText.getWord().word.charAt(0)) || CharacterUtils.isPunctuation(nextText.getWord().word.charAt(0))) {
+                        if (CharacterUtils.match(nextText.getWord().word)) {
                             CYBlock mPrev = mCur.getPrevBlock();
                             mPrev.setMargin(mPrev.getMarginLeft(), mPrev.getMarginRight() + mCur.getWidth());
                             doLayout(true);
-                            rebuildPunctuation(builder);
+                            rebuildPunctuation(i, builder);
                             return;
                         }
                     }
                 }
             }
         }
-
     }
 }
