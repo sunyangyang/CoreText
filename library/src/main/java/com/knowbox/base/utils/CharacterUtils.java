@@ -1,5 +1,8 @@
 package com.knowbox.base.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by weilei on 18/2/6.
  */
@@ -67,6 +70,13 @@ public class CharacterUtils {
         if (0x301D <= ch && ch <= 0x301F) return true;
 
         return false;
+    }
+
+    //是否是标点符号
+    public static boolean match(String s) {
+        Pattern pattern = Pattern.compile("\\p{P}");
+        Matcher matcher = pattern.matcher(String.valueOf(s));
+        return matcher.matches();
     }
 
 }
