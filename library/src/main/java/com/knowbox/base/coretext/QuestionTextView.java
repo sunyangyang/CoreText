@@ -40,9 +40,14 @@ public class QuestionTextView extends CYSinglePageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (isChineseParaText()) {
-            rebuild(getBuilder());
+        try {
+            if (isChineseParaText()) {
+                rebuild(getBuilder());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private boolean isChineseParaText() {
@@ -50,7 +55,7 @@ public class QuestionTextView extends CYSinglePageView {
             return false;
         }
         List<CYBlock> blocks = getBuilder().getBlocks();
-        if (blocks != null) {
+        if (blocks != null && blocks.size() > 0) {
             CYBlock block = blocks.get(0);
             CYStyle style;
             if (block instanceof CYStyleStartBlock)
