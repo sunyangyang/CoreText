@@ -116,15 +116,19 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
         DataInfo info = null;
         Stack stack = new Stack();
         String flag;
+        String perchFlag = "";
         for (int i = 0; i < content.length() - 1; i++) {
             flag = content.substring(i, i + 2);
-            if (flag.equals("#{")) {
+            if (i > 1) {
+                perchFlag = content.substring(i - 2, i + 2);
+            }
+            if (flag.equals("#{") && !"\\\\#{".equals(perchFlag)) {
                 if (stack.isEmpty()) {
                     info = new DataInfo();
                     info.start = i;
                 }
                 stack.push(flag);
-            } else if (flag.equals("}#") || flag.equals("#}")) {
+            } else if (flag.equals("}#")) {
                 stack.pop();
                 if (stack.isEmpty()) {
                     if (info != null) {

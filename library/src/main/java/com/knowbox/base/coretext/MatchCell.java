@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
@@ -19,6 +18,8 @@ import com.hyena.coretext.utils.Const;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sunyangyang on 2017/10/25.
@@ -80,37 +81,45 @@ public class MatchCell {
         if (mTextEnv == null) {
             mTextEnv = new TableTextEnv(mMatchBlock.getTextEnv());
         }
+        String perchText = "";
         try {
-            text = text.replaceAll("#", "");
-            JSONObject jsonObject = new JSONObject(text);
+            perchText = text.replaceAll("#", "");
+            JSONObject jsonObject = new JSONObject(perchText);
             String type = jsonObject.optString("type");
             if (type.equals("img")) {
                 jsonObject.put("src", "");
                 mIsImage = true;
+                Pattern pattern = Pattern.compile("\"src\":\"(.*?)\"");
+                Matcher matcher = pattern.matcher(text);
+                while (matcher.find()) {
+                    text = text.replace(matcher.group(1), "");//防止多次加载图片
+                }
             }
-            text = jsonObject.toString();
         } catch (Exception e) {
 
         }
         mTextEnv.setSuggestedPageWidth(mMaxWidth);
         mTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         List<CYBlock> blocks = CYBlockProvider.getBlockProvider().build(mTextEnv, text);
-        if (blocks != null && !blocks.isEmpty()) {
-            CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
-            List<CYPageBlock> pages = layout.parse();
-            if (pages != null && pages.size() > 0) {
-                mPerchPageBlock = pages.get(0);
-                int leftPadding = Const.DP_1 * 20;
-                int topPadding = Const.DP_1 * 20;
-                int rightPadding = Const.DP_1 * 20;
-                int bottomPadding = Const.DP_1 * 20;
-                mPerchPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+        if (mPerchPageBlock == null || !mIsImage) {
+            if (blocks != null && !blocks.isEmpty()) {
+                CYHorizontalLayout layout = new CYHorizontalLayout(mTextEnv, blocks);
+                List<CYPageBlock> pages = layout.parse();
+                if (pages != null && pages.size() > 0) {
+                    mPerchPageBlock = pages.get(0);
+                    int leftPadding = Const.DP_1 * 20;
+                    int topPadding = Const.DP_1 * 10;
+                    int rightPadding = Const.DP_1 * 20;
+                    int bottomPadding = Const.DP_1 * 10;
+                    mPerchPageBlock.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+                }
             }
         }
 
+
         if (mPerchPageBlock != null) {
             int width = Math.min(mPerchPageBlock.getWidth(), mMaxWidth);
-            int height = mIsImage ? mPerchPageBlock.getContentHeight() - Const.DP_1 * 30 : mPerchPageBlock.getHeight();
+            int height = mPerchPageBlock.getHeight();
             return new Point(width, height);
         } else {
             return new Point();
@@ -140,6 +149,7 @@ public class MatchCell {
         }
         mPageTextEnv.setSuggestedPageWidth((int) rectF.width());
         mPageTextEnv.setSuggestedPageHeight((int) rectF.height());
+
         if (mPageBlock != null && mIsImage) {
             mPageBlock.onMeasure();
         } else {
@@ -207,20 +217,6 @@ public class MatchCell {
         mIsWait = wait;
     }
 
-    //Point传过来的x为左侧的ID，y为右侧ID
-    public boolean findCellById(Point p) {
-        if (mIsLeft) {
-            if (mId == p.x) {
-                return true;
-            }
-        } else {
-            if (mId == p.y) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void draw(Canvas canvas, int offsetX, int offsetY) {
         if (mPageBlock != null) {
             mOffsetX = offsetX;
@@ -239,13 +235,8 @@ public class MatchCell {
             canvas.translate(mOffsetX, mOffsetY);
             canvas.drawRoundRect(mRectF, mCorner, mCorner, mBorderPaint);
             canvas.drawRoundRect(mRectF, mCorner, mCorner, mFillPaint);
-            if (!mIsImage) {
-                //这里一定要用pageblock中的getWidth 和 getHeight 方法
-                canvas.translate(mRectF.left + (mRectF.width() - mPageBlock.getWidth()) * 1.f / 2, mRectF.top + (mRectF.height() - mPageBlock.getHeight()) * 1.f / 2);
-            } else {
-                //加载图片时mPageBlock使用原有已存在的，因此Y位置上会有所变化，使用占位mPerchPageBlock和mPerchPageBlock来共同计算
-                canvas.translate(mRectF.left + (mRectF.width() - mPageBlock.getWidth()) * 1.f / 2, mRectF.top + (mRectF.height() - mPerchPageBlock.getHeight()) * 1.f / 2 + mPerchPageBlock.getHeight() - mPageBlock.getHeight());
-            }
+            //这里一定要用pageblock中的getWidth 和 getHeight 方法
+            canvas.translate(mRectF.left + (mRectF.width() - mPageBlock.getWidth()) * 1.f / 2, mRectF.top + (mRectF.height() - mPageBlock.getHeight()) * 1.f / 2);
             mPageBlock.draw(canvas);
             canvas.restore();
         }
