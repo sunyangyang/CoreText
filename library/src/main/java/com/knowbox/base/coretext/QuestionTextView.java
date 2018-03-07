@@ -15,9 +15,9 @@ import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYStyleStartBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.PaintManager;
 import com.knowbox.base.utils.CharacterUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +41,7 @@ public class QuestionTextView extends CYSinglePageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         try {
-            if (isChineseParaText()) {
-                rebuild(getBuilder());
-            }
+            isChineseParaText();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,30 +54,33 @@ public class QuestionTextView extends CYSinglePageView {
         }
         List<CYBlock> blocks = getBuilder().getBlocks();
         if (blocks != null && blocks.size() > 0) {
-            CYBlock block = blocks.get(0);
-            CYStyle style;
-            if (block instanceof CYStyleStartBlock)
-                style = ((CYStyleStartBlock) block).getStyle();
-            else {
-                style = block.getParagraphStyle();
+            List<CYBlock> updateBlocks = new ArrayList<>();
+            for (int i = 0; i < blocks.size(); i++) {
+                CYBlock block = blocks.get(i);
+                CYStyle style;
+                if (block instanceof CYStyleStartBlock)
+                    style = ((CYStyleStartBlock) block).getStyle();
+                else {
+                    style = block.getParagraphStyle();
+                }
+                if (style != null && (style.getStyle().equals("chinese_read")
+                        || style.getStyle().equals("chinese_read_pinyin")
+                        || style.getStyle().equals("chinese_recite")
+                        || style.getStyle().equals("chinese_recite_pinyin")
+                        || style.getStyle().equals("chinese_paratext"))) {
+                    updateBlocks.add(block);
+                }
             }
-            if (style != null && (style.getStyle().equals("chinese_read")
-                    || style.getStyle().equals("chinese_read_pinyin")
-                    || style.getStyle().equals("chinese_recite")
-                    || style.getStyle().equals("chinese_recite_pinyin")
-                    || style.getStyle().equals("chinese_paratext"))){
-                return true;
+            if (updateBlocks.size() > 0) {
+                rebuild(updateBlocks);
             }
         }
+
         return false;
     }
 
-    private void rebuild(CYSinglePageView.Builder builder) {
-        if (builder == null || builder.getBlocks() == null) {
-            return;
-        }
+    private void rebuild(List<CYBlock> blocks) {
         boolean isFirstCh = true;
-        List<CYBlock> blocks = builder.getBlocks();
         for (int i = 0; i < blocks.size(); i++) {
             CYBlock mCur = blocks.get(i);
             if (mCur instanceof CYTextBlock) {
@@ -97,14 +98,13 @@ public class QuestionTextView extends CYSinglePageView {
         }
         doLayout(true);
         try {
-            rebuildPunctuation(0, builder);
+            rebuildPunctuation(0, blocks);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void rebuildPunctuation(int index, CYSinglePageView.Builder builder) {
-        List<CYBlock> blocks = builder.getBlocks();
+    private void rebuildPunctuation(int index, List<CYBlock> blocks) {
         if (index == blocks.size() - 1) {
             return;
         }
@@ -120,7 +120,7 @@ public class QuestionTextView extends CYSinglePageView {
                             CYBlock mPrev = mCur.getPrevBlock();
                             mPrev.setMargin(mPrev.getMarginLeft(), mPrev.getMarginRight() + mCur.getWidth());
                             doLayout(true);
-                            rebuildPunctuation(i, builder);
+                            rebuildPunctuation(i, blocks);
                             return;
                         }
                     }
