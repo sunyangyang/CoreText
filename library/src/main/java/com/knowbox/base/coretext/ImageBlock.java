@@ -81,12 +81,12 @@ public class ImageBlock extends CYImageBlock {
             int height = MathUtils.valueOfInt(heightPx);
             this.mWidth = (width == 0 ? 680: width);
             this.mHeight = (height == 0 ? 270 : height);
-            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / width;
+            mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                setWidth((int) (width * mScale));
-                setHeight((int) (height * mScale));
+                setWidth((int) (mWidth * mScale));
+                setHeight((int) (mHeight * mScale));
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
@@ -106,8 +106,8 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
-                setWidth((int) (width * mScale / 2));
-                setHeight((int) (height * mScale / 2));
+                setWidth((int) (mWidth * mScale / 2));
+                setHeight((int) (mHeight * mScale / 2));
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             }
