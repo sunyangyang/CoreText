@@ -151,20 +151,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/latex_bottom">
-        <LinearLayout
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
             <com.knowbox.base.coretext.QuestionTextView
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="30dp"
                 android:id="@+id/qtv_question"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </LinearLayout>
 
     </ScrollView>
 
