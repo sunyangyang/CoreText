@@ -32,6 +32,8 @@ import java.util.TreeSet;
 
 public class MatchBlock extends CYPlaceHolderBlock {
     public static final int MATCH_VALUE_ID = Integer.MAX_VALUE;
+    public static final int RIGHT_COLOR = Integer.MAX_VALUE - 2;
+    public static final int ERROR_COLOR = Integer.MAX_VALUE - 3;
     private final int SAVE_STATUS_ID = Integer.MAX_VALUE - 1;
     private List<MyMatchStatus> mList = new ArrayList<MyMatchStatus>();
     private List<MatchInfo> mLeftList = new ArrayList<MatchInfo>();
@@ -119,7 +121,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
             mLeftCells = new MatchCell[mLeftList.size()];
             mRightCells = new MatchCell[mRightList.size()];
             mRectangles = new RectF[2][length];//0为左边，1为右边
-            init();
+            init(textEnv);
             refreshLayout(SAVE_STATUS_ID, null);
             getTextEnv().setEditableValueChangeListener(new TextEnv.EditableValueChangeListener() {
                 @Override
@@ -279,7 +281,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
         return getContentHeight();
     }
 
-    private void init() {
+    private void init(TextEnv textEnv) {
         mBorderColor = 0xffe3ebf4;
         mBorderLightColor = 0xff44cdfc;
         mFillColor = 0xffffffff;
@@ -287,6 +289,17 @@ public class MatchBlock extends CYPlaceHolderBlock {
         mRightColor = 0xff44cdfc;
         mErrorColor = 0xffd8453b;
         mCommonColor = 0xffb6c6d4;
+
+        try {
+            if (Integer.valueOf(textEnv.getEditableValue(RIGHT_COLOR).getValue()) > 0) {
+                mRightColor = Integer.valueOf(textEnv.getEditableValue(RIGHT_COLOR).getValue());
+            }
+            if (Integer.valueOf(textEnv.getEditableValue(ERROR_COLOR).getValue()) > 0) {
+                mErrorColor = Integer.valueOf(textEnv.getEditableValue(ERROR_COLOR).getValue());
+            }
+        } catch (Exception e) {
+
+        }
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setColor(mBorderColor);

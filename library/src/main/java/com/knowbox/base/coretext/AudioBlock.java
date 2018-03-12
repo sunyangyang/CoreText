@@ -11,7 +11,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 
@@ -524,5 +523,22 @@ public class AudioBlock extends CYPlaceHolderBlock {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        if (mIsPlaying && mPlayBusService != null && mPlayBusService.getPlayerBusServiceObserver() != null) {
+            try {
+                mPlayBusService.pause();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
