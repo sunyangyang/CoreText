@@ -145,6 +145,11 @@ public class MatchCell {
                         mMatchBlock.postInvalidateThis();
                     }
                 }
+
+                @Override
+                public void onPageBuild() {
+
+                }
             });
         }
         mPageTextEnv.setSuggestedPageWidth((int) rectF.width());

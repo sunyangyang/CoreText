@@ -6,7 +6,6 @@ package com.knowbox.base.coretext;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.hyena.coretext.CYSinglePageView;
 import com.hyena.coretext.blocks.CYBlock;
@@ -41,27 +40,30 @@ public class QuestionTextView extends CYSinglePageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        try {
-            isChineseParaText();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
-    private boolean isChineseParaText() {
+    @Override
+    public void onPageBuild() {
+        super.onPageBuild();
+        isChineseParaText();
+    }
+
+    public void isChineseParaText() {
         if (getBuilder() == null) {
-            return false;
+            return;
         }
         List<CYBlock> blocks = getBuilder().getBlocks();
         if (blocks != null && blocks.size() > 0) {
             List<CYBlock> updateBlocks = new ArrayList<>();
+            boolean hasTextBlock = false;
             for (int i = 0; i < blocks.size(); i++) {
                 CYBlock block = blocks.get(i);
-                CYStyle style;
+                CYStyle style = null;
                 if (block instanceof CYStyleStartBlock)
                     style = ((CYStyleStartBlock) block).getStyle();
-                else {
+                else if (block instanceof CYBreakLineBlock) {
+                    updateBlocks.add(block);
+                } else {
                     style = block.getParagraphStyle();
                 }
                 if (style != null && (style.getStyle().equals("chinese_read")
@@ -70,14 +72,13 @@ public class QuestionTextView extends CYSinglePageView {
                         || style.getStyle().equals("chinese_recite_pinyin")
                         || style.getStyle().equals("chinese_paratext"))) {
                     updateBlocks.add(block);
+                    hasTextBlock = true;
                 }
             }
-            if (updateBlocks.size() > 0) {
+            if (hasTextBlock) {
                 rebuild(updateBlocks);
             }
         }
-
-        return false;
     }
 
     private void rebuild(List<CYBlock> blocks) {
@@ -119,7 +120,7 @@ public class QuestionTextView extends CYSinglePageView {
                         CYTextBlock nextText = (CYTextBlock) mNext;
                         if (CharacterUtils.match(nextText.getWord().word)) {
                             CYBlock mPrev = mCur.getPrevBlock();
-                            mPrev.setMargin(mPrev.getMarginLeft(), mPrev.getMarginRight() + mCur.getWidth());
+                            mPrev.setMargin(0, mCur.getWidth());
                             doLayout(true);
                             rebuildPunctuation(i, blocks);
                             return;
