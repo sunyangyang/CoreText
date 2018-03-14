@@ -38,7 +38,7 @@ import maximsblog.blogspot.com.jlatexmath.core.TeXFormula;
  * Created by yangzc on 17/3/3.
  */
 public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockProvider.CYBlockBuilder {
-    public final int version = 1;
+    public final int version = 3;
 
     static {
         //init latex

@@ -255,7 +255,7 @@ public class ImageBlock extends CYImageBlock {
 
         @Override
         public Object getTag() {
-            return null;
+            return ImageBlock.this;
         }
 
         private void setImageDrawableInfo(Drawable drawable) {
@@ -275,6 +275,7 @@ public class ImageBlock extends CYImageBlock {
                     .getResources(), bitmap));
         }
     };
+
 
     @Override
     public void onLoadComplete(String imageUrl, Bitmap bitmap, Object tag) {
