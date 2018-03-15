@@ -100,7 +100,7 @@ public class QuestionTextView extends CYSinglePageView {
         }
         doLayout(true);
         try {
-            rebuildPunctuation(0, blocks);
+//            rebuildPunctuation(0, blocks);
         } catch (Exception e) {
             e.printStackTrace();
         }
