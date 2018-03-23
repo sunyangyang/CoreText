@@ -66,7 +66,8 @@ public class QuestionTextView extends CYSinglePageView {
                 } else {
                     style = block.getParagraphStyle();
                 }
-                if (style != null && (style.getStyle().equals("chinese_read")
+                if (style != null && style.getStyle() != null &&
+                        (style.getStyle().equals("chinese_read")
                         || style.getStyle().equals("chinese_read_pinyin")
                         || style.getStyle().equals("chinese_recite")
                         || style.getStyle().equals("chinese_recite_pinyin")
