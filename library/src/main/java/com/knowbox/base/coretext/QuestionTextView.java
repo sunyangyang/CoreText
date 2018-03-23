@@ -45,7 +45,11 @@ public class QuestionTextView extends CYSinglePageView {
     @Override
     public void onPageBuild() {
         super.onPageBuild();
-        isChineseParaText();
+        try {
+            isChineseParaText();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void isChineseParaText() {
