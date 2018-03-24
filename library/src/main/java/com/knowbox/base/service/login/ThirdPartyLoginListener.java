@@ -10,8 +10,8 @@ import cn.sharesdk.framework.Platform;
  */
 public interface ThirdPartyLoginListener {
 
-    public void onLogin(Platform platform);
+    void onLogin(Platform platform);
 
-    public void onFail(Platform platform);
+    void onFail(Platform platform);
 
 }
