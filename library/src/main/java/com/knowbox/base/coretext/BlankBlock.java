@@ -4,6 +4,7 @@
 
 package com.knowbox.base.coretext;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ public class BlankBlock extends CYEditBlock {
 
     public static String CLASS_FILL_IN = "fillin";
     public static String CLASS_CHOICE = "choice";
+    public static String CLASS_DELIVERY = "delivery";
 
     private String mClass = CLASS_CHOICE;
     private String size;
@@ -91,7 +93,7 @@ public class BlankBlock extends CYEditBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        updateSize();
+        updateSize(getText());
     }
 
     @Override
@@ -104,13 +106,46 @@ public class BlankBlock extends CYEditBlock {
                 return;
 
             getTextEnv().setEditableValue(getTabId(), text);
-            if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size)) {
-                updateSize();
+            if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size) || "delivery".equals(size)) {
+                updateSize(text);
                 requestLayout();
             } else {
                 postInvalidateThis();
             }
         }
+    }
+
+    @Override
+    public void insertText(String text) {
+        if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
+            String value = getTextEnv().getEditableValue(getTabId()).getValue() + text;
+            if (value.length() > getTextLength())
+                return;
+            if (!TextUtils.isEmpty(value)) {
+                updateSize(value + text);
+            } else {
+                updateSize(text);
+            }
+        }
+        super.insertText(text);
+    }
+
+    @Override
+    public void removeText() {
+        if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
+            String value = getTextEnv().getEditableValue(getTabId()).getValue();
+            if (!TextUtils.isEmpty(value)) {
+                updateSize(getTextEnv().getEditableValue(getTabId()).getValue().substring(0, value.length() - 1));
+            }
+        }
+        super.removeText();
+    }
+
+    @Override
+    public void breakLine() {
+        Log.e("XXXXX", "id = " + getTabId() + ", getText() = " + getText());
+        updateSize(getText().substring(0, getFlashPosition()));
+        super.breakLine();
     }
 
     public int getTextLength() {
@@ -125,9 +160,8 @@ public class BlankBlock extends CYEditBlock {
         return size;
     }
 
-    private void updateSize() {
+    private void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
-        String text = getText();
         if (!getTextEnv().isEditable()) {
             if (text == null) {
                 text = "";
@@ -185,6 +219,14 @@ public class BlankBlock extends CYEditBlock {
             } else if ("flag".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+            } else if ("delivery".equals(size)) {
+                int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text));
+                this.mWidth = width;
+                if (this.mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
+                    this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                }
+                this.mHeight = 40 * Const.DP_1;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
@@ -270,4 +312,9 @@ public class BlankBlock extends CYEditBlock {
         return false;
     }
 
+    @Override
+    public void draw(Canvas canvas) {
+        mFlashX = getEditFace().getFlashX();
+        super.draw(canvas);
+    }
 }

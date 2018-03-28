@@ -73,6 +73,8 @@ public class DefaultBlockMaker implements IBlockMaker {
             return (T) new VerticalCalculationBlock(textEnv, data);
         } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
+        } else if ("delivery_equation".equals(type)) {
+            return (T) new DeliveryBlock(textEnv, data);
         }
         return null;
     }

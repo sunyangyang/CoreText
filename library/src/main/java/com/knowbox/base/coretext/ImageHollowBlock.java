@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
+import com.hyena.coretext.event.CYEditGroupFocusEventLister;
 import com.hyena.coretext.utils.Const;
 
 import org.json.JSONArray;
@@ -157,6 +158,11 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
     @Override
     public List<ICYEditable> findAllEditable() {
         return blankBlocks;
+    }
+
+    @Override
+    public void setFocusChangeListener(CYEditGroupFocusEventLister cyEditGroupFocusEventLister) {
+
     }
 
 //    @Override

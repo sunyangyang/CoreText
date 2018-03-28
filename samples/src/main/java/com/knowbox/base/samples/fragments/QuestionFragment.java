@@ -7,10 +7,12 @@ package com.knowbox.base.samples.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hyena.coretext.CYSinglePageView;
 import com.hyena.coretext.blocks.ICYEditable;
@@ -33,35 +35,41 @@ import java.util.List;
  */
 public class QuestionFragment extends Fragment {
 
-    private QuestionTextView textView;
-    private int mFocusId = -1;
+    private QuestionTextView mQtvQuestion;
+    private int mFocusTabId;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.layout_question, null);
-        textView = (QuestionTextView) view.findViewById(R.id.qtv_question);
-        view.findViewById(R.id.latex_keyboard_1).setOnClickListener(new View.OnClickListener() {
+        mQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_question);
+        view.findViewById(R.id.latex_keyboard_1).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_2).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_3).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_4).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_5).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_6).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_7).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_8).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_9).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_star).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_del).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_w).setOnClickListener(mClickListener);
+
+        mQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_question);
+        mQtvQuestion.setFocusEventListener(new CYFocusEventListener() {
             @Override
-            public void onClick(View v) {
-                String text = textView.getText(1);
-                textView.setText(mFocusId, text);
-            }
-        });
-        textView.setFocusEventListener(new CYFocusEventListener() {
-            @Override
-            public void onFocusChange(boolean b, final int i) {
-                if (!b)
-                    return;
-                ICYEditable editable = textView.findEditableByTabId(i);
-                if (editable != null) {
-                    LogUtil.v("yangzc", "pos: " + editable.getBlockRect().toString());
+            public void onFocusChange(boolean focus, final int tabId) {
+                if (focus) {
+                    LogUtil.v("yangzc", "tabId: " + tabId);
+                    mFocusTabId = tabId;
+                    Log.e("XXXXX", "tabId = " + tabId);
+                    ICYEditable editable = mQtvQuestion.findEditableByTabId(tabId);
                 }
             }
 
             @Override
-            public void onClick(int i) {
-
+            public void onClick(int tabId) {
             }
         });
 
@@ -144,16 +152,20 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#65+61=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 5}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_audio\"}##{\"type\":\"audio\",\"style\":\"math_reading\",\"src\":\"http://tikuqiniu.knowbox.cn/ssyy20171111/824209.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#最大的两位数是#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}#。#{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read\"}#西边天上的朵朵白云，#{\"type\":\"P\"}#变成了红彤彤的晚霞；#{\"type\":\"P\"}#从东山上升起的太阳，#{\"type\":\"P\"}#到西山上就要落下！#{\"type\":\"P\"}##{\"type\":\"P\"}#一天中太阳做了多少好事：#{\"type\":\"P\"}#她把金光往鲜花上洒，#{\"type\":\"P\"}#她把小树往高处拔；#{\"type\":\"P\"}#她陪着小朋友在海边戏水，#{\"type\":\"P\"}#看他们扬起欢乐的浪花……#{\"type\":\"P\"}##{\"type\":\"para_begin\"}##{\"type\":\"para_end\"}#太阳就要从西山落啦！#{\"type\":\"P\"}#她要去哪儿？#{\"type\":\"P\"}#她要趁人们睡觉的时侯，#{\"type\":\"P\"}#走向另外的国家。#{\"type\":\"P\"}##{\"type\":\"P\"}#在别的国家里，#{\"type\":\"P\"}#也有快乐的小朋友，#{\"type\":\"P\"}#也有小树和鲜花。#{\"type\":\"P\"}#我知道，此时，#{\"type\":\"P\"}#那里的小朋友和鲜花，#{\"type\":\"P\"}#正在睡梦中等她、盼她……#{\"type\":\"para_end\"}#\"";
-        question = "#{\"type\":\"para_begin\",\"size\":34,\"align\":\"left\",\"color\":\"#808080\",\"margin\":40}#la#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"size\":34,\"align\":\"left\",\"color\":\"#808080\",\"margin\":40,\"style\":\"\"}#la#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50\"}#";
+//        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
-        builder = textView.getBuilder(question);
-        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
+        builder = mQtvQuestion.getBuilder(question);
+//        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
 //        builder.setFontSize(15 * Const.DP_1);
 //        builder.setEditableValue(VerticalCalculationBlock.SCALE, 0.64 + "");
 //        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1"));
 //        builder.setEditableValue(2, new EditableValue(0xffff6666, "5"));
 //        builder.setEditable(true).setEditableValue(1, "");
         builder.build();
+//        mQtvQuestion.setFocus(1);
 //        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1000"));
 //        builder.setEditableValue(2, new EditableValue(0xffff6666, "5000"));
         return view;
@@ -167,6 +179,33 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
     @Override
     public void onPause() {
         super.onPause();
-        textView.pause();
+        mQtvQuestion.pause();
     }
+
+    private View.OnClickListener mClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v != null && v instanceof TextView) {
+                TextView textView = (TextView) v;
+                if (mFocusTabId >= 0) {
+                    ICYEditable editable = mQtvQuestion.findEditableByTabId(mFocusTabId);
+                    if (editable != null) {
+                        String currentText = mQtvQuestion.getText(mFocusTabId);
+                        if (currentText == null)
+                            currentText = "";
+                        String text = textView.getText().toString();
+                        if ("删除".equals(text)) {
+                            if (TextUtils.isEmpty(currentText))
+                                return;
+                            editable.removeText();
+                        } else if ("#".equals(text)) {
+                            editable.breakLine();
+                        } else {
+                            editable.insertText(text);
+                        }
+                    }
+                }
+            }
+        }
+    };
 }

@@ -13,6 +13,7 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
+import com.hyena.coretext.event.CYEditGroupFocusEventLister;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
@@ -434,6 +435,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             }
         }
         return edits;
+    }
+
+    @Override
+    public void setFocusChangeListener(CYEditGroupFocusEventLister cyEditGroupFocusEventLister) {
+
     }
 
     @Override

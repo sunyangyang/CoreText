@@ -99,6 +99,21 @@ public class LatexBlock extends CYLatexBlock {
         }
 
         @Override
+        public void insertText(String s) {
+
+        }
+
+        @Override
+        public void breakLine() {
+
+        }
+
+        @Override
+        public void removeText() {
+
+        }
+
+        @Override
         public boolean hasBottomLine() {
             return false;
         }
