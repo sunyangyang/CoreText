@@ -1,6 +1,7 @@
 package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -71,7 +72,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         }
 
         if (!TextUtils.isEmpty(colors)) {
-            mColors = answers.split("=");
+            mColors = colors.split("=");
         }
         init(content);
     }
@@ -80,8 +81,12 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     public ICYEditable findEditable(float v, float v1) {
         for (int i = 0; i < mList.size(); i++) {
             if (mList.get(i) != null && mList.get(i).findEditable(v, v1) != null) {
-                mList.get(i).setFocus(true);
-                return mList.get(i).findEditable(v, v1);
+                if (mList.get(i).getEditable()) {
+                    return mList.get(i).findEditable(v, v1);
+                } else {
+                    return null;
+                }
+
             }
         }
         return null;
@@ -138,30 +143,38 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(Const.DP_1 * 2);
         mPaint.setColor(0xff5eb9ff);
-        mIsEditable = mTextEnv.isEditable();
+        if (mAnswers != null) {
+            mIsEditable = false;
+        }
         for (int i = 0; i < mMaxCount; i++) {
             String text = "";
-            int color = -1;
-            if (mAnswers != null && mAnswers.length > i + 1) {
+            if (mAnswers != null && mAnswers.length > 0 && i + 1 < mAnswers.length) {
                 text = mAnswers[i + 1];
             }
-            if (mColors != null && mColors.length > i + 1) {
+            String color = "";
+            if (mColors != null && mColors.length > 0 && i + 1 < mColors.length) {
                 try {
-                   color = Integer.valueOf(mColors[i + 1]);
+                    color = mColors[i + 1];
                 } catch (Exception e) {
 
                 }
             }
-            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, color, text));
+            if (TextUtils.isEmpty(text)) {
+                text = SIGN_EQUAL;
+            } else {
+                text = SIGN_EQUAL + text;
+            }
+            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, text, color));
         }
+
         if (mAnswers != null && mAnswers.length > 0) {
             for (int i = 1; i < mAnswers.length; i++) {
                 addCell();
             }
         } else {
             addCell();
-            mList.get(0).findEditable().setFocus(true);
         }
+        postInvalidateThis();
     }
 
     private DeliveryCell findCellById(int id) {
@@ -179,18 +192,20 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             while (mId < mMaxCount && mIdList.contains(String.valueOf(mId))) {
                 mId++;
             }
+
             DeliveryCell cell = findCellById(mId);
             mIdList.add(String.valueOf(mId));
             mList.add(cell);
             setLineY();
-            postInvalidateThis();
-            cell.setText(SIGN_EQUAL);
-            if (mFocusEventListener != null) {
-                mFocusEventListener.onFocusChange(false, getFocusEditable());
-                mFocusEventListener.onFocusChange(true, cell.findEditable());
+            if (mIsEditable) {
+                if (mFocusEventListener != null) {
+                    mFocusEventListener.onFocusChange(false, getFocusEditable());
+                    mFocusEventListener.onFocusChange(true, cell.findEditable());
+                }
+                ((BlankBlock) cell.findEditable()).getEditFace().
+                        setFlashX(PaintManager.getInstance().getWidth(mTextEnv.getPaint(), cell.getText()));
+
             }
-            ((BlankBlock)cell.findEditable()).getEditFace().
-                    setFlashX(CYEditBlock.DEFAULT_FLASH_X);
         }
     }
 
@@ -224,9 +239,8 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                     mFocusEventListener.onFocusChange(false, cell.findEditable());
                     mFocusEventListener.onFocusChange(true, newCell.findEditable());
                 }
-                ((BlankBlock)newCell.findEditable()).getEditFace().
-                        setFlashX((getContentRect().width() - PaintManager.getInstance().getWidth(mTextEnv.getPaint(), newCell.getText())) / 2 +
-                                PaintManager.getInstance().getWidth(mTextEnv.getPaint(), newCell.getText()));
+                ((BlankBlock) newCell.findEditable()).getEditFace().
+                        setFlashX(PaintManager.getInstance().getWidth(mTextEnv.getPaint(), newCell.getText()));
                 setLineY();
                 postInvalidateThis();
             }
@@ -245,7 +259,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         }
         if (mList.size() > 1) {
             DeliveryCell prCell = null;
-            if (position - 1 > 0) {
+            if (position - 1 >= 0) {
                 prCell = mList.get(position - 1);
             } else {
                 prCell = mList.get(1);
@@ -257,7 +271,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                 mFocusEventListener.onFocusChange(false, cell.findEditable());
                 mFocusEventListener.onFocusChange(true, prCell.findEditable());
             }
-            ((BlankBlock)prCell.findEditable()).getEditFace().
+            ((BlankBlock) prCell.findEditable()).getEditFace().
                     setFlashX((getContentRect().width() - PaintManager.getInstance().getWidth(mTextEnv.getPaint(), prCell.getText())) / 2 +
                             PaintManager.getInstance().getWidth(mTextEnv.getPaint(), prCell.getText()));
             setLineY();
@@ -267,6 +281,9 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
     private void setLineY() {
         float top = mTitleHeight + mMarginTop + mPaddingVertical;
+        if (!mIsEditable) {
+            top = mTitleHeight + mMarginTop;
+        }
         mBlankBlockLineHeight = mList.get(0).getHeight();
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setLineY((int) (i * mBlankBlockLineHeight + top + mList.get(i).getHeight() / 2));
@@ -279,10 +296,12 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         Rect rect = getContentRect();
         canvas.save();
         canvas.translate(rect.left, rect.top);
-        canvas.drawText(mTitle, mEqualWidth + mPaddingHorizontal, 0, mTextEnv.getPaint());
-        RectF rectF = new RectF(mPaint.getStrokeWidth(), mTitleHeight + mMarginTop,
-                mTextEnv.getSuggestedPageWidth() - mPaint.getStrokeWidth(), getInputHeight() + Const.DP_1 * 30);
-        canvas.drawRoundRect(rectF, mCorner, mCorner, mPaint);
+        canvas.drawText(mTitle, mEqualWidth * 2, 0, mTextEnv.getPaint());
+        if (mIsEditable) {
+            RectF rectF = new RectF(mPaint.getStrokeWidth(), mTitleHeight + mMarginTop,
+                    mTextEnv.getSuggestedPageWidth() - mPaint.getStrokeWidth(), getInputHeight() + Const.DP_1 * 30);
+            canvas.drawRoundRect(rectF, mCorner, mCorner, mPaint);
+        }
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).draw(canvas);
         }
@@ -307,7 +326,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     private float getInputHeight() {
         float height = 0;
         for (int i = 0; i < mList.size(); i++) {
-           height += mList.get(i).getHeight();
+            height += mList.get(i).getHeight();
         }
         height += mPaddingVertical * 2 + mPaint.getStrokeWidth() * 2;
         //最少两行的高度,而且只有第一行保证不能被删除，所以get(0)是肯定存在的
@@ -334,20 +353,29 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         public void insert(DeliveryCell cell) {
             setAnswer();
         }
+
+        @Override
+        public void removeText() {
+            setAnswer();
+        }
     };
 
     public interface TextChangeListener {
         void breakLine(int flashPosition, DeliveryCell cell, String text);
+
         void remove(DeliveryCell cell);
+
         void insert(DeliveryCell cell);
+
+        void removeText();
     }
 
     @Override
     public boolean onTouchEvent(int action, float x, float y) {
         BlankBlock blankBlock = (BlankBlock) getFocusEditable();
-        if (blankBlock != null && blankBlock.getEditFace() != null) {
-            if (x < blankBlock.getContentRect().left + (blankBlock.getContentRect().width() - PaintManager.getInstance().getWidth(mTextEnv.getPaint(), blankBlock.getText())) / 2 + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL) / 2) {
-                x = blankBlock.getContentRect().left + (blankBlock.getContentRect().width() - PaintManager.getInstance().getWidth(mTextEnv.getPaint(), blankBlock.getText())) / 2 + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL);
+        if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
+            if (x < blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL) / 2) {
+                x = blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL);
             }
             blankBlock.getEditFace().setFlashX(x);
         }
@@ -356,7 +384,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
     private void setAnswer() {
         String answer = "";
-        for (int i = 0; i< mList.size(); i++) {
+        for (int i = 0; i < mList.size(); i++) {
             answer += mList.get(i).getText();
         }
         mTextEnv.setEditableValue(ANSWER_ID, answer);

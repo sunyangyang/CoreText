@@ -89,7 +89,7 @@ public class EditFace extends CYEditFace {
                 float textX = 0;
                 if (!TextUtils.isEmpty(text)) {
                     textWidth = PaintManager.getInstance().getWidth(mTextPaint, text);
-                    textX = contentRect.left;
+                    textX = 0;
                     flashLeft = textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, 1)) / 2;
                     flashRight = textX + textWidth;
                 }
@@ -99,7 +99,7 @@ public class EditFace extends CYEditFace {
                         if (textWidth > contentRect.width()) {
                             left = contentRect.right;
                         } else {
-                            left = contentRect.left + (contentRect.width() + textWidth) / 2;
+                            left = contentRect.left + textWidth;
                         }
                         mFlashPosition = text.length();
                     } else {
@@ -111,7 +111,7 @@ public class EditFace extends CYEditFace {
                     left = contentRect.left + textX;
                 } else if ((!TextUtils.isEmpty(text) && flashX >= flashRight)) {
                     mFlashPosition = text.length();
-                    left = contentRect.left + (contentRect.width() + textWidth) / 2;
+                    left = contentRect.left + textWidth;
                 } else {
                     if (!TextUtils.isEmpty(text)) {
                         for (int i = 0; i < text.length(); i++) {

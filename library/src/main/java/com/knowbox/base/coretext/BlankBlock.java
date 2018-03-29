@@ -143,8 +143,9 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public void breakLine() {
-        Log.e("XXXXX", "id = " + getTabId() + ", getText() = " + getText());
-        updateSize(getText().substring(0, getFlashPosition()));
+        if (!TextUtils.isEmpty(getText()) && getText().length() > getFlashPosition()) {
+            updateSize(getText().substring(0, getFlashPosition()));
+        }
         super.breakLine();
     }
 

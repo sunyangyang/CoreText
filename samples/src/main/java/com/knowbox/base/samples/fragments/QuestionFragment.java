@@ -23,6 +23,7 @@ import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.hyena.coretext.event.CYFocusEventListener;
 import com.knowbox.base.coretext.DefaultBlockBuilder;
+import com.knowbox.base.coretext.DeliveryBlock;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.coretext.VerticalCalculationBlock;
 import com.knowbox.base.samples.R;
@@ -63,7 +64,6 @@ public class QuestionFragment extends Fragment {
                 if (focus) {
                     LogUtil.v("yangzc", "tabId: " + tabId);
                     mFocusTabId = tabId;
-                    Log.e("XXXXX", "tabId = " + tabId);
                     ICYEditable editable = mQtvQuestion.findEditableByTabId(tabId);
                 }
             }
@@ -158,6 +158,9 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
+//        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100");
+//        builder.setEditableValue(DeliveryBlock.COLOR_ID, "=#ff0000=#000000=#0000ff");
+
 //        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
 //        builder.setFontSize(15 * Const.DP_1);
 //        builder.setEditableValue(VerticalCalculationBlock.SCALE, 0.64 + "");
