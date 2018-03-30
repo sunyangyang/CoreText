@@ -63,6 +63,8 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
+            } else if ("delivery".equals(getSize())) {
+                mTextLength = 20;
             } else {
                 mTextLength = 20;
             }
@@ -165,6 +167,7 @@ public class BlankBlock extends CYEditBlock {
 
     private void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
+        int maxWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
         if (!getTextEnv().isEditable()) {
             if (text == null) {
                 text = "";

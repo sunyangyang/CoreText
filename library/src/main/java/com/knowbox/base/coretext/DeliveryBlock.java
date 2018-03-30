@@ -244,6 +244,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                 ((BlankBlock) newCell.findEditable()).getEditFace().
                         setFlashX(PaintManager.getInstance().getWidth(mTextEnv.getPaint(), newCell.getText()));
                 setLineY();
+                requestLayout();
                 postInvalidateThis();
             }
         }
@@ -301,7 +302,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         canvas.drawText(mTitle, mEqualWidth * 2, 0, mTextEnv.getPaint());
         if (mIsEditable) {
             RectF rectF = new RectF(mPaint.getStrokeWidth(), mTitleHeight + mMarginTop,
-                    mTextEnv.getSuggestedPageWidth() - mPaint.getStrokeWidth(), getInputHeight() + Const.DP_1 * 30);
+                    mTextEnv.getSuggestedPageWidth() - mPaint.getStrokeWidth(), getContentHeight() - mPaint.getStrokeWidth());
             canvas.drawRoundRect(rectF, mCorner, mCorner, mPaint);
         }
         for (int i = 0; i < mList.size(); i++) {
@@ -317,7 +318,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
     @Override
     public int getContentHeight() {
-        return (int) (mTitleHeight + mPaddingVertical * 2 + mMarginTop + getInputHeight()) + Const.DP_1 * 30;
+        return (int) (mTitleHeight + mMarginTop + getInputHeight());
     }
 
     @Override
@@ -380,7 +381,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             if (x < blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL) / 2) {
                 x = blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL);
             }
-            blankBlock.getEditFace().setFlashX(x);
+            blankBlock.getEditFace().setFlashX(x - blankBlock.getContentRect().left);
         }
         return super.onTouchEvent(action, x, y);
     }

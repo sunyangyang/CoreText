@@ -70,7 +70,7 @@ public class EditFace extends CYEditFace {
 //    private Rect mRect = new Rect();
 //    private int padding = Const.DP_1 * 5;
     @Override
-    protected void drawFlash(Canvas canvas, Rect blockRect, Rect contentRect, float flashX) {
+    protected void drawFlash(Canvas canvas, Rect blockRect, Rect contentRect, float flashX, float flashY) {
         if (!mTextEnv.isEditable())
             return;
 
@@ -95,7 +95,6 @@ public class EditFace extends CYEditFace {
                 }
                 if (flashX <= DEFAULT_FLASH_X) {
                     if (!TextUtils.isEmpty(text)) {
-//                mTextPaint.measureText(text);
                         if (textWidth > contentRect.width()) {
                             left = contentRect.right;
                         } else {
@@ -148,7 +147,7 @@ public class EditFace extends CYEditFace {
                 canvas.drawLine(left, contentRect.top + padding, left, contentRect.bottom - padding, mFlashPaint);
             }
         } else if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            super.drawFlash(canvas, blockRect, blockRect, flashX);
+            super.drawFlash(canvas, blockRect, blockRect, flashX, flashY);
         }
     }
 
