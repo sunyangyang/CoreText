@@ -18,6 +18,9 @@ import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.hyena.coretext.blocks.CYEditBlock.DEFAULT_FLASH_X;
 
 /**
@@ -152,6 +155,7 @@ public class EditFace extends CYEditFace {
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
         if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (!TextUtils.isEmpty(text)) {
+                float textWidth = PaintManager.getInstance().getWidth(mTextPaint, text);
                 float x;
                 x = (float) contentRect.left;
                 canvas.save();
@@ -166,6 +170,24 @@ public class EditFace extends CYEditFace {
                     y = (float) contentRect.bottom - this.mTextPaintMetrics.bottom;
                 }
 
+                List<String> list = new ArrayList<String>();
+                int startPosition = 0;
+                for (int i = 0; i < text.length(); i++) {
+                    if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= textWidth &&
+                            PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > textWidth) {
+                        String content = text.substring(startPosition, i);
+                        startPosition = i;
+                        list.add(content);
+                    }
+                }
+
+//                int line = 0;
+//                if (textWidth > contentRect.width()) {
+//                    line = (int) ((textWidth / contentRect.width()) + 1);
+//                }
+//                if (line > 1) {
+//
+//                }
                 canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
             }
