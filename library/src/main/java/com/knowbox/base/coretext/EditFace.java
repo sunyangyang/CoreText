@@ -28,9 +28,18 @@ public class EditFace extends CYEditFace {
     private String mClass = BlankBlock.CLASS_CHOICE;
     private int mRoundCorner = Const.DP_1 * 5;
     private ICYEditable editable;
+
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
         this.editable = editable;
+    }
+
+    public int getRowsVerticalSpacing() {
+        return mVerticalSpacing;
+    }
+
+    public void setRowsVerticalSpacing(int spacing) {
+        mVerticalSpacing = spacing;
     }
 
     public void setClass(String clazz) {

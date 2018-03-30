@@ -64,7 +64,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
-                mTextLength = 20;
+                mTextLength = 40;
             } else {
                 mTextLength = 20;
             }
@@ -184,6 +184,16 @@ public class BlankBlock extends CYEditBlock {
             } else if ("small_img_blank".equals(size)) {
                 this.mWidth = 110;
                 this.mHeight = 60;
+            } else if ("delivery".equals(size)) {
+                int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
+                if (width >= maxWidth) {
+                    mWidth = maxWidth;
+                    int line = (width / maxWidth) + 1;
+                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                } else {
+                    this.mWidth = width;
+                    this.mHeight = textHeight;
+                }
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -228,11 +238,15 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                this.mWidth = width;
-                if (this.mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
-                    this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                textHeight = 40 * Const.DP_1;
+                if (width >= maxWidth) {
+                    mWidth = maxWidth;
+                    int line = (width / maxWidth) + 1;
+                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                } else {
+                    this.mWidth = width;
+                    this.mHeight = textHeight;
                 }
-                this.mHeight = 40 * Const.DP_1;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
