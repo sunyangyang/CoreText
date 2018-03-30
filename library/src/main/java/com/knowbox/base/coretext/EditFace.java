@@ -47,6 +47,7 @@ public class EditFace extends CYEditFace {
     }
 
     private RectF mRectF = new RectF();
+
     @Override
     protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
@@ -76,16 +77,10 @@ public class EditFace extends CYEditFace {
         canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBackGroundPaint);
     }
 
-//    private Rect mRect = new Rect();
-//    private int padding = Const.DP_1 * 5;
     @Override
     protected void drawFlash(Canvas canvas, Rect blockRect, Rect contentRect, float flashX, float flashY) {
         if (!mTextEnv.isEditable())
             return;
-
-//        mRect.set(contentRect);
-//        mRect.top = mRect.top + padding;
-//        mRect.bottom = mRect.bottom - padding;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
         if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
@@ -95,7 +90,7 @@ public class EditFace extends CYEditFace {
                 float textWidth = 0;
                 float flashLeft = 0;
                 float flashRight = 0;
-                float textX = 0;
+                float textX = mTextX;
                 if (!TextUtils.isEmpty(text)) {
                     textWidth = PaintManager.getInstance().getWidth(mTextPaint, text);
                     textX = 0;
@@ -122,23 +117,16 @@ public class EditFace extends CYEditFace {
                     left = contentRect.left + textWidth;
                 } else {
                     if (!TextUtils.isEmpty(text)) {
-                        for (int i = 0; i < text.length(); i++) {
-                            if (i < text.length() - 1) {
-                                if (flashX >= textX +
-                                        PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i + 1)) -
-                                        PaintManager.getInstance().getWidth(mTextPaint, text.substring(i, i + 1)) / 2 &&
-                                        flashX < textX
-                                                + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i + 2)) -
-                                                +PaintManager.getInstance().getWidth(mTextPaint, text.substring(i + 1, i + 2)) / 2) {
-                                    left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i)));
-                                    mFlashPosition = i;
-                                    break;
-                                }
-                            } else {
-                                if (flashX < flashRight) {
-                                    mFlashPosition = i;
-                                    left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, text.length() - 1)));
-                                }
+                        for (int i = 1; i < text.length(); i++) {
+                            if (flashX >= textX +
+                                    PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i)) -
+                                    PaintManager.getInstance().getWidth(mTextPaint, text.substring(i - 1, i)) / 2 &&
+                                    flashX < textX
+                                            + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i + 1)) -
+                                            +PaintManager.getInstance().getWidth(mTextPaint, text.substring(i, i + 1)) / 2) {
+                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, i)));
+                                mFlashPosition = i;
+                                break;
                             }
                         }
                     } else {
@@ -163,26 +151,26 @@ public class EditFace extends CYEditFace {
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
         if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
-            if(!TextUtils.isEmpty(text)) {
+            if (!TextUtils.isEmpty(text)) {
                 float x;
-                x = (float)contentRect.left;
+                x = (float) contentRect.left;
                 canvas.save();
                 canvas.clipRect(contentRect);
                 TextEnv.Align align = this.mTextEnv.getTextAlign();
                 float y;
-                if(align == TextEnv.Align.TOP) {
-                    y = (float)(contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
-                } else if(align == TextEnv.Align.CENTER) {
-                    y = (float)(contentRect.top + (contentRect.height() + PaintManager.getInstance().getHeight(this.mTextPaint)) / 2) - this.mTextPaintMetrics.bottom;
+                if (align == TextEnv.Align.TOP) {
+                    y = (float) (contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
+                } else if (align == TextEnv.Align.CENTER) {
+                    y = (float) (contentRect.top + (contentRect.height() + PaintManager.getInstance().getHeight(this.mTextPaint)) / 2) - this.mTextPaintMetrics.bottom;
                 } else {
-                    y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom;
+                    y = (float) contentRect.bottom - this.mTextPaintMetrics.bottom;
                 }
 
                 canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
             }
         } else if (!mTextEnv.isEditable()) {
-             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
+            if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 mBottomLinePaint.set(mTextPaint);
                 mBottomLinePaint.setStrokeWidth(Const.DP_1);
                 super.drawText(canvas, text, blockRect, contentRect, hasBottomLine);
@@ -190,7 +178,7 @@ public class EditFace extends CYEditFace {
                 if (TextUtils.isEmpty(text)) {
                     super.drawText(canvas, "( )", blockRect, contentRect, false);
                 } else {
-                    super.drawText(canvas, "("+ text + ")", blockRect, contentRect, false);
+                    super.drawText(canvas, "(" + text + ")", blockRect, contentRect, false);
                 }
             }
         } else {

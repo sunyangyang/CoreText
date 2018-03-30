@@ -377,12 +377,14 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     @Override
     public boolean onTouchEvent(int action, float x, float y) {
         BlankBlock blankBlock = (BlankBlock) getFocusEditable();
+        float flashX = x;
         if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
-            if (x < blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL) / 2) {
-                x = blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL);
+            if (flashX < blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL) / 2) {
+                flashX = blankBlock.getContentRect().left + PaintManager.getInstance().getWidth(mTextEnv.getPaint(), SIGN_EQUAL);
             }
-            blankBlock.getEditFace().setFlashX(x - blankBlock.getContentRect().left);
+            blankBlock.getEditFace().setFlashX(flashX - blankBlock.getContentRect().left);
         }
+
         return super.onTouchEvent(action, x, y);
     }
 
