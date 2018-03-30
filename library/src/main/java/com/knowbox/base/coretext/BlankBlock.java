@@ -85,7 +85,9 @@ public class BlankBlock extends CYEditBlock {
                 ((EditFace)getEditFace()).updateEnv();
                 setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
             } else {
-                this.mClass = CLASS_FILL_IN;
+                if (!TextUtils.equals(this.mClass, CLASS_DELIVERY)) {
+                    this.mClass = CLASS_FILL_IN;
+                }
                 setPadding(Const.DP_1, Const.DP_1, Const.DP_1, Const.DP_1);
             }
             ((EditFace)getEditFace()).setClass(mClass);

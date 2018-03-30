@@ -154,19 +154,7 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (!mTextEnv.isEditable()) {
-             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-                mBottomLinePaint.set(mTextPaint);
-                mBottomLinePaint.setStrokeWidth(Const.DP_1);
-                super.drawText(canvas, text, blockRect, contentRect, hasBottomLine);
-            } else {
-                if (TextUtils.isEmpty(text)) {
-                    super.drawText(canvas, "( )", blockRect, contentRect, false);
-                } else {
-                    super.drawText(canvas, "("+ text + ")", blockRect, contentRect, false);
-                }
-            }
-        } else if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if(!TextUtils.isEmpty(text)) {
                 float x;
                 x = (float)contentRect.left;
@@ -184,6 +172,18 @@ public class EditFace extends CYEditFace {
 
                 canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
+            }
+        } else if (!mTextEnv.isEditable()) {
+             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
+                mBottomLinePaint.set(mTextPaint);
+                mBottomLinePaint.setStrokeWidth(Const.DP_1);
+                super.drawText(canvas, text, blockRect, contentRect, hasBottomLine);
+            } else {
+                if (TextUtils.isEmpty(text)) {
+                    super.drawText(canvas, "( )", blockRect, contentRect, false);
+                } else {
+                    super.drawText(canvas, "("+ text + ")", blockRect, contentRect, false);
+                }
             }
         } else {
             super.drawText(canvas, text, blockRect, contentRect, false);

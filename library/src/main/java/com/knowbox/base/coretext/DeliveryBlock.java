@@ -143,7 +143,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(Const.DP_1 * 2);
         mPaint.setColor(0xff5eb9ff);
-        if (mAnswers != null) {
+        if (!mTextEnv.isEditable() || mAnswers != null) {
             mIsEditable = false;
         }
         for (int i = 0; i < mMaxCount; i++) {
@@ -164,12 +164,14 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             } else {
                 text = SIGN_EQUAL + text;
             }
-            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, text, color));
+            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, text, color, mIsEditable));
         }
 
-        if (mAnswers != null && mAnswers.length > 0) {
-            for (int i = 1; i < mAnswers.length; i++) {
-                addCell();
+        if (!mIsEditable) {
+            if (mAnswers != null && mAnswers.length > 0) {
+                for (int i = 1; i < mAnswers.length; i++) {
+                    addCell();
+                }
             }
         } else {
             addCell();
@@ -329,10 +331,11 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             height += mList.get(i).getHeight();
         }
         height += mPaddingVertical * 2 + mPaint.getStrokeWidth() * 2;
-        //最少两行的高度,而且只有第一行保证不能被删除，所以get(0)是肯定存在的
-        if (height < mPaddingVertical * 2 + mList.get(0).getHeight() * 2) {
+
+        if (mList.size() > 0 && height < mPaddingVertical * 2 + mList.get(0).getHeight() * 2) {
             height += mList.get(0).getHeight();
         }
+
         return height;
     }
 

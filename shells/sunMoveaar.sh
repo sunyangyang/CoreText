@@ -1,6 +1,6 @@
 #!/bin/sh
 ./gradlew library:assembleRelease
-#./gradlew -p library clean build uploadArchives
+#./gradlew -p library cleash n build uploadArchives
 #if [ "$1" = "student" ]
 #then
 #	rm -rf ~/AndroidRCStudent/libs/library-release.aar

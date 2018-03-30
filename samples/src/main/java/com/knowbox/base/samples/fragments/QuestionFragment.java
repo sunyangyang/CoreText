@@ -158,7 +158,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
-//        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100");
+        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100");
 //        builder.setEditableValue(DeliveryBlock.COLOR_ID, "=#ff0000=#000000=#0000ff");
 
 //        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
