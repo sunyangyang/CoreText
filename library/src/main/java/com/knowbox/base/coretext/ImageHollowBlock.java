@@ -2,12 +2,14 @@ package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.event.CYEditGroupFocusEventLister;
 import com.hyena.coretext.utils.Const;
+import com.hyena.framework.clientlog.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +72,7 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
                 }
                 EditFace editFace = (EditFace) getEditFace();
                 editFace.getTextPaint().setTextSize(Const.DP_1 * 9 * getScale());
+                LogUtil.e("XXXXX", "getScale() = " + getScale());
                 editFace.updateEnv();
                 super.draw(canvas);
             }
