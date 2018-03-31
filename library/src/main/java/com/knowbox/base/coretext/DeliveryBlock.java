@@ -46,7 +46,6 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     private float mEqualWidth = 0;
     private float mTitleHeight = 0;
     private float mWidth = 0;
-    private float mBlankBlockLineHeight = 0;
     private int mMarginTop = Const.DP_1 * 5;
     private int mPaddingVertical = Const.DP_1 * 11;
     private int mPaddingHorizontal = Const.DP_1 * 21;
@@ -145,6 +144,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         mPaint.setColor(0xff5eb9ff);
         if (!mTextEnv.isEditable() || mAnswers != null) {
             mIsEditable = false;
+            mMarginTop = 0;
         }
         for (int i = 0; i < mMaxCount; i++) {
             String text = "";
@@ -290,9 +290,15 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         if (!mIsEditable) {
             top = mTitleHeight + mMarginTop;
         }
-        mBlankBlockLineHeight = mList.get(0).getHeight();
+
         for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).setLineY((int) (getListHeight(i) + top + mList.get(i).getHeight() / 2));
+            float height = 0;
+            if (!mIsEditable) {
+                height = 0;
+            } else {
+                height = mList.get(i).getHeight() / 2;
+            }
+            mList.get(i).setLineY((int) (getListHeight(i) + top + height));
         }
     }
 
@@ -345,9 +351,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         for (int i = 0; i < mList.size(); i++) {
             height += mList.get(i).getHeight();
         }
-        if (!mIsEditable) {
-            height += mPaint.getStrokeWidth() * 2;
-        } else {
+        if (mIsEditable) {
             height += mPaddingVertical * 2 + mPaint.getStrokeWidth() * 2;
             if (mList.size() > 0 && height < mPaddingVertical * 2 + mList.get(0).getHeight() * 2) {
                 height += mList.get(0).getHeight();
@@ -400,7 +404,6 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             }
             blankBlock.getEditFace().setFlashX(flashX - blankBlock.getContentRect().left);
         }
-
         return super.onTouchEvent(action, x, y);
     }
 
