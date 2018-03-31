@@ -146,6 +146,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             mIsEditable = false;
             mMarginTop = 0;
         }
+        int width = (int) (mTextEnv.getSuggestedPageWidth() - ((mPaddingHorizontal + mPaint.getStrokeWidth()) * 2));
         for (int i = 0; i < mMaxCount; i++) {
             String text = "";
             if (mAnswers != null && mAnswers.length > 0 && i + 1 < mAnswers.length) {
@@ -164,7 +165,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             } else {
                 text = SIGN_EQUAL + text;
             }
-            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, text, color, mIsEditable));
+            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i, mListener, mEqualWidth, text, color, mIsEditable, width));
         }
 
         if (!mIsEditable) {

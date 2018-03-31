@@ -2,6 +2,7 @@ package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;

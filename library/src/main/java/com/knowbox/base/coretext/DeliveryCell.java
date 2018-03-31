@@ -25,7 +25,7 @@ public class DeliveryCell {
     private int mColor = -1;
 
     public DeliveryCell(DeliveryBlock block, TextEnv textEnv, int id, DeliveryBlock.TextChangeListener listener,
-                        float offsetX, String text, String color, boolean isEditable) {
+                        float offsetX, String text, String color, boolean isEditable, int width) {
         mId = id;
         mDeliveryBlock = block;
         mListener = listener;
@@ -43,6 +43,7 @@ public class DeliveryCell {
         EditableValue editableValue = new EditableValue(mColor, text);
         mTextEnv.setEditableValue(mId, editableValue);
         mTextEnv.setEditable(isEditable);
+        mTextEnv.setSuggestedPageWidth(width);
         mBlock = new BlankBlock(mTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + mId + "}") {
             @Override
             public void breakLine() {

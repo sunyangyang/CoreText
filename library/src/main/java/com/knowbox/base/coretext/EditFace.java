@@ -156,6 +156,7 @@ public class EditFace extends CYEditFace {
         if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (!TextUtils.isEmpty(text)) {
                 float textWidth = PaintManager.getInstance().getWidth(mTextPaint, text);
+                float textHeight = PaintManager.getInstance().getHeight(mTextPaint);
                 float x;
                 x = (float) contentRect.left;
                 canvas.save();
@@ -172,13 +173,26 @@ public class EditFace extends CYEditFace {
 
                 List<String> list = new ArrayList<String>();
                 int startPosition = 0;
-                for (int i = 0; i < text.length(); i++) {
-                    if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= textWidth &&
-                            PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > textWidth) {
-                        String content = text.substring(startPosition, i);
-                        startPosition = i;
-                        list.add(content);
+                Log.e("XXXXX", "contentRect.width() = " + contentRect.width());
+                if (PaintManager.getInstance().getWidth(mTextPaint, text) > contentRect.width()) {
+                    for (int i = 0; i < text.length(); i++) {
+//                        if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= textWidth &&
+//                                PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > textWidth) {
+                        if (i % 10 == 0) {
+                            String content = text.substring(startPosition, i);
+                            startPosition = i;
+                            list.add(content);
+                        }
+
+//                        }
                     }
+                } else {
+                    list.add(text);
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    Log.e("XXXXX", "i = " + i + ", list = " + list.get(i) + ", x = " + x + ", y = " + y);
+                    canvas.drawText(list.get(i), x, y, this.mTextPaint);
+                    y += (textHeight + mVerticalSpacing);
                 }
 
 //                int line = 0;
@@ -188,7 +202,7 @@ public class EditFace extends CYEditFace {
 //                if (line > 1) {
 //
 //                }
-                canvas.drawText(text, x, y, this.mTextPaint);
+
                 canvas.restore();
             }
         } else if (!mTextEnv.isEditable()) {
