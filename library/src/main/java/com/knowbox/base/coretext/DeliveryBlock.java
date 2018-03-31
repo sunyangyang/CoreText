@@ -169,7 +169,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
         if (!mIsEditable) {
             if (mAnswers != null && mAnswers.length > 0) {
-                for (int i = 1; i < mAnswers.length; i++) {
+                for (int i = 1; i < (mAnswers.length >= mMaxCount ? mMaxCount : mAnswers.length); i++) {
                     addCell();
                 }
             }
@@ -283,14 +283,28 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     }
 
     private void setLineY() {
+        if (mList.size() <= 0) {
+            return;
+        }
         float top = mTitleHeight + mMarginTop + mPaddingVertical;
         if (!mIsEditable) {
             top = mTitleHeight + mMarginTop;
         }
         mBlankBlockLineHeight = mList.get(0).getHeight();
         for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).setLineY((int) (i * mBlankBlockLineHeight + top + mList.get(i).getHeight() / 2));
+            mList.get(i).setLineY((int) (getListHeight(i) + top + mList.get(i).getHeight() / 2));
         }
+    }
+
+    private int getListHeight(int index) {
+        if (mList.size() <= 0) {
+            return 0;
+        }
+        int height = 0;
+        for (int i = 0; i < index; i++) {
+            height += mList.get(i).getHeight();
+        }
+        return height;
     }
 
     @Override
@@ -331,12 +345,14 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         for (int i = 0; i < mList.size(); i++) {
             height += mList.get(i).getHeight();
         }
-        height += mPaddingVertical * 2 + mPaint.getStrokeWidth() * 2;
-
-        if (mList.size() > 0 && height < mPaddingVertical * 2 + mList.get(0).getHeight() * 2) {
-            height += mList.get(0).getHeight();
+        if (!mIsEditable) {
+            height += mPaint.getStrokeWidth() * 2;
+        } else {
+            height += mPaddingVertical * 2 + mPaint.getStrokeWidth() * 2;
+            if (mList.size() > 0 && height < mPaddingVertical * 2 + mList.get(0).getHeight() * 2) {
+                height += mList.get(0).getHeight();
+            }
         }
-
         return height;
     }
 
