@@ -23,6 +23,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.knowbox.base.utils.Utils.DELIVERY_ANSWER_ID;
+import static com.knowbox.base.utils.Utils.DELIVERY_COLOR_ID;
+import static com.knowbox.base.utils.Utils.DELIVERY_CONTENT_ID;
+
 /**
  * Created by sunyangyang on 2018/3/24.
  */
@@ -30,9 +34,6 @@ import java.util.List;
 public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGroup {
 
     public static final String SIGN_EQUAL = "=";
-    public static final int CONTENT_ID = Integer.MAX_VALUE;
-    public static final int COLOR_ID = Integer.MAX_VALUE - 1;
-    public static final int ANSWER_ID = Integer.MAX_VALUE - 2;
 
     private String mTitle = "";
     private List<String> mIdList = new ArrayList<String>();
@@ -60,11 +61,11 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);
         String answers = "";
         String colors = "";
-        if (textEnv.getEditableValue(CONTENT_ID) != null) {
-            answers = textEnv.getEditableValue(CONTENT_ID).getValue();
+        if (textEnv.getEditableValue(DELIVERY_CONTENT_ID) != null) {
+            answers = textEnv.getEditableValue(DELIVERY_CONTENT_ID).getValue();
         }
-        if (textEnv.getEditableValue(COLOR_ID) != null) {
-            colors = textEnv.getEditableValue(COLOR_ID).getValue();
+        if (textEnv.getEditableValue(DELIVERY_COLOR_ID) != null) {
+            colors = textEnv.getEditableValue(DELIVERY_COLOR_ID).getValue();
         }
         if (!TextUtils.isEmpty(answers)) {
             mAnswers = answers.split("=");
@@ -413,7 +414,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         for (int i = 0; i < mList.size(); i++) {
             answer += mList.get(i).getText();
         }
-        mTextEnv.setEditableValue(ANSWER_ID, answer);
+        mTextEnv.setEditableValue(DELIVERY_ANSWER_ID, answer);
     }
 
     public int getListSize() {

@@ -16,6 +16,7 @@ import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.knowbox.base.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,7 @@ public class BlankBlock extends CYEditBlock {
     private String mDefaultText;
     private int mTextLength = 16;
     private TextEnv mTextEnv;
+    private int mPaddingHorizontal = 0;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mTextEnv = textEnv;
@@ -64,7 +66,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
-                mTextLength = 40;
+                mTextLength = 400;
             } else {
                 mTextLength = 20;
             }
@@ -96,6 +98,13 @@ public class BlankBlock extends CYEditBlock {
             setMargin(mMargin, mMargin);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        if (mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING) != null) {
+            try {
+                mPaddingHorizontal = Integer.valueOf(mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING).getValue());
+            } catch (Exception e) {
+
+            }
         }
         updateSize(getText());
     }
@@ -167,8 +176,7 @@ public class BlankBlock extends CYEditBlock {
 
     private void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
-        int maxWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
-        Log.e("XXXXX", "getTextEnv().getSuggestedPageWidth() = " + getTextEnv().getSuggestedPageWidth());
+        int maxWidth = mTextEnv.getSuggestedPageWidth() - mPaddingHorizontal;
         if (!getTextEnv().isEditable()) {
             if (text == null) {
                 text = "";
@@ -187,7 +195,7 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = 60;
             } else if ("delivery".equals(size)) {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
-                if (width >= maxWidth) {
+                if (width > maxWidth) {
                     mWidth = maxWidth;
                     int line = (width / maxWidth) + 1;
                     this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
@@ -239,16 +247,16 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                textHeight = 40 * Const.DP_1;
-                if (width >= maxWidth) {
+                int line = 0;
+                if (width > maxWidth) {
                     mWidth = maxWidth;
-                    int line = (width / maxWidth) + 1;
+                    line = (width / maxWidth) + 1;
                     this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
                 } else {
                     this.mWidth = width;
                     this.mHeight = textHeight;
                 }
-                Log.e("XXXXX", "mHeight = " + mHeight);
+                this.mHeight += Const.DP_1 * 5;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;

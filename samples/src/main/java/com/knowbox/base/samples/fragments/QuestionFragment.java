@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hyena.coretext.CYSinglePageView;
+import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.event.CYFocusEventListener;
 import com.hyena.coretext.utils.Const;
@@ -156,8 +157,11 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\": 10\"}#";
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
+        builder.setSuggestedPageWidth(800);
+        builder.setTextAlign(TextEnv.Align.TOP);
 //        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100=100+10=110=1000");
 //        builder.setEditableValue(DeliveryBlock.COLOR_ID, "=#ff0000=#000000=#0000ff");
 

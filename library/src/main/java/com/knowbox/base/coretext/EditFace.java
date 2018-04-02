@@ -53,7 +53,7 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
+        if (!mTextEnv.isEditable())
             return;
 
         if (editable.hasFocus()) {
@@ -173,36 +173,23 @@ public class EditFace extends CYEditFace {
 
                 List<String> list = new ArrayList<String>();
                 int startPosition = 0;
-                Log.e("XXXXX", "contentRect.width() = " + contentRect.width());
                 if (PaintManager.getInstance().getWidth(mTextPaint, text) > contentRect.width()) {
                     for (int i = 0; i < text.length(); i++) {
-//                        if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= textWidth &&
-//                                PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > textWidth) {
-                        if (i % 10 == 0) {
+                        if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= contentRect.width() &&
+                                PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > contentRect.width()) {
                             String content = text.substring(startPosition, i);
                             startPosition = i;
                             list.add(content);
                         }
-
-//                        }
                     }
+                    list.add(text.substring(startPosition, text.length()));
                 } else {
                     list.add(text);
                 }
                 for (int i = 0; i < list.size(); i++) {
-                    Log.e("XXXXX", "i = " + i + ", list = " + list.get(i) + ", x = " + x + ", y = " + y);
                     canvas.drawText(list.get(i), x, y, this.mTextPaint);
                     y += (textHeight + mVerticalSpacing);
                 }
-
-//                int line = 0;
-//                if (textWidth > contentRect.width()) {
-//                    line = (int) ((textWidth / contentRect.width()) + 1);
-//                }
-//                if (line > 1) {
-//
-//                }
-
                 canvas.restore();
             }
         } else if (!mTextEnv.isEditable()) {
