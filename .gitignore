@@ -8,3 +8,4 @@ build/
 local.properties
 shells/moveaar.sh
 shells/sunMoveaar.sh
+gradle.properties
