@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hyena.coretext.CYSinglePageView;
+import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.event.CYFocusEventListener;
 import com.hyena.coretext.utils.Const;
@@ -156,9 +157,12 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/Fho4BygJ8Yabs-_AD--a29_T1DWX\",\"width\":\"680px\",\"height\":\"408px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"3.4\"},{\"type\":\"blank\",\"id\":2,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"23.0\"},{\"type\":\"blank\",\"id\":3,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"42.6\"},{\"type\":\"blank\",\"id\":4,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"62.3\"},{\"type\":\"blank\",\"id\":5,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"81.9\"}]}##{\"type\":\"para_end\"}#";
+//        question = "#{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\": 10\"}#";
+//        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/Fho4BygJ8Yabs-_AD--a29_T1DWX\",\"width\":\"680px\",\"height\":\"408px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"3.4\"},{\"type\":\"blank\",\"id\":2,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"23.0\"},{\"type\":\"blank\",\"id\":3,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"42.6\"},{\"type\":\"blank\",\"id\":4,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"62.3\"},{\"type\":\"blank\",\"id\":5,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"81.9\"}]}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
+        builder.setSuggestedPageWidth(800);
+        builder.setTextAlign(TextEnv.Align.TOP);
 //        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100=100+10=110=1000");
 //        builder.setEditableValue(DeliveryBlock.COLOR_ID, "=#ff0000=#000000=#0000ff");
 
@@ -199,8 +203,6 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                             currentText = "";
                         String text = textView.getText().toString();
                         if ("删除".equals(text)) {
-                            if (TextUtils.isEmpty(currentText))
-                                return;
                             editable.removeText();
                         } else if ("#".equals(text)) {
                             editable.breakLine();

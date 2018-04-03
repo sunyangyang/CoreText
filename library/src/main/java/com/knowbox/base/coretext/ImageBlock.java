@@ -33,8 +33,6 @@ import org.json.JSONObject;
  * Created by yangzc on 17/2/6.
  */
 public class ImageBlock extends CYImageBlock {
-    public static final int RETRY = Integer.MAX_VALUE;
-
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String size;
@@ -51,17 +49,10 @@ public class ImageBlock extends CYImageBlock {
     protected IDisplayer mDisplayer;
     protected int mLoadingResId, mErrorResId;
     private boolean isSuccess = false;
-    private boolean isRetry = false;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         ImageFetcher.getImageFetcher();
-        EditableValue editableValue = textEnv.getEditableValue(RETRY);
-        try {
-            isRetry = Boolean.valueOf(editableValue.getValue());
-        } catch (Exception e) {
-
-        }
         init(textEnv.getContext(), content);
     }
 

@@ -16,6 +16,7 @@ import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.knowbox.base.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,8 @@ public class BlankBlock extends CYEditBlock {
     private String mDefaultText;
     private int mTextLength = 16;
     private TextEnv mTextEnv;
+    private int mPaddingHorizontal = 0;
+    private int mLines = 0;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mTextEnv = textEnv;
@@ -64,7 +67,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
-                mTextLength = 20;
+                mTextLength = 400;
             } else {
                 mTextLength = 20;
             }
@@ -97,6 +100,13 @@ public class BlankBlock extends CYEditBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if (mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING) != null) {
+            try {
+                mPaddingHorizontal = Integer.valueOf(mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING).getValue());
+            } catch (Exception e) {
+
+            }
+        }
         updateSize(getText());
     }
 
@@ -121,14 +131,15 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public void insertText(String text) {
+        if (getFlashPosition() < 0) {
+            return;
+        }
         if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
             String value = getTextEnv().getEditableValue(getTabId()).getValue() + text;
             if (value.length() > getTextLength())
                 return;
             if (!TextUtils.isEmpty(value)) {
-                updateSize(value + text);
-            } else {
-                updateSize(text);
+                updateSize(value);
             }
         }
         super.insertText(text);
@@ -136,6 +147,9 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public void removeText() {
+        if (getFlashPosition() < 0) {
+            return;
+        }
         if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
             String value = getTextEnv().getEditableValue(getTabId()).getValue();
             if (!TextUtils.isEmpty(value)) {
@@ -147,6 +161,9 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public void breakLine() {
+        if (getFlashPosition() < 0) {
+            return;
+        }
         if (!TextUtils.isEmpty(getText()) && getText().length() > getFlashPosition()) {
             updateSize(getText().substring(0, getFlashPosition()));
         }
@@ -167,7 +184,7 @@ public class BlankBlock extends CYEditBlock {
 
     private void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
-        int maxWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+        int maxWidth = mTextEnv.getSuggestedPageWidth() - mPaddingHorizontal;
         if (!getTextEnv().isEditable()) {
             if (text == null) {
                 text = "";
@@ -184,6 +201,31 @@ public class BlankBlock extends CYEditBlock {
             } else if ("small_img_blank".equals(size)) {
                 this.mWidth = 110;
                 this.mHeight = 60;
+            } else if ("delivery".equals(size)) {
+                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text));
+                int line = 0;
+                if (width > maxWidth) {
+                    mWidth = maxWidth;
+                    int startPosition = 0;
+                    for (int i = 0; i < text.length(); i++) {
+                        if (PaintManager.getInstance().getWidth(getTextEnv()
+                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
+                                PaintManager.getInstance().getWidth(getTextEnv()
+                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
+                            line++;
+                            startPosition = i;
+                        }
+                    }
+                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+                        line++;
+                    }
+                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                } else {
+                    this.mWidth = (int) width;
+                    this.mHeight = textHeight;
+                }
+                this.mHeight += Const.DP_1 * 3;
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -226,13 +268,34 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else if ("delivery".equals(size)) {
-                int width = Math.max(Const.DP_1 * 32, (int) PaintManager.getInstance().getWidth(getTextEnv()
+                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                this.mWidth = width;
-                if (this.mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
-                    this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                int line = 0;
+                if (width > maxWidth) {
+                    mWidth = maxWidth;
+                    int startPosition = 0;
+                    for (int i = 0; i < text.length(); i++) {
+                        if (PaintManager.getInstance().getWidth(getTextEnv()
+                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
+                                PaintManager.getInstance().getWidth(getTextEnv()
+                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
+                            line++;
+                            startPosition = i;
+                        }
+                    }
+                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+                        line++;
+                    }
+                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                    if (mLines != line) {
+                        mLines = line;
+                        notifyLayoutChange();
+                    }
+                } else {
+                    this.mWidth = (int) width;
+                    this.mHeight = textHeight;
                 }
-                this.mHeight = 40 * Const.DP_1;
+                this.mHeight += Const.DP_1 * 3;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
@@ -321,6 +384,12 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public void draw(Canvas canvas) {
         mFlashX = getEditFace().getFlashX();
+        mFlashY = getEditFace().getFlashY();
+        mFlashPosition = getEditFace().getFlashPosition();
         super.draw(canvas);
+    }
+
+    public void notifyLayoutChange() {
+
     }
 }
