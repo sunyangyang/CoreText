@@ -38,8 +38,8 @@ dependencies {
 }
 
 ext {
-//    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('uploadArchives')}
-    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('library:assembleRelease')}
+    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('uploadArchives')}
+//    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('library:assembleRelease')}
 }
 
 if (IS_RELEASE) {

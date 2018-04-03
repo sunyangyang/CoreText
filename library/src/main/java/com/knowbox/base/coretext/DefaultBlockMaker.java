@@ -19,8 +19,6 @@ import org.json.JSONObject;
  */
 
 public class DefaultBlockMaker implements IBlockMaker {
-    int count = 0;
-
     @Override
     public CYTextBlock buildTextBlock(TextEnv textEnv, String s) {
         return new CYTextBlock(textEnv, s);
@@ -44,7 +42,6 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if("img".equals(type)) {
             return (T) new ImageBlock(textEnv, data);
         } else if("P".equals(type)) {
-            count++;
             return (T) new CYBreakLineBlock(textEnv, data);
         } else if ("para_begin".equals(type)) {
             return (T) new ParagraphBlock(textEnv, data) {
