@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
@@ -19,9 +18,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.knowbox.base.utils.Utils.DELIVERY_ANSWER_ID;
-import static com.knowbox.base.utils.Utils.DELIVERY_COLOR_ID;
-import static com.knowbox.base.utils.Utils.DELIVERY_CONTENT_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_ANSWER_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_COLOR_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_CONTENT_ID;
 
 /**
  * Created by sunyangyang on 2018/3/24.

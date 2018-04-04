@@ -4,11 +4,7 @@
 
 package com.knowbox.base.coretext;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
@@ -16,7 +12,7 @@ import com.hyena.coretext.blocks.CYEditFace;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.knowbox.base.utils.Utils;
+import com.knowbox.base.utils.BaseConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,9 +102,9 @@ public class BlankBlock extends CYEditBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING) != null) {
+        if (mTextEnv.getEditableValue(BaseConstant.BLANK_SET_PADDING) != null) {
             try {
-                mPaddingHorizontal = Integer.valueOf(mTextEnv.getEditableValue(Utils.BLANK_SET_PADDING).getValue());
+                mPaddingHorizontal = Integer.valueOf(mTextEnv.getEditableValue(BaseConstant.BLANK_SET_PADDING).getValue());
             } catch (Exception e) {
 
             }

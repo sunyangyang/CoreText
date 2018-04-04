@@ -4,15 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
-import com.knowbox.base.utils.Utils;
-
-import static com.knowbox.base.coretext.DeliveryBlock.SIGN_EQUAL;
+import com.knowbox.base.utils.BaseConstant;
 
 /**
  * Created by sunyangyang on 2018/3/24.
@@ -46,7 +43,7 @@ public class DeliveryCell {
         mTextEnv.setEditableValue(mId, editableValue);
         mTextEnv.setEditable(isEditable);
         mTextEnv.setSuggestedPageWidth(width);
-        mTextEnv.setEditableValue(Utils.BLANK_SET_PADDING, String.valueOf(Const.DP_1 * 40));
+        mTextEnv.setEditableValue(BaseConstant.BLANK_SET_PADDING, String.valueOf(Const.DP_1 * 40));
         mBlock = new BlankBlock(mTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + mId + "}") {
             @Override
             public void breakLine() {

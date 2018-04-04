@@ -91,7 +91,7 @@ public class EditFace extends CYEditFace {
             return;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) && mTextList.size() > 0) {
             if (editable.isEditable() && editable.hasFocus()) {
                 String text = getText();
                 float left = 0;
@@ -215,48 +215,11 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
-            mTextList.clear();
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) && mTextList.size() > 0) {
             if (!TextUtils.isEmpty(text)) {
-                float textHeight = PaintManager.getInstance().getHeight(mTextPaint);
-                float x;
-                x = (float) contentRect.left;
+                float x = (float) contentRect.left;
                 canvas.save();
                 canvas.clipRect(contentRect);
-                float y;
-                y = (float) (contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
-                int startPosition = 0;
-                if (PaintManager.getInstance().getWidth(mTextPaint, text) > contentRect.width()) {
-                    for (int i = 0; i < text.length(); i++) {
-                        if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= contentRect.width() &&
-                                PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > contentRect.width()) {
-                            String content = text.substring(startPosition, i);
-                            TextInfo info = new TextInfo();
-                            info.mStartPos = startPosition;
-                            info.mEndPos = i;
-                            info.mText = content;
-                            info.mY = y;
-                            mTextList.add(info);
-                            startPosition = i;
-                            y += (textHeight + mVerticalSpacing);
-                        }
-                    }
-                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
-                        TextInfo info = new TextInfo();
-                        info.mStartPos = startPosition;
-                        info.mEndPos = text.length();
-                        info.mText = text.substring(startPosition, text.length());
-                        info.mY = y;
-                        mTextList.add(info);
-                    }
-                } else {
-                    TextInfo info = new TextInfo();
-                    info.mStartPos = 0;
-                    info.mEndPos = text.length();
-                    info.mText = text;
-                    info.mY = y;
-                    mTextList.add(info);
-                }
                 for (int i = 0; i < mTextList.size(); i++) {
                     canvas.drawText(mTextList.get(i).mText, x, mTextList.get(i).mY, this.mTextPaint);
                 }
@@ -285,6 +248,12 @@ public class EditFace extends CYEditFace {
         if (TextUtils.isEmpty(text))
             return "";
         return text;
+    }
+
+    @Override
+    public void onDraw(Canvas canvas, Rect blockRect, Rect contentRect) {
+        getTextList(contentRect);
+        super.onDraw(canvas, blockRect, contentRect);
     }
 
     public class TextInfo {

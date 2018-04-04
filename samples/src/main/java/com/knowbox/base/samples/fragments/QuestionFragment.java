@@ -7,8 +7,6 @@ package com.knowbox.base.samples.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +16,11 @@ import com.hyena.coretext.CYSinglePageView;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.event.CYFocusEventListener;
-import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.utils.UiThreadHandler;
-import com.hyena.coretext.event.CYFocusEventListener;
 import com.knowbox.base.coretext.BlankBlock;
-import com.knowbox.base.coretext.DefaultBlockBuilder;
-import com.knowbox.base.coretext.DeliveryBlock;
 import com.knowbox.base.coretext.QuestionTextView;
-import com.knowbox.base.coretext.VerticalCalculationBlock;
 import com.knowbox.base.samples.R;
-import com.knowbox.base.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.knowbox.base.utils.BaseConstant;
 
 /**
  * Created by yangzc on 17/2/16.
@@ -164,8 +152,8 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
         builder.setTextAlign(TextEnv.Align.TOP);
-//        builder.setEditableValue(Utils.DELIVERY_CONTENT_ID, "=40+10=50=100100+101101000ajksdb=jkasfbjkasfbjkabdkasnbdjkasndjkabfjasbdkjasbjkdbfjkasndjasnfjasnjfnasjdasdsadsfasdasdasfasfa");
-//        builder.setEditableValue(Utils.DELIVERY_COLOR_ID, "=#ff0000=#000000=#0000ff");
+        builder.setEditableValue(BaseConstant.DELIVERY_CONTENT_ID, "=40+10=50=100100+101101000ajksdb=jkasfbjkasfbjkabdkasnbdjkasndjkabfjasbdkjasbjkdbfjkasndjasnfjasnjfnasjdasdsadsfasdasdasfasfa");
+        builder.setEditableValue(BaseConstant.DELIVERY_COLOR_ID, "=#ff0000=#000000=#0000ff");
 
 //        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
 //        builder.setFontSize(15 * Const.DP_1);
