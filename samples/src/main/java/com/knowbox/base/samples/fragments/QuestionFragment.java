@@ -23,11 +23,13 @@ import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.UiThreadHandler;
 import com.hyena.coretext.event.CYFocusEventListener;
+import com.knowbox.base.coretext.BlankBlock;
 import com.knowbox.base.coretext.DefaultBlockBuilder;
 import com.knowbox.base.coretext.DeliveryBlock;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.coretext.VerticalCalculationBlock;
 import com.knowbox.base.samples.R;
+import com.knowbox.base.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,10 +163,9 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/Fho4BygJ8Yabs-_AD--a29_T1DWX\",\"width\":\"680px\",\"height\":\"408px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"3.4\"},{\"type\":\"blank\",\"id\":2,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"23.0\"},{\"type\":\"blank\",\"id\":3,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"42.6\"},{\"type\":\"blank\",\"id\":4,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"62.3\"},{\"type\":\"blank\",\"id\":5,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"81.9\"}]}##{\"type\":\"para_end\"}#";
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
-        builder.setSuggestedPageWidth(800);
         builder.setTextAlign(TextEnv.Align.TOP);
-//        builder.setEditableValue(DeliveryBlock.CONTENT_ID, "=40+10=50=100=100+10=110=1000");
-//        builder.setEditableValue(DeliveryBlock.COLOR_ID, "=#ff0000=#000000=#0000ff");
+//        builder.setEditableValue(Utils.DELIVERY_CONTENT_ID, "=40+10=50=100100+101101000ajksdb=jkasfbjkasfbjkabdkasnbdjkasndjkabfjasbdkjasbjkdbfjkasndjasnfjasnjfnasjdasdsadsfasdasdasfasfa");
+//        builder.setEditableValue(Utils.DELIVERY_COLOR_ID, "=#ff0000=#000000=#0000ff");
 
 //        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
 //        builder.setFontSize(15 * Const.DP_1);
@@ -203,11 +204,11 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                             currentText = "";
                         String text = textView.getText().toString();
                         if ("删除".equals(text)) {
-                            editable.removeText();
+                            ((BlankBlock)editable).removeText();
                         } else if ("#".equals(text)) {
-                            editable.breakLine();
+                            ((BlankBlock)editable).breakLine();
                         } else {
-                            editable.insertText(text);
+                            ((BlankBlock)editable).insertText(text);
                         }
                     }
                 }

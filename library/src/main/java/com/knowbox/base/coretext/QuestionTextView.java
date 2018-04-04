@@ -14,6 +14,7 @@ import com.hyena.coretext.blocks.CYLineBlock;
 import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYStyleStartBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
+import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.knowbox.base.utils.CharacterUtils;
 
@@ -51,6 +52,27 @@ public class QuestionTextView extends CYSinglePageView {
             e.printStackTrace();
         }
     }
+
+//    public void insertText(int tabId, String text) {
+//        ICYEditable editable = findEditableByTabId(tabId);
+//        if (editable != null) {
+//            editable.insertText(text);
+//        }
+//    }
+//
+//    public void removeText(int tabId) {
+//        ICYEditable editable = findEditableByTabId(tabId);
+//        if (editable != null) {
+//            editable.removeText();
+//        }
+//    }
+//
+//    public void cutText(int tabId) {
+//        ICYEditable editable = findEditableByTabId(tabId);
+//        if (editable != null) {
+//            editable.breakLine();
+//        }
+//    }
 
     public void isChineseParaText() {
         if (getBuilder() == null) {

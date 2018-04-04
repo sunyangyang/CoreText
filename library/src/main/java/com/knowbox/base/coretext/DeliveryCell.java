@@ -46,7 +46,7 @@ public class DeliveryCell {
         mTextEnv.setEditableValue(mId, editableValue);
         mTextEnv.setEditable(isEditable);
         mTextEnv.setSuggestedPageWidth(width);
-        mTextEnv.setEditableValue(Utils.BLANK_SET_PADDING, String.valueOf(Const.DP_1 * 50));
+        mTextEnv.setEditableValue(Utils.BLANK_SET_PADDING, String.valueOf(Const.DP_1 * 40));
         mBlock = new BlankBlock(mTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + mId + "}") {
             @Override
             public void breakLine() {
@@ -54,7 +54,7 @@ public class DeliveryCell {
                 if (mDeliveryBlock.getListSize() < mDeliveryBlock.getMaxCount()) {
                     super.breakLine();
                     if (!TextUtils.isEmpty(text) && mListener != null) {
-                        mListener.breakLine(getFlashPosition(), DeliveryCell.this, text);
+                        mListener.breakLine(((EditFace)getEditFace()).getFlashPosition(), DeliveryCell.this, text);
                     }
                 }
             }
@@ -69,7 +69,7 @@ public class DeliveryCell {
 
             @Override
             public void removeText() {
-                if (getFlashPosition() > 0) {
+                if (((EditFace)getEditFace()).getFlashPosition() > 0) {
                     super.removeText();
                 }
 

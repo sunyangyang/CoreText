@@ -42,6 +42,12 @@ public class BlankBlock extends CYEditBlock {
     private TextEnv mTextEnv;
     private int mPaddingHorizontal = 0;
     private int mLines = 0;
+
+    private float mFlashX;
+    private float mFlashY;
+    private int mFlashPosition = -1;
+    public static final int DEFAULT_FLASH_X = -1000;
+    public static final int DEFAULT_FLASH_Y = -1000;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mTextEnv = textEnv;
@@ -121,6 +127,7 @@ public class BlankBlock extends CYEditBlock {
 
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size) || "delivery".equals(size)) {
+                ((EditFace)getEditFace()).setFlashPosition(text.length());
                 updateSize(text);
                 requestLayout();
             } else {
@@ -129,12 +136,12 @@ public class BlankBlock extends CYEditBlock {
         }
     }
 
-    @Override
     public void insertText(String text) {
-        if (getFlashPosition() < 0) {
+        if (((EditFace)getEditFace()).getFlashPosition() < 0) {
             return;
         }
-        if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
+        TextEnv textEnv = getTextEnv();
+        if (textEnv != null && textEnv.getEditableValue(getTabId()) != null) {
             String value = getTextEnv().getEditableValue(getTabId()).getValue() + text;
             if (value.length() > getTextLength())
                 return;
@@ -142,32 +149,57 @@ public class BlankBlock extends CYEditBlock {
                 updateSize(value);
             }
         }
-        super.insertText(text);
+
+        if (textEnv != null) {
+            if (textEnv.getEditableValue(getTabId()) != null) {
+                String content = textEnv.getEditableValue(getTabId()).getValue();
+                if (TextUtils.isEmpty(content)) {
+                    ((EditFace)getEditFace()).setFlashPosition(text.length());
+                    textEnv.setEditableValue(getTabId(), text);
+                } else {
+                    String value = content.substring(0, ((EditFace)getEditFace()).getFlashPosition()) + text + content.substring(((EditFace)getEditFace()).getFlashPosition(), content.length());
+                    ((EditFace)getEditFace()).setFlashPosition(((EditFace)getEditFace()).getFlashPosition() + text.length());
+                    textEnv.setEditableValue(getTabId(), value);
+                }
+                requestLayout();
+            } else {
+                ((EditFace)getEditFace()).setFlashPosition(text.length());
+                textEnv.setEditableValue(getTabId(), text);
+                requestLayout();
+            }
+        }
     }
 
-    @Override
     public void removeText() {
-        if (getFlashPosition() < 0) {
+        if (((EditFace)getEditFace()).getFlashPosition() < 0) {
             return;
         }
-        if (getTextEnv() != null && getTextEnv().getEditableValue(getTabId()) != null) {
+        TextEnv textEnv = getTextEnv();
+        if (textEnv != null && textEnv.getEditableValue(getTabId()) != null) {
             String value = getTextEnv().getEditableValue(getTabId()).getValue();
             if (!TextUtils.isEmpty(value)) {
                 updateSize(getTextEnv().getEditableValue(getTabId()).getValue().substring(0, value.length() - 1));
             }
+            if (!TextUtils.isEmpty(value)) {
+                if (((EditFace)getEditFace()).getFlashPosition() > 0) {
+                    String newValue = value.substring(0, ((EditFace)getEditFace()).getFlashPosition() - 1) + value.substring(((EditFace)getEditFace()).getFlashPosition(), value.length());
+                    textEnv.setEditableValue(getTabId(), newValue);
+                    ((EditFace)getEditFace()).setFlashPosition(((EditFace)getEditFace()).getFlashPosition() - 1);
+                    requestLayout();
+                }
+            }
         }
-        super.removeText();
     }
 
-    @Override
     public void breakLine() {
-        if (getFlashPosition() < 0) {
+        if (((EditFace)getEditFace()).getFlashPosition() < 0) {
             return;
         }
-        if (!TextUtils.isEmpty(getText()) && getText().length() > getFlashPosition()) {
-            updateSize(getText().substring(0, getFlashPosition()));
+        if (!TextUtils.isEmpty(getText()) && getText().length() > ((EditFace)getEditFace()).getFlashPosition()) {
+            updateSize(getText().substring(0, ((EditFace)getEditFace()).getFlashPosition()));
         }
-        super.breakLine();
+        getTextEnv().setEditableValue(getTabId(), getText().substring(0, ((EditFace)getEditFace()).getFlashPosition()));
+        requestLayout();
     }
 
     public int getTextLength() {
@@ -381,15 +413,22 @@ public class BlankBlock extends CYEditBlock {
         return false;
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        mFlashX = getEditFace().getFlashX();
-        mFlashY = getEditFace().getFlashY();
-        mFlashPosition = getEditFace().getFlashPosition();
-        super.draw(canvas);
-    }
-
     public void notifyLayoutChange() {
 
     }
+//
+//    @Override
+//    public boolean onTouchEvent(int action, float x, float y) {
+//        if (TextUtils.isEmpty(getText())) {
+//            mFlashX = DEFAULT_FLASH_X;
+//            mFlashY = DEFAULT_FLASH_Y;
+//            mFlashPosition = 0;
+//        } else {
+//            mFlashX = x - getContentRect().left;
+//            mFlashY = y - getContentRect().top;
+//            mFlashPosition = -1;
+//        }
+//        return super.onTouchEvent(action, x, y);
+//    }
+
 }

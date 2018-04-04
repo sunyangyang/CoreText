@@ -11,7 +11,6 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
-import com.hyena.coretext.event.CYEditGroupFocusEventLister;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
 
@@ -51,7 +50,6 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     private int mCorner = Const.DP_1 * 5;
     private Paint mPaint;
     private boolean mIsEditable = true;
-    private CYEditGroupFocusEventLister mFocusEventListener;
 
     public DeliveryBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -120,11 +118,6 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             }
         }
         return list;
-    }
-
-    @Override
-    public void setFocusChangeListener(CYEditGroupFocusEventLister cyEditGroupFocusEventLister) {
-        mFocusEventListener = cyEditGroupFocusEventLister;
     }
 
     private void init(String content) {
@@ -196,13 +189,13 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             mIdList.add(String.valueOf(mId));
             mList.add(cell);
             setLineY();
-            if (mIsEditable) {
-                if (mFocusEventListener != null) {
-                    mFocusEventListener.onFocusChange(false, getFocusEditable());
-                    mFocusEventListener.onFocusChange(true, cell.findEditable());
-                }
-                ((BlankBlock) cell.findEditable()).getEditFace().setFlashPosition(cell.getText().length());
-            }
+//            if (mIsEditable) {
+//                if (mFocusEventListener != null) {
+//                    mFocusEventListener.onFocusChange(false, getFocusEditable());
+//                    mFocusEventListener.onFocusChange(true, cell.findEditable());
+//                }
+//                ((BlankBlock) cell.findEditable()).getEditFace().setFlashPosition(cell.getText().length());
+//            }
         }
     }
 
@@ -233,11 +226,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                     mList.add(position + 1, newCell);
                 }
                 newCell.setText(value);
-                if (mFocusEventListener != null) {
-                    mFocusEventListener.onFocusChange(false, cell.findEditable());
-                    mFocusEventListener.onFocusChange(true, newCell.findEditable());
-                }
-                ((BlankBlock) newCell.findEditable()).getEditFace().setFlashPosition(newCell.getText().length());
+//                ((BlankBlock) newCell.findEditable()).getEditFace().setFlashPosition(newCell.getText().length());
                 setLineY();
                 requestLayout();
                 postInvalidateThis();
@@ -265,12 +254,12 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
             mList.remove(cell);
             mIdList.remove(String.valueOf(cell.getTabId()));
-            if (mFocusEventListener != null) {
-                mFocusEventListener.onFocusChange(false, cell.findEditable());
-                mFocusEventListener.onFocusChange(true, prCell.findEditable());
-            }
-
-            ((BlankBlock) prCell.findEditable()).getEditFace().setFlashPosition(prCell.getText().length());
+//            if (mFocusEventListener != null) {
+//                mFocusEventListener.onFocusChange(false, cell.findEditable());
+//                mFocusEventListener.onFocusChange(true, prCell.findEditable());
+//            }
+//
+//            ((BlankBlock) prCell.findEditable()).getEditFace().setFlashPosition(prCell.getText().length());
             setLineY();
             postInvalidateThis();
         }
@@ -404,9 +393,9 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         float flashX = x;
         float flashY = y;
         if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
-            blankBlock.getEditFace().setFlashX(flashX - blankBlock.getContentRect().left);
-            blankBlock.getEditFace().setFlashY(flashY - blankBlock.getContentRect().top);
-            blankBlock.getEditFace().setFlashPosition(-1);
+            ((EditFace)blankBlock.getEditFace()).setFlashX(flashX - blankBlock.getContentRect().left);
+            ((EditFace)blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
+            ((EditFace)blankBlock.getEditFace()).setFlashPosition(-1);
         }
         return super.onTouchEvent(action, x, y);
     }
