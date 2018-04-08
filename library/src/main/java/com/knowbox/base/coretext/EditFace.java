@@ -91,7 +91,7 @@ public class EditFace extends CYEditFace {
             return;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass) && mTextList.size() > 0) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (editable.isEditable() && editable.hasFocus()) {
                 String text = getText();
                 float left = 0;
@@ -215,7 +215,7 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass) && mTextList.size() > 0) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
                 canvas.save();

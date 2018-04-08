@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
@@ -47,11 +48,15 @@ public class DeliveryCell {
         mBlock = new BlankBlock(mTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + mId + "}") {
             @Override
             public void breakLine() {
+                int pos = ((EditFace)getEditFace()).getFlashPosition();
+                if (pos < 0) {
+                    return;
+                }
                 String text = getText();
                 if (mDeliveryBlock.getListSize() < mDeliveryBlock.getMaxCount()) {
                     super.breakLine();
                     if (!TextUtils.isEmpty(text) && mListener != null) {
-                        mListener.breakLine(((EditFace)getEditFace()).getFlashPosition(), DeliveryCell.this, text);
+                        mListener.breakLine(pos, DeliveryCell.this, text);
                     }
                 }
             }
@@ -59,6 +64,10 @@ public class DeliveryCell {
             @Override
             public void insertText(String text) {
                 super.insertText(text);
+                int pos = ((EditFace)getEditFace()).getFlashPosition();
+                if (pos < 0) {
+                    return;
+                }
                 if (mListener != null) {
                     mListener.insert(DeliveryCell.this);
                 }
@@ -66,6 +75,10 @@ public class DeliveryCell {
 
             @Override
             public void removeText() {
+                int pos = ((EditFace)getEditFace()).getFlashPosition();
+                if (pos < 0) {
+                    return;
+                }
                 if (((EditFace)getEditFace()).getFlashPosition() > 0) {
                     super.removeText();
                 }
@@ -152,5 +165,9 @@ public class DeliveryCell {
 
     public int getLineY() {
         return mBlock.getLineY();
+    }
+
+    public void setLineHeight(int lineHeight) {
+        mBlock.setLineHeight(lineHeight);
     }
 }

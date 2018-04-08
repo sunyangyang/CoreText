@@ -7,20 +7,25 @@ package com.knowbox.base.samples.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hyena.coretext.CYSinglePageView;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.event.CYFocusEventListener;
+import com.hyena.coretext.utils.Const;
 import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.coretext.BlankBlock;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.samples.R;
-import com.knowbox.base.utils.BaseConstant;
+
+import java.util.List;
 
 /**
  * Created by yangzc on 17/2/16.
@@ -48,7 +53,6 @@ public class QuestionFragment extends Fragment {
         view.findViewById(R.id.latex_keyboard_del).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_w).setOnClickListener(mClickListener);
 
-        mQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_question);
         mQtvQuestion.setFocusEventListener(new CYFocusEventListener() {
             @Override
             public void onFocusChange(boolean focus, final int tabId) {
@@ -152,8 +156,8 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
         builder.setTextAlign(TextEnv.Align.TOP);
-        builder.setEditableValue(BaseConstant.DELIVERY_CONTENT_ID, "=40+10=50=100100+101101000ajksdb=jkasfbjkasfbjkabdkasnbdjkasndjkabfjasbdkjasbjkdbfjkasndjasnfjasnjfnasjdasdsadsfasdasdasfasfa");
-        builder.setEditableValue(BaseConstant.DELIVERY_COLOR_ID, "=#ff0000=#000000=#0000ff");
+//        builder.setEditableValue(BaseConstant.DELIVERY_CONTENT_ID, "=40+10=50=100100+101101000ajksdb=jkasfbjkasfbjkabdkasnbdjkasndjkabfjasbdkjasbjkdbfjkasndjasnfjasnjfnasjdasdsadsfasdasdasfasfa");
+//        builder.setEditableValue(BaseConstant.DELIVERY_COLOR_ID, "=#ff0000=#000000=#0000ff");
 
 //        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
 //        builder.setFontSize(15 * Const.DP_1);
@@ -200,7 +204,20 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                         }
                     }
                 }
+                if (findFocusEditable(mQtvQuestion.findEditableList()) != null) {
+                    mFocusTabId = findFocusEditable(mQtvQuestion.findEditableList()).getTabId();
+                }
+                mQtvQuestion.setFocus(mFocusTabId);
             }
         }
     };
+
+    private ICYEditable findFocusEditable(List<ICYEditable> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).hasFocus()) {
+                return list.get(i);
+            }
+        }
+        return null;
+    }
 }
