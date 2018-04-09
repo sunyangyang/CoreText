@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.hyena.coretext.TextEnv;
@@ -13,6 +14,7 @@ import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.knowbox.base.utils.BaseConstant;
 
 import org.json.JSONObject;
 
@@ -43,7 +45,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     private float mEqualWidth = 0;
     private float mEqualHeight = 0;
     private float mTitleHeight = 0;
-    private float mWidth = 0;
+    private int mWidth = 0;
     private int mMarginTop = Const.DP_1 * 5;
     private int mPaddingVertical = Const.DP_1 * 11;
     private int mPaddingHorizontal = Const.DP_1 * 21;
@@ -127,6 +129,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         JSONObject object = null;
         try {
             object = new JSONObject(content);
+            mMaxCount = Integer.valueOf(mTextEnv.getEditableValue(BaseConstant.DELIVERY_MAX_COUNT).getValue());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +145,8 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             mIsEditable = false;
             mMarginTop = 0;
         }
-        int width = (int) (mTextEnv.getSuggestedPageWidth() - ((mPaddingHorizontal + mPaint.getStrokeWidth()) * 2));
+
+        mWidth = (int) (mTextEnv.getSuggestedPageWidth() - ((mPaddingHorizontal + mPaint.getStrokeWidth()) * 2));
         for (int i = 0; i < mMaxCount; i++) {
             String text = "";
             if (mAnswers != null && mAnswers.length > 0 && i + 1 < mAnswers.length) {
@@ -157,7 +161,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                 }
             }
             //id从1开始
-            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i + 1, mListener, mEqualWidth * 2, text, color, mIsEditable, width));
+            mAllList.add(new DeliveryCell(DeliveryBlock.this, mTextEnv, i + 1, mListener, mEqualWidth * 2, text, color, mIsEditable, mWidth));
         }
 
         if (!mIsEditable) {
@@ -193,18 +197,19 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
             while (mId < mMaxCount + 1 && mIdList.contains(String.valueOf(mId))) {
                 mId++;
             }
+            DeliveryCell cell;
+            if (!mIsEditable) {
+                cell = findCellById(mId);
+            } else {
+                cell = new DeliveryCell(DeliveryBlock.this, mTextEnv, mId, mListener, mEqualWidth * 2, "", "", mIsEditable, mWidth);
+            }
 
-            DeliveryCell cell = findCellById(mId);
             mIdList.add(String.valueOf(mId));
             mList.add(cell);
             clearFocus();
             cell.setFocus(true);
             setLineY();
             if (mIsEditable) {
-//                if (mFocusEventListener != null) {
-//                    mFocusEventListener.onFocusChange(false, getFocusEditable());
-//                    mFocusEventListener.onFocusChange(true, cell.findEditable());
-//                }
                 ((EditFace)((BlankBlock) cell.findEditable()).getEditFace()).setFlashPosition(cell.getText().length());
             }
         }
@@ -229,7 +234,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
                 clearFocus();
                 String value = text.substring(flashPosition, text.length());
                 cell.setText(text.substring(0, flashPosition));
-                DeliveryCell newCell = findCellById(mId);
+                DeliveryCell newCell = new DeliveryCell(DeliveryBlock.this, mTextEnv, mId, mListener, mEqualWidth * 2, "", "", mIsEditable, mWidth);
                 if (position == mList.size() - 1) {
                     mIdList.add(String.valueOf(mId));
                     mList.add(newCell);
@@ -435,4 +440,13 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         return mMaxCount;
     }
 
+    @Override
+    public void onMeasure() {
+        for (int i = 0; i < mList.size(); i++) {
+            mList.get(i).setSuggestWidth(getTextEnv().getSuggestedPageWidth());
+        }
+        super.onMeasure();
+        setLineY();
+        postInvalidateThis();
+    }
 }

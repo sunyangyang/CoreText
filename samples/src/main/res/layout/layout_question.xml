@@ -150,10 +150,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/latex_bottom">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <View
+                android:id="@+id/test"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                />
             <com.knowbox.base.coretext.QuestionTextView
+                android:layout_toRightOf="@+id/test"
                 android:id="@+id/qtv_question"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+        </RelativeLayout>
+
 
     </ScrollView>
 

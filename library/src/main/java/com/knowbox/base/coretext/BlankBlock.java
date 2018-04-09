@@ -5,6 +5,7 @@
 package com.knowbox.base.coretext;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
@@ -35,7 +36,6 @@ public class BlankBlock extends CYEditBlock {
 
     private String mDefaultText;
     private int mTextLength = 16;
-    private TextEnv mTextEnv;
     private int mPaddingHorizontal = 0;
     private int mLines = 0;
 
@@ -46,7 +46,6 @@ public class BlankBlock extends CYEditBlock {
     public static final int DEFAULT_FLASH_Y = -1000;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        mTextEnv = textEnv;
         init(content);
     }
 
@@ -102,9 +101,9 @@ public class BlankBlock extends CYEditBlock {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (mTextEnv.getEditableValue(BaseConstant.BLANK_SET_PADDING) != null) {
+        if (getTextEnv().getEditableValue(BaseConstant.BLANK_SET_PADDING) != null) {
             try {
-                mPaddingHorizontal = Integer.valueOf(mTextEnv.getEditableValue(BaseConstant.BLANK_SET_PADDING).getValue());
+                mPaddingHorizontal = Integer.valueOf(getTextEnv().getEditableValue(BaseConstant.BLANK_SET_PADDING).getValue());
             } catch (Exception e) {
 
             }
@@ -210,9 +209,9 @@ public class BlankBlock extends CYEditBlock {
         return size;
     }
 
-    private void updateSize(String text) {
+    protected void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
-        int maxWidth = mTextEnv.getSuggestedPageWidth() - mPaddingHorizontal;
+        int maxWidth = getTextEnv().getSuggestedPageWidth() - mPaddingHorizontal;
         if (!getTextEnv().isEditable()) {
             if (text == null) {
                 text = "";
@@ -343,11 +342,6 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public String getText() {
         return super.getText();
-    }
-
-    @Override
-    public void onMeasure() {
-        super.onMeasure();
     }
 
     @Override

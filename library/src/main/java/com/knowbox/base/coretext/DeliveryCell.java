@@ -170,4 +170,9 @@ public class DeliveryCell {
     public void setLineHeight(int lineHeight) {
         mBlock.setLineHeight(lineHeight);
     }
+
+    public void setSuggestWidth(int width) {
+        mBlock.getTextEnv().setSuggestedPageWidth(width);
+        mBlock.updateSize(mBlock.getText());
+    }
 }
