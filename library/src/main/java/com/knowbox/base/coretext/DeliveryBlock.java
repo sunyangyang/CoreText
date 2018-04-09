@@ -46,7 +46,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     private float mEqualHeight = 0;
     private float mTitleHeight = 0;
     private int mWidth = 0;
-    private int mMarginTop = Const.DP_1 * 5;
+    private int mMarginTop = Const.DP_1 * 10;
     private int mPaddingVertical = Const.DP_1 * 11;
     private int mPaddingHorizontal = Const.DP_1 * 21;
     private int mCorner = Const.DP_1 * 5;
@@ -143,7 +143,6 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         mPaint.setColor(0xff5eb9ff);
         if (!mTextEnv.isEditable() || mAnswers != null) {
             mIsEditable = false;
-            mMarginTop = 0;
         }
 
         mWidth = (int) (mTextEnv.getSuggestedPageWidth() - ((mPaddingHorizontal + mPaint.getStrokeWidth()) * 2));
@@ -321,7 +320,7 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
         Rect rect = getContentRect();
         canvas.save();
         canvas.translate(rect.left, rect.top);
-        canvas.drawText(mTitle, mEqualWidth * 2, 0, mTextEnv.getPaint());
+        canvas.drawText(mTitle, mEqualWidth * 2, mTitleHeight, mTextEnv.getPaint());
         if (mIsEditable) {
             RectF rectF = new RectF(mPaint.getStrokeWidth(), mTitleHeight + mMarginTop,
                     mTextEnv.getSuggestedPageWidth() - mPaint.getStrokeWidth(), getContentHeight() - mPaint.getStrokeWidth());
