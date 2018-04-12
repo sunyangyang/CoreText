@@ -117,6 +117,8 @@ public class MatchBlock extends CYPlaceHolderBlock {
                 return;
             }
 
+            mCanOperate = textEnv.isEditable();
+
             int length = mLeftList.size() > mRightList.size() ? mLeftList.size() : mRightList.size();
             mLeftCells = new MatchCell[mLeftList.size()];
             mRightCells = new MatchCell[mRightList.size()];

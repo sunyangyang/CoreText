@@ -2,6 +2,7 @@ package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +24,7 @@ public class DeliveryCell {
     private BlankBlock mBlock;
     private DeliveryBlock mDeliveryBlock;
     private int mColor = -1;
+    protected Paint mPaint;
 
     public DeliveryCell(DeliveryBlock block, TextEnv textEnv, int id, DeliveryBlock.TextChangeListener listener,
                         float offsetX, String text, String color, boolean isEditable, int width) {
@@ -100,6 +102,11 @@ public class DeliveryCell {
         mBlock.setX((int) offsetX);
         mBlock.setFocusable(isEditable);
         mBlock.setFocus(false);
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.set(mTextEnv.getPaint());
+        if (mColor != -1) {
+            mPaint.setColor(mColor);
+        }
     }
 
     public int getTabId() {
@@ -174,5 +181,9 @@ public class DeliveryCell {
     public void setSuggestWidth(int width) {
         mBlock.getTextEnv().setSuggestedPageWidth(width);
         mBlock.updateSize(mBlock.getText());
+    }
+
+    public Paint getPaint() {
+        return mPaint;
     }
 }
