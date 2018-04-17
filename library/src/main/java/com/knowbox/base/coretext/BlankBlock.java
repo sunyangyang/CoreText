@@ -69,6 +69,8 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
                 mTextLength = 400;
+            } else if ("sudoku_blank".equals(getSize())) {
+                mTextLength = 1;
             } else {
                 mTextLength = 20;
             }
@@ -226,7 +228,7 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 160;
                 this.mHeight = 60;
             } else if ("small_img_blank".equals(size)) {
-                this.mWidth = 110;
+                this.mWidth = 60;
                 this.mHeight = 60;
             } else if ("delivery".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
@@ -253,6 +255,9 @@ public class BlankBlock extends CYEditBlock {
                     this.mHeight = textHeight;
                 }
                 this.mHeight += Const.DP_1 * 3;
+            } else if ("sudoku_blank".equals(size)) {
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 7;
+                this.mHeight = mWidth;
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -286,7 +291,7 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = 160;
                 this.mHeight = 60;
             } else if ("small_img_blank".equals(size)) {
-                this.mWidth = 110;
+                this.mWidth = 60;
                 this.mHeight = 60;
             } else if ("number".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;//init中设置了margin，加上margin的宽度
@@ -323,6 +328,9 @@ public class BlankBlock extends CYEditBlock {
                     this.mHeight = textHeight;
                 }
                 this.mHeight += Const.DP_1 * 3;
+            } else if ("sudoku_blank".equals(size)) {
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 7;
+                this.mHeight = mWidth;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
