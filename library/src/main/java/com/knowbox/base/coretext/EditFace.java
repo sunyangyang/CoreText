@@ -74,8 +74,8 @@ public class EditFace extends CYEditFace {
         if ("sudoku_blank".equals(mSize) && editable.hasFocus()) {
             mRoundCorner = Const.DP_1 * 2;
             int padding = Const.DP_1 * 1;
-            int length = Const.DP_1 * 11;
-            mRectF.set(blockRect.left + padding / 2, blockRect.top, blockRect.right - padding, blockRect.bottom + padding);
+            int length = Const.DP_1 * 7;
+            mRectF.set(blockRect.left + padding, blockRect.top, blockRect.right - padding, blockRect.bottom + padding);
             if (mBorderFillPaint == null) {
                 mBorderFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 mBorderOutPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

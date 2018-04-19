@@ -90,12 +90,12 @@ public class SudokuBlock extends CYTableBlock {
         }
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBorderPaint.setColor(0xffdbf0ff);
+        mBorderPaint.setColor(0xffffffff);
         mBorderPaint.setStrokeWidth(Const.DP_1 * 2);
         mBorderPaint.setStyle(Paint.Style.FILL);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(0xff89ccff);
+        mPaint.setColor(0xffb6dfff);
         mPaint.setStrokeWidth(Const.DP_1);
         mPaint.setStyle(Paint.Style.FILL);
 
@@ -135,18 +135,17 @@ public class SudokuBlock extends CYTableBlock {
                 }
             }
         }
-        Log.e("XXXXX", "width = " + mBorderPaint.getStrokeWidth());
         for (int i = 0; i < mCells.length; i++) {
             SudokuCell columnCells[] = mCells[i];
             for (int j = 0; j < columnCells.length; j++) {
                 SudokuCell cell = mCells[i][j];
                 if (cell != null) {
                     String cellText = mNumList.get(i * mLengthW + j);
-                    if (cellText.contains("blank")) {
-                        cell.setPaintColor(0xffffffff);
-                    } else {
-                        cell.setPaintColor(0xffd9f0ff);
-                    }
+//                    if (cellText.contains("blank")) {
+//                        cell.setPaintColor(0xffffffff);
+//                    } else {
+//                        cell.setPaintColor(0xffd9f0ff);
+//                    }
                     cell.setCellText(cellText);
                 }
             }
@@ -320,6 +319,7 @@ public class SudokuBlock extends CYTableBlock {
         canvas.save();
         //block有设置过setpadding
         Rect contentRect = getContentRect();
+        canvas.translate(((getContentWidth() -  mBorderPaint.getStrokeWidth() * 2) - getCellsWidth()) / 2, 0 );
         mRectF.set(contentRect.left, contentRect.top,
                 contentRect.left + getCellsWidth() - mBorderPaint.getStrokeWidth() / 2, contentRect.top + getCellsHeight() - mBorderPaint.getStrokeWidth() / 2);
         canvas.drawRoundRect(mRectF, mCorner, mCorner, mPaint);

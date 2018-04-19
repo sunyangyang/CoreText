@@ -141,8 +141,28 @@ public class MatchBlock extends CYPlaceHolderBlock {
 
                 }
             });
+            if (!mCanOperate) {
+                for (int i = 0; i < mLeftCells.length; i++) {
+                    mLeftCells[i].setWait(false);
+                    mLeftCells[i].setFocus(false);
+                }
+                for (int i = 0; i < mRightCells.length; i++) {
+                    mRightCells[i].setWait(false);
+                    mRightCells[i].setFocus(false);
+                }
+                if (mFocusCell != null) {
+                    mFocusCell.setWait(false);
+                    mFocusCell.setFocus(false);
+                    mFocusCell = null;
+                }
+                postInvalidateStatus();
+            }
         } catch (Exception e) {
         }
+
+    }
+
+    private void clearStatus() {
 
     }
 
