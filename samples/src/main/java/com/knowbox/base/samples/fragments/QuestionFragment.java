@@ -4,6 +4,7 @@
 
 package com.knowbox.base.samples.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -162,6 +163,9 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                 ",\"\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"1\",\"2\",\"3\",\"\",\"5\",\"6\",\"7\",\"8\",\"9\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"" +
                 ",\"1\",\"2\",\"3\",\"\",\"5\",\"6\",\"7\",\"8\",\"9\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"\",\"8\",\"9\",\"1\",\"2\",\"3\",\"4\",\"\",\"6\",\"7\",\"8\",\"9\"],\"blank_list\":[{\"type\":\"blank\",\"id\":\"1\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"2\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"3\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"4\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"5\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"6\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"},{\"type\":\"blank\",\"id\":\"7\",\"class\":\"fillin\",\"size\":\"sudoku_blank\"}]}#\n" +
                 "#{\"type\":\"para_end\"}#";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mQtvQuestion.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         CYSinglePageView.Builder builder;
         builder = mQtvQuestion.getBuilder(question);
         builder.setEditable(false);

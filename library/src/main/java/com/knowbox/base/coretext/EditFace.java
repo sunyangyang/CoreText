@@ -7,6 +7,8 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
 public class EditFace extends CYEditFace {
 
     private String mClass = BlankBlock.CLASS_CHOICE;
+    private String mSize = "";
     private int mRoundCorner = Const.DP_1 * 5;
     private ICYEditable editable;
     private List<TextInfo> mTextList = new ArrayList<TextInfo>();
@@ -37,6 +40,8 @@ public class EditFace extends CYEditFace {
     private float mFlashX;
     private float mFlashY;
     private int mFlashPosition = -1;
+    private Paint mBorderFillPaint;
+    private Paint mBorderOutPaint;
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -55,6 +60,10 @@ public class EditFace extends CYEditFace {
         this.mClass = clazz;
     }
 
+    public void setSize(String size) {
+        mSize = size;
+    }
+
     private RectF mRectF = new RectF();
 
     @Override
@@ -62,7 +71,34 @@ public class EditFace extends CYEditFace {
         if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
             return;
 
-        if (editable.hasFocus()) {
+        if ("sudoku_blank".equals(mSize) && editable.hasFocus()) {
+            mRoundCorner = Const.DP_1 * 2;
+            int padding = Const.DP_1 * 1;
+            int length = Const.DP_1 * 11;
+            mRectF.set(blockRect.left + padding / 2, blockRect.top, blockRect.right - padding, blockRect.bottom + padding);
+            if (mBorderFillPaint == null) {
+                mBorderFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mBorderOutPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            }
+            mBorderFillPaint.setStyle(Paint.Style.FILL);
+            mBorderFillPaint.setColor(0xffffffff);
+            mBorderFillPaint.setShadowLayer(Const.DP_1 * 5, 5, 0, Color.DKGRAY);
+            canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderFillPaint);
+
+            mBorderPaint.setColor(0xffff7753);
+            mBorderPaint.setStrokeWidth(Const.DP_1 * 2);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
+
+            mBorderOutPaint.setStrokeWidth(Const.DP_1 * 2);
+            mBorderOutPaint.setColor(0xffffffff);
+            mBorderOutPaint.setStyle(Paint.Style.STROKE);
+            float[] path = new float[] {mRectF.left + length, mRectF.top, mRectF.right - length, mRectF.top,
+                    mRectF.left + length, mRectF.bottom, mRectF.right - length, mRectF.bottom,
+                    mRectF.left, mRectF.top + length, mRectF.left, mRectF.bottom - length,
+                    mRectF.right, mRectF.top + length, mRectF.right, mRectF.bottom - length,};
+            canvas.drawLines(path, mBorderOutPaint);
+        } else if (editable.hasFocus()) {
             mRectF.set(blockRect);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
@@ -73,7 +109,8 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
+        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) ||
+                "sudoku_blank".equals(mSize))
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);

@@ -3,7 +3,10 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
@@ -27,24 +30,47 @@ import java.util.List;
  * Created by sunyangyang on 2018/4/13.
  */
 
-public class SudukuCell extends TableCell {
+public class SudokuCell extends TableCell {
     private int mRow;
     private int mColumn;
     private CYTableBlock tableBlock;
     private CYPageBlock pageBlock;
-    private Paint borderPaint;
+    private Paint mBorderPaint;
     private Rect mRect = new Rect();
     private int contentOffsetX, contentOffsetY;
     private int rows[], columns[];
+    private RectF mRectF = new RectF();
+    private Rect mRectRightAngle = new Rect();
+    private float mPadding;
+    private float mPaddingLeft;
+    private float mPaddingTop;
+    private float mPaddingRight;
+    private float mPaddingBottom;
+    private int mCorner;
+    private int mColor;
+    public static int LEFT_TOP = 0;
+    public static int LEFT_BOTTOM = 1;
+    public static int RIGHT_TOP = 2;
+    public static int RIGHT_BOTTOM = 3;
+    public static int LEFT = 4;
+    public static int RIGHT = 5;
+    public static int TOP = 6;
+    public static int BOTTOM = 7;
+    public static int ALL = 8;
+    public static int NONE = 9;
+    private int mCornerType = ALL;
 
-    public SudukuCell(CYTableBlock tableBlock, Paint borderPaint, int[] rows, int[] columns, int row, int column) {
+    public SudokuCell(CYTableBlock tableBlock, Paint borderPaint, int[] rows, int[] columns, int row, int column, float padding, int corner) {
         super(tableBlock, borderPaint, rows, columns, row, column);
         mRow = row;
         mColumn = column;
         this.tableBlock = tableBlock;
-        this.borderPaint = borderPaint;
+        this.mBorderPaint = borderPaint;
+        mColor = borderPaint.getColor();
         this.rows = rows;
         this.columns = columns;
+        mPadding = padding;
+        mCorner = corner;
         update();
     }
 
@@ -56,6 +82,7 @@ public class SudukuCell extends TableCell {
         textEnv.setTextColor(tableTextEnv.getTextColor()).setFontSize(tableTextEnv.getFontSize()).setFontScale(tableTextEnv.getFontScale());
         textEnv.setSuggestedPageWidth(getWidth());
         textEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
+        textEnv.setFontSize(getWidth() / 2);
         textEnv.getEventDispatcher().addLayoutEventListener(new CYLayoutEventListener() {
             @Override
             public void doLayout(boolean force) {
@@ -93,8 +120,8 @@ public class SudukuCell extends TableCell {
         }
     }
 
-    public void setPaint(Paint paint) {
-        borderPaint = paint;
+    public void setPaintColor(int color) {
+        mColor = color;
     }
 
     public int getRow() {
@@ -103,6 +130,30 @@ public class SudukuCell extends TableCell {
 
     public int getColumn () {
         return mColumn;
+    }
+
+    public void setPaddingTop(float paddingTop) {
+        mPaddingTop = paddingTop;
+    }
+
+    public void setPaddingBottom(float paddingBottom) {
+        mPaddingBottom = paddingBottom;
+    }
+
+    public void setPaddingLeft(float paddingLeft) {
+        mPaddingLeft = paddingLeft;
+    }
+
+    public void setPaddingRight(float paddingRight) {
+        mPaddingRight = paddingRight;
+    }
+
+    public void setPadding(float padding) {
+        mPadding = padding;
+    }
+
+    public void setCornerType(int type) {
+        mCornerType = type;
     }
 
     /**
@@ -136,7 +187,7 @@ public class SudukuCell extends TableCell {
     private int getX() {
         int x = 0;
         for (int i = 0; i < startColumn; i++) {
-            x += (columns[i] + borderPaint.getStrokeWidth());
+            x += columns[i];
         }
         return x;
     }
@@ -157,7 +208,43 @@ public class SudukuCell extends TableCell {
     public void draw(Canvas canvas, Rect rect) {
         canvas.save();
         canvas.translate(rect.left, rect.top);
-        canvas.drawRect(mRect, borderPaint);
+        mBorderPaint.setColor(mColor);
+        mRectF.set(mRect.left + (mPadding + mPaddingLeft), mRect.top + (mPadding + mPaddingTop), mRect.right - (mPadding + mPaddingRight), mRect.bottom - (mPadding + mPaddingBottom));
+
+        if (mCornerType == NONE) {
+            canvas.drawRect(mRectF, mBorderPaint);
+        } else {
+            canvas.drawRoundRect(mRectF, mCorner, mCorner, mBorderPaint);
+            if (mCornerType != ALL) {
+                float width = mRectF.width() / 2;
+                float height = mRectF.height() / 2;
+
+                if (mCornerType != TOP && mCornerType != BOTTOM) {
+                    if (mCornerType != LEFT) {
+                        if (mCornerType != LEFT_TOP) {
+                            canvas.drawRect(mRectF.left, mRectF.top, mRectF.left + width, mRectF.top + height, mBorderPaint);
+                        }
+                        if (mCornerType != LEFT_BOTTOM) {
+                            canvas.drawRect(mRectF.left, mRectF.top + height, mRectF.left + width, mRectF.bottom, mBorderPaint);
+                        }
+                    }
+
+                    if (mCornerType != RIGHT) {
+                        if (mCornerType != RIGHT_TOP) {
+                            canvas.drawRect(mRectF.left + width, mRectF.top, mRectF.right, mRectF.top + height, mBorderPaint);
+                        }
+                        if (mCornerType != RIGHT_BOTTOM) {
+                            canvas.drawRect(mRectF.left + width, mRectF.top + height, mRectF.right, mRectF.bottom, mBorderPaint);
+                        }
+                    }
+                } else if (mCornerType == TOP) {//top和bottom不同时共存
+                    canvas.drawRect(mRectF.left, mRectF.top + height, mRectF.right, mRectF.bottom, mBorderPaint);
+                } else if (mCornerType == BOTTOM) {
+                    canvas.drawRect(mRectF.left, mRectF.top, mRectF.right, mRectF.top + height, mBorderPaint);
+                }
+            }
+        }
+
         canvas.restore();
 
         //绘制单元格内容

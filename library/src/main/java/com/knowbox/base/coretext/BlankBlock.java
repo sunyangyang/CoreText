@@ -89,6 +89,8 @@ public class BlankBlock extends CYEditBlock {
                 } else if ("flag".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                } else if ("sudoku_blank".equals(size)) {
+                    ((EditFace)getEditFace()).setSize(size);
                 }
                 ((EditFace)getEditFace()).updateEnv();
                 setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
@@ -256,8 +258,8 @@ public class BlankBlock extends CYEditBlock {
                 }
                 this.mHeight += Const.DP_1 * 3;
             } else if ("sudoku_blank".equals(size)) {
-                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 7;
-                this.mHeight = mWidth;
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 6;
+                this.mHeight = mWidth + Const.DP_1 * 2;
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -329,7 +331,7 @@ public class BlankBlock extends CYEditBlock {
                 }
                 this.mHeight += Const.DP_1 * 3;
             } else if ("sudoku_blank".equals(size)) {
-                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 7;
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 6;
                 this.mHeight = mWidth;
             } else {
                 this.mWidth = Const.DP_1 * 50;

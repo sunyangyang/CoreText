@@ -4,7 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYTableBlock;
@@ -16,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,14 +35,19 @@ public class SudokuBlock extends CYTableBlock {
     private List<String> mBlankList;
     private List<Sudoku> mSudokuList;
     private int mSudokuCount = 1;//包含的宫格个数
-    private SudukuCell[][] mCells;//所有的格子，按照从左向右，从上向下排布，棋盘一样布局
+    private SudokuCell[][] mCells;//所有的格子，按照从左向右，从上向下排布，棋盘一样布局
     private Paint mBorderPaint;
     private int[] mRows;
     private int[] mColumns;//纵列均为大小一样的正方形，所以mColumns与mRows的每一个都相等
     private int mFocusRow = -1;
     private int mFocusColumn = -1;
     private Paint mPaint;
-//    private int mStrokeWidth = Const.DP_1 * 5;
+    private Paint mBgPaint;
+    private RectF mRectF = new RectF();
+    private int mCorner;
+    private HashMap<Integer[][], List<SingleSudokuBlock>> mHashMap;
+    private int mBlockPadding;
+    private int mCellPadding;
 
     public SudokuBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -47,6 +55,7 @@ public class SudokuBlock extends CYTableBlock {
 
     @Override
     protected void init(String content) {
+
         JSONObject object = null;
         try {
             object = new JSONObject(content);
@@ -77,20 +86,20 @@ public class SudokuBlock extends CYTableBlock {
         getTextEnv().setTextAlign(TextEnv.Align.CENTER);
 
         if (mLengthW > mSplitW) {//总宽个数大于分割宽个数，说明这是有多个宫格合并的大宫格
-            mSudokuCount = mLengthW / mSplitW;
+            mSudokuCount = (mLengthW / mSplitW) * (mLengthH / mSplitH);
         }
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBorderPaint.setColor(Color.BLACK);
-        mBorderPaint.setStrokeWidth(Const.DP_1);
-        mBorderPaint.setStyle(Paint.Style.STROKE);
-        mBorderPaint.setAlpha(0);
+        mBorderPaint.setColor(0xffdbf0ff);
+        mBorderPaint.setStrokeWidth(Const.DP_1 * 2);
+        mBorderPaint.setStyle(Paint.Style.FILL);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(Color.BLUE);
+        mPaint.setColor(0xff89ccff);
         mPaint.setStrokeWidth(Const.DP_1);
-        mPaint.setStyle(Paint.Style.STROKE);
-        setWidth((int) (getTextEnv().getSuggestedPageWidth() - mBorderPaint.getStrokeWidth() * 2));
+        mPaint.setStyle(Paint.Style.FILL);
+
+        setPadding((int)mBorderPaint.getStrokeWidth(), (int)mBorderPaint.getStrokeWidth(), (int)mBorderPaint.getStrokeWidth(), (int)mBorderPaint.getStrokeWidth());
 
         initTable(mLengthW, mLengthH);
 
@@ -101,11 +110,16 @@ public class SudokuBlock extends CYTableBlock {
                 position++;
             }
         }
+
+        for (int i = 0; i < mCells.length; i++) {
+
+        }
+
         mSudokuList = new ArrayList<Sudoku>();
         for (int i = 0; i < mCells.length; i++) {
-            SudukuCell columnCells[] = mCells[i];
+            SudokuCell columnCells[] = mCells[i];
             for (int j = 0; j < columnCells.length; j++) {
-                SudukuCell cell = mCells[i][j];
+                SudokuCell cell = mCells[i][j];
                 if (cell != null) {
                     String cellText = mNumList.get(i * mLengthW + j);
                     cell.setCellText(cellText);
@@ -121,13 +135,18 @@ public class SudokuBlock extends CYTableBlock {
                 }
             }
         }
-
+        Log.e("XXXXX", "width = " + mBorderPaint.getStrokeWidth());
         for (int i = 0; i < mCells.length; i++) {
-            TableCell columnCells[] = mCells[i];
+            SudokuCell columnCells[] = mCells[i];
             for (int j = 0; j < columnCells.length; j++) {
-                TableCell cell = mCells[i][j];
+                SudokuCell cell = mCells[i][j];
                 if (cell != null) {
                     String cellText = mNumList.get(i * mLengthW + j);
+                    if (cellText.contains("blank")) {
+                        cell.setPaintColor(0xffffffff);
+                    } else {
+                        cell.setPaintColor(0xffd9f0ff);
+                    }
                     cell.setCellText(cellText);
                 }
             }
@@ -137,15 +156,15 @@ public class SudokuBlock extends CYTableBlock {
     @Override
     public ICYEditable getFocusEditable() {
         List<ICYEditable> edits = this.findAllEditable();
-        if(edits == null) {
+        if (edits == null) {
             return null;
         } else {
-            for(int i = 0; i < edits.size(); ++i) {
-                ICYEditable editable = (ICYEditable)edits.get(i);
-                if(editable.hasFocus()) {
-                    if (editable instanceof SudukuCell) {
-                        mFocusRow = ((SudukuCell) editable).getRow();
-                        mFocusColumn = ((SudukuCell) editable).getColumn();
+            for (int i = 0; i < edits.size(); ++i) {
+                ICYEditable editable = (ICYEditable) edits.get(i);
+                if (editable.hasFocus()) {
+                    if (editable instanceof SudokuCell) {
+                        mFocusRow = ((SudokuCell) editable).getRow();
+                        mFocusColumn = ((SudokuCell) editable).getColumn();
                     }
                     return editable;
                 }
@@ -160,7 +179,7 @@ public class SudokuBlock extends CYTableBlock {
             TableCell rows[] = mCells[i];
             for (int j = 0; j < rows.length; j++) {
                 TableCell cell = mCells[i][j];
-                if (cell != null && cell.getRect().contains((int)x, (int)y)) {
+                if (cell != null && cell.getRect().contains((int) x, (int) y)) {
                     ICYEditable editable = cell.findEditable(x, y);
                     if (editable != null) {
                         return editable;
@@ -190,11 +209,10 @@ public class SudokuBlock extends CYTableBlock {
     public int getContentHeight() {
         int height = 0;
 
-        for(int i = 0; i < this.mRows.length; ++i) {
+        for (int i = 0; i < this.mRows.length; ++i) {
             height += this.mRows[i];
         }
-
-        return height;
+        return (int) (height + mBorderPaint.getStrokeWidth() * 2);
     }
 
     @Override
@@ -203,13 +221,22 @@ public class SudokuBlock extends CYTableBlock {
     }
 
     @Override
+    public int getContentWidth() {
+        return getTextEnv().getSuggestedPageWidth();
+
+    }
+
+    @Override
     public void initTable(int rowCnt, int columnCnt) {
         if (rowCnt > 0 && columnCnt > 0) {
             mRows = new int[rowCnt];
             mColumns = new int[columnCnt];
-            mCells = new SudukuCell[rowCnt][columnCnt];
+            mCells = new SudokuCell[rowCnt][columnCnt];
+            if (mCorner == 0) {
+                mCorner = Const.DP_1 * 5;
+            }
             for (int i = 0; i < columnCnt; i++) {
-                mColumns[i] = getWidth() / columnCnt;
+                mColumns[i] = (int) ((getContentWidth() - mBorderPaint.getStrokeWidth() * 2) / columnCnt);
             }
 
             for (int i = 0; i < rowCnt; i++) {
@@ -220,48 +247,93 @@ public class SudokuBlock extends CYTableBlock {
             for (int i = 0; i < mCells.length; i++) {
                 TableCell columnCells[] = mCells[i];
                 for (int j = 0; j < columnCells.length; j++) {
-                    mCells[i][j] = new SudukuCell(this, mBorderPaint, mRows, mColumns, i, j);
-                    mCells[i][j].setPaint(mBorderPaint);
+                    mCells[i][j] = new SudokuCell(this, mBorderPaint, mRows, mColumns, i, j, mBorderPaint.getStrokeWidth() / 2, mCorner);
+                    if (mSplitW != mLengthW) {
+                        if (i % mSplitH == 0) {
+                            if (i == 0) {
+                                mCells[i][j].setPaddingTop(mBorderPaint.getStrokeWidth());
+                            } else {
+                                mCells[i][j].setPaddingTop(mBorderPaint.getStrokeWidth() / 2);
+                            }
+                        }
+                        if (i % mSplitH == (mSplitH - 1)) {
+                            mCells[i][j].setPaddingBottom(mBorderPaint.getStrokeWidth() / 2);
+                        }
+                        if (j % mSplitW == 0) {
+                            if (j == 0) {
+                                mCells[i][j].setPaddingLeft(mBorderPaint.getStrokeWidth());
+                            } else {
+                                mCells[i][j].setPaddingLeft(mBorderPaint.getStrokeWidth() / 2);
+                            }
+                        }
+                        if (j % mSplitW == (mSplitW - 1)) {
+                            mCells[i][j].setPaddingRight(mBorderPaint.getStrokeWidth() / 2);
+                        }
+                        if (mSplitW == 1 && mSplitH == 1) {
+                            mCells[i][j].setCornerType(SudokuCell.ALL);
+                        } else if (mSplitW == 1) {
+                            if (i % mSplitH == 0) {
+                                mCells[i][j].setCornerType(SudokuCell.TOP);
+                            } else if (i % mSplitH == (mSplitH - 1)) {
+                                mCells[i][j].setCornerType(SudokuCell.BOTTOM);
+                            }
+                        } else if (mSplitH == 1) {
+                            if (j % mSplitW == 0) {
+                                mCells[i][j].setCornerType(SudokuCell.LEFT);
+                            } else if (j % mSplitW == (mSplitW - 1)) {
+                                mCells[i][j].setCornerType(SudokuCell.RIGHT);
+                            }
+                        } else {
+                            if (i % mSplitH == 0 && j % mSplitW == 0) {
+                                mCells[i][j].setCornerType(SudokuCell.LEFT_TOP);
+                            } else if (i % mSplitH == 0 && j % mSplitW == (mSplitW - 1)) {
+                                mCells[i][j].setCornerType(SudokuCell.RIGHT_TOP);
+                            } else if (i % mSplitH == (mSplitH - 1) && j % mSplitW == 0) {
+                                mCells[i][j].setCornerType(SudokuCell.LEFT_BOTTOM);
+                            } else if (i % mSplitH == (mSplitH - 1) && j % mSplitW == (mSplitW - 1)) {
+                                mCells[i][j].setCornerType(SudokuCell.RIGHT_BOTTOM);
+                            } else {
+                                mCells[i][j].setCornerType(SudokuCell.NONE);
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
+    private int getCellsWidth () {
+        return mColumns[0] * mLengthH;
+    }
+
+    private int getCellsHeight () {
+        return mRows[0] * mLengthH;
+    }
+
     private class Sudoku {
-        public SudukuCell mFirstPosition;
-        public SudukuCell mEndPosition;
+        public SudokuCell mFirstPosition;
+        public SudokuCell mEndPosition;
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.save();
-
+        //block有设置过setpadding
+        Rect contentRect = getContentRect();
+        mRectF.set(contentRect.left, contentRect.top,
+                contentRect.left + getCellsWidth() - mBorderPaint.getStrokeWidth() / 2, contentRect.top + getCellsHeight() - mBorderPaint.getStrokeWidth() / 2);
+        canvas.drawRoundRect(mRectF, mCorner, mCorner, mPaint);
         for (int i = 0; i < mCells.length; i++) {
             TableCell columnCells[] = mCells[i];
             for (int j = 0; j < columnCells.length; j++) {
                 TableCell cell = mCells[i][j];
                 if (cell != null) {
                     Rect rect = getBlockRect();
-                    rect.left += mBorderPaint.getStrokeWidth();
+                    rect.left += mBorderPaint.getStrokeWidth() / 2;
+                    rect.top += mBorderPaint.getStrokeWidth() / 2;
                     cell.draw(canvas, rect);
                 }
             }
-        }
-        Rect rect = getContentRect();
-        canvas.translate(rect.left + mBorderPaint.getStrokeWidth(), rect.top);
-        for (int i = 0; i < mLengthW + 1; i++) {
-            canvas.drawLine(mRows[0] * i, 0, mRows[0] * i, mColumns[0] * (mLengthH), mPaint);
-        }
-
-        for (int i = 0; i < mLengthH + 1; i++) {
-//            if (i == 0) {
-//                canvas.drawLine(-mStrokeWidth / 2, mColumns[0] * i, mRows[0] * (mLengthW) + mStrokeWidth / 2, mRows[0] * i, mPaint);
-//            } else if (i == mLengthH) {
-//                canvas.drawLine(0, mColumns[0] * i, mRows[0] * (mLengthW), mRows[0] * i, mPaint);
-//            } else {
-                canvas.drawLine(0, mColumns[0] * i, mRows[0] * (mLengthW), mRows[0] * i, mPaint);
-//            }
-
         }
         canvas.restore();
     }
