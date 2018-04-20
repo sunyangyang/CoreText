@@ -10,7 +10,7 @@ import com.hyena.framework.servcie.BaseService;
 public interface UploadService extends BaseService {
 
 	//七牛云上传服务
-	public static final String SERVICE_NAME_QINIU = "com.knowbox.service.upload_qiniu";
+	String SERVICE_NAME_QINIU = "com.knowbox.service.upload_qiniu";
 
 	/**
 	 * 上传本地文件
@@ -21,13 +21,13 @@ public interface UploadService extends BaseService {
 	
 	/**
 	 * 停止任务
-	 * @param filePath
+	 * @param taskId
 	 */
-	public void cancelJob(String taskId);
+	void cancelJob(String taskId);
 	
 	/**
 	 * 停止所有任务
 	 */
-	public void cancelAllJobs();
+	void cancelAllJobs();
 
 }

@@ -17,7 +17,6 @@ import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;
 import com.knowbox.base.samples.fragments.QuestionFragment;
-import com.knowbox.base.samples.fragments.NumberCalculationFragment;
 import com.knowbox.base.service.log.BoxLogService;
 import com.knowbox.base.service.log.LogService;
 import com.knowbox.base.service.push.GetuiPushIntentService;
@@ -25,6 +24,9 @@ import com.knowbox.base.service.push.GetuiPushService;
 import com.knowbox.base.service.share.ShareContent;
 import com.knowbox.base.service.share.ShareListener;
 import com.knowbox.base.service.share.ShareSDKService;
+import com.knowbox.base.service.upload.UCUploadServiceImpl;
+import com.knowbox.base.service.upload.UploadListener;
+import com.knowbox.base.service.upload.UploadTask;
 
 import java.util.HashMap;
 
@@ -53,6 +55,39 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 testShare();
+            }
+        });
+
+        UCUploadServiceImpl server = new UCUploadServiceImpl() {
+            @Override
+            public String getBucketInfoUrl() {
+                return null;
+            }
+        };
+        server.upload(new UploadTask(UploadTask.TYPE_PICTURE, "/sdcard/Pictures/10.png"), new UploadListener() {
+            @Override
+            public void onUploadStarted(UploadTask uploadTask) {
+                LogUtil.v("yangzc", "onUploadStarted");
+            }
+
+            @Override
+            public void onUploadProgress(UploadTask uploadTask, double progress) {
+                LogUtil.v("yangzc", "onUploadProgress, progress: " + progress);
+            }
+
+            @Override
+            public void onUploadComplete(UploadTask uploadTask, String remoteUrl) {
+                LogUtil.v("yangzc", "onUploadComplete, url: " + remoteUrl);
+            }
+
+            @Override
+            public void onUploadError(UploadTask uploadTask, int errorCode, String error, String extend) {
+                LogUtil.v("yangzc", "onUploadError");
+            }
+
+            @Override
+            public void onRetry(UploadTask uploadTask, int errorCode, String error, String extend) {
+                LogUtil.v("yangzc", "onRetry");
             }
         });
     }
