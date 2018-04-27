@@ -44,6 +44,7 @@ public class BlankBlock extends CYEditBlock {
     private int mFlashPosition = -1;
     public static final int DEFAULT_FLASH_X = -1000;
     public static final int DEFAULT_FLASH_Y = -1000;
+    public static final String TWPoint = "=24 ";
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
@@ -89,9 +90,8 @@ public class BlankBlock extends CYEditBlock {
                 } else if ("flag".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
-                } else if ("sudoku_blank".equals(size)) {
-                    ((EditFace)getEditFace()).setSize(size);
                 }
+                ((EditFace)getEditFace()).setSize(size);
                 ((EditFace)getEditFace()).updateEnv();
                 setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
             } else {
@@ -258,8 +258,11 @@ public class BlankBlock extends CYEditBlock {
                 }
                 this.mHeight += Const.DP_1 * 3;
             } else if ("sudoku_blank".equals(size)) {
-                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 6;
-                this.mHeight = mWidth + Const.DP_1 * 2;
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
+                this.mHeight = mWidth + Const.DP_1 * 3;
+            } else if ("24point_blank".equals(size)) {
+                this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
+                this.mHeight = Const.DP_1 * 45;
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -331,8 +334,11 @@ public class BlankBlock extends CYEditBlock {
                 }
                 this.mHeight += Const.DP_1 * 3;
             } else if ("sudoku_blank".equals(size)) {
-                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 6;
-                this.mHeight = mWidth;
+                this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
+                this.mHeight = mWidth + Const.DP_1 * 3;
+            } else if ("24point_blank".equals(size)) {
+                this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
+                this.mHeight = Const.DP_1 * 45;
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;

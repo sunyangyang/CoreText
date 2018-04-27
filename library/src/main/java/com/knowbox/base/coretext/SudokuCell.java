@@ -40,7 +40,7 @@ public class SudokuCell extends TableCell {
     private int contentOffsetX, contentOffsetY;
     private int rows[], columns[];
     private RectF mRectF = new RectF();
-    private Rect mRectRightAngle = new Rect();
+    private RectF mRectPage = new RectF();
     private float mPadding;
     private float mPaddingLeft;
     private float mPaddingTop;
@@ -77,12 +77,13 @@ public class SudokuCell extends TableCell {
     @Override
     public void setCellText(String text) {
         TextEnv tableTextEnv = tableBlock.getTextEnv();
-        TextEnv textEnv = new TableTextEnv(tableTextEnv);
+        TextEnv textEnv = new TextEnv(tableTextEnv.getContext());
         textEnv.setTextAlign(TextEnv.Align.CENTER);
         textEnv.setTextColor(tableTextEnv.getTextColor()).setFontSize(tableTextEnv.getFontSize()).setFontScale(tableTextEnv.getFontScale());
         textEnv.setSuggestedPageWidth(getWidth());
         textEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         textEnv.setFontSize(getWidth() / 2);
+        textEnv.setEditable(tableTextEnv.isEditable());
         textEnv.getEventDispatcher().addLayoutEventListener(new CYLayoutEventListener() {
             @Override
             public void doLayout(boolean force) {

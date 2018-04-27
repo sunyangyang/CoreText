@@ -45,10 +45,6 @@ public class SudokuBlock extends CYTableBlock {
     private Paint mBgPaint;
     private RectF mRectF = new RectF();
     private int mCorner;
-    private HashMap<Integer[][], List<SingleSudokuBlock>> mHashMap;
-    private int mBlockPadding;
-    private int mCellPadding;
-
     public SudokuBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
     }
