@@ -354,7 +354,6 @@ public class BlankBlock extends CYEditBlock {
 //        }
 //    }
 
-
     @Override
     public String getText() {
         return super.getText();
@@ -387,7 +386,9 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public boolean isValid() {
-        if (!getTextEnv().isEditable()
+        if ("24point_blank".equals(getSize())) {
+            return true;
+        } else if (!getTextEnv().isEditable()
                 && TextUtils.isEmpty(getText())) {
             return false;
         }

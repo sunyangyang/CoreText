@@ -288,8 +288,6 @@ public class EditFace extends CYEditFace {
             }
         } else if ("24point_blank".equals(mSize)) {
             if(!TextUtils.isEmpty(text)) {
-                float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
-                float contentWidth = (float)contentRect.width();
                 float x = contentRect.left;
                 canvas.save();
                 canvas.clipRect(contentRect);

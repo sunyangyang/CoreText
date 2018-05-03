@@ -195,19 +195,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"blank\",\"id\":\"10\",\"class\":\"fillin\",\"size\":\"letter\"}#=24#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
         builder.setTextColor(0xff5ebaff);
-//        builder.setEditableValue(BaseConstant.DELIVERY_CONTENT_ID, "=40+10=50=100100+10=");
-//        builder.setEditableValue(BaseConstant.DELIVERY_COLOR_ID, "=#ff0000");
-
-//        builder.setSuggestedPageWidth(getActivity().getResources().getDisplayMetrics().widthPixels);
-//        builder.setFontSize(15 * Const.DP_1);
-//        builder.setEditableValue(VerticalCalculationBlock.SCALE, 0.64 + "");
-//        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1"));
-//        builder.setEditableValue(2, new EditableValue(0xffff6666, "5"));
-//        builder.setEditable(true).setEditableValue(1, "");
         builder.build();
-//        mQtvQuestion.setFocus(1);
-//        builder.setEditableValue(1, new EditableValue(0xff44cdfc, "1000"));
-//        builder.setEditableValue(2, new EditableValue(0xffff6666, "5000"));
         return view;
     }
 
@@ -243,6 +231,15 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //                            ((BlankBlock)editable).breakLine();
                         } else {
                             editable.setText(currentText + text);
+                            ICYEditable editable1 = mQtvQuestion.findEditableByTabId(1001);
+                            if (editable1 != null) {
+                                if (editable1.hasFocus()) {
+                                    editable1.setFocus(false);
+                                } else {
+                                    editable1.setFocus(true);
+                                }
+
+                            }
                         }
                         editable.setTextColor(0xff5d758b);
                     }
