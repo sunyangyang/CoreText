@@ -55,6 +55,11 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
 
     public DeliveryBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        /**
+         * TODO 优化点：1.获取answer和color时候，判断是否为空，为空只创建一个cell，否则创建两者中比较长的一个的但小于等于maxcount数量的cell
+         * TODO 优化点：2.将cell中的blank宽度一开始就设置为最大宽度，这样一来点击事件就可以一直触发，不会因为x值大于blank宽度而不触发，这样就可以将焦点变化转到业务层
+         */
+
         setIsInMonopolyRow(true);
         mTextEnv = textEnv;
         mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);

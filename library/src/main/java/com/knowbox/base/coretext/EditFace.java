@@ -7,9 +7,12 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
@@ -28,6 +31,7 @@ import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
 public class EditFace extends CYEditFace {
 
     private String mClass = BlankBlock.CLASS_CHOICE;
+    private String mSize = "";
     private int mRoundCorner = Const.DP_1 * 5;
     private ICYEditable editable;
     private List<TextInfo> mTextList = new ArrayList<TextInfo>();
@@ -36,6 +40,8 @@ public class EditFace extends CYEditFace {
     private float mFlashX;
     private float mFlashY;
     private int mFlashPosition = -1;
+    private Paint mBorderFillPaint;
+    private Paint mBorderOutPaint;
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -54,14 +60,45 @@ public class EditFace extends CYEditFace {
         this.mClass = clazz;
     }
 
+    public void setSize(String size) {
+        mSize = size;
+    }
+
     private RectF mRectF = new RectF();
 
     @Override
     protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
+        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) || "24point_blank".equals(mSize))
             return;
 
-        if (editable.hasFocus()) {
+        if ("sudoku_blank".equals(mSize) && editable.hasFocus()) {
+            mRoundCorner = Const.DP_1 * 2;
+            int length = Const.DP_1 * 11;
+            int padding = Const.DP_1 * 1;
+            mRectF.set(contentRect.left, contentRect.top + padding, contentRect.right, contentRect.bottom + padding);
+            if (mBorderFillPaint == null) {
+                mBorderFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mBorderOutPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            }
+            mBorderFillPaint.setStyle(Paint.Style.FILL);
+            mBorderFillPaint.setColor(0xffffffff);
+            mBorderFillPaint.setShadowLayer(Const.DP_1 * 5, 0, 0, 0x7f3c92d2);
+            canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderFillPaint);
+
+            mBorderPaint.setColor(0xffff7753);
+            mBorderPaint.setStrokeWidth(Const.DP_1 * 2);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
+
+            mBorderOutPaint.setStrokeWidth(Const.DP_1 * 2);
+            mBorderOutPaint.setColor(0xffffffff);
+            mBorderOutPaint.setStyle(Paint.Style.STROKE);
+            float[] path = new float[] {mRectF.left + length, mRectF.top, mRectF.right - length, mRectF.top,
+                    mRectF.left + length, mRectF.bottom, mRectF.right - length, mRectF.bottom,
+                    mRectF.left, mRectF.top + length, mRectF.left, mRectF.bottom - length,
+                    mRectF.right, mRectF.top + length, mRectF.right, mRectF.bottom - length,};
+            canvas.drawLines(path, mBorderOutPaint);
+        } else if (editable.hasFocus()) {
             mRectF.set(blockRect);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
@@ -72,7 +109,8 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
-        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass))
+        if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) ||
+                "sudoku_blank".equals(mSize) || "24point_blank".equals(mSize))
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
@@ -209,7 +247,30 @@ public class EditFace extends CYEditFace {
                 canvas.drawLine(left, top - textHeight + this.mTextPaintMetrics.bottom, left, top + this.mTextPaintMetrics.bottom, mFlashPaint);
             }
         } else if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            super.drawFlash(canvas, blockRect, blockRect);
+            if ("24point_blank".equals(mSize)) {
+                if(this.mEditable.isEditable() && this.mEditable.hasFocus() && this.mInputFlash) {
+                    String text = this.getText();
+                    float left;
+                    if(!TextUtils.isEmpty(text)) {
+                        float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
+                        left = contentRect.left + textWidth;
+                    } else {
+                        left = contentRect.left;
+                    }
+
+                    left += (float)Const.DP_1;
+                    int textHeight = PaintManager.getInstance().getHeight(this.mTextPaint);
+                    int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
+                    if(padding <= 0) {
+                        padding = Const.DP_1 * 2;
+                    }
+
+                    canvas.drawLine(left, (float)(contentRect.top + padding), left, (float)(contentRect.bottom - padding), this.mFlashPaint);
+                }
+            } else {
+                super.drawFlash(canvas, blockRect, blockRect);
+            }
+
         }
     }
 
@@ -223,6 +284,24 @@ public class EditFace extends CYEditFace {
                 for (int i = 0; i < mTextList.size(); i++) {
                     canvas.drawText(mTextList.get(i).mText, x, mTextList.get(i).mY, this.mTextPaint);
                 }
+                canvas.restore();
+            }
+        } else if ("24point_blank".equals(mSize)) {
+            if(!TextUtils.isEmpty(text)) {
+                float x = contentRect.left;
+                canvas.save();
+                canvas.clipRect(contentRect);
+                TextEnv.Align align = this.mTextEnv.getTextAlign();
+                float y;
+                if(align == TextEnv.Align.TOP) {
+                    y = (float)(contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
+                } else if(align == TextEnv.Align.CENTER) {
+                    y = (float)(contentRect.top + (contentRect.height() + PaintManager.getInstance().getHeight(this.mTextPaint)) / 2) - this.mTextPaintMetrics.bottom;
+                } else {
+                    y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom;
+                }
+
+                canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
             }
         } else if (!mTextEnv.isEditable()) {
