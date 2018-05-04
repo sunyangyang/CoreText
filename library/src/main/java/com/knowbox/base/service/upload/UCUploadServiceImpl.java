@@ -61,7 +61,6 @@ public abstract class UCUploadServiceImpl implements UploadService {
         String url = getBucketInfoUrl();
         UCloudUploadInfo result = new DataAcquirer<UCloudUploadInfo>()
                 .get(url, new UCloudUploadInfo());
-        result.setErrorCode(BaseObject.OK);
         return result;
     }
 
@@ -348,14 +347,26 @@ public abstract class UCUploadServiceImpl implements UploadService {
     }
 
     public static class UCloudUploadInfo extends BaseObject {
-        public String mBucket = "yangzc";
-        public String mProxySuffix = ".cn-bj.ufileos.com";
-        public String mAuthorServer = "http://106.75.84.4:8071/test.php";
-        public long mExpiredTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+//        public String mBucket = "yangzc";
+//        public String mProxySuffix = ".cn-bj.ufileos.com";
+//        public String mAuthorServer = "http://106.75.84.4:8071/test.php";
+//        public long mExpiredTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+
+        public String mBucket;
+        public String mProxySuffix;
+        public String mAuthorServer;
+        public long mExpiredTime;
 
         @Override
         public void parse(JSONObject json) {
             super.parse(json);
+            JSONObject data = json.optJSONObject("data");
+            if (data != null) {
+                this.mBucket = data.optString("mBucket");
+                this.mProxySuffix = data.optString("mProxySuffix");
+                this.mAuthorServer = data.optString("mAuthorServer");
+                this.mExpiredTime = data.optLong("mExpiredTime");
+            }
         }
     }
 

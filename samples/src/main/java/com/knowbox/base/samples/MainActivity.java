@@ -61,10 +61,10 @@ public class MainActivity extends FragmentActivity {
         UCUploadServiceImpl server = new UCUploadServiceImpl() {
             @Override
             public String getBucketInfoUrl() {
-                return null;
+                return "http://shark1.heavi.cn/common/ufile/setting";
             }
         };
-        server.upload(new UploadTask(UploadTask.TYPE_PICTURE, "/sdcard/Pictures/10.png"), new UploadListener() {
+        server.upload(new UploadTask(UploadTask.TYPE_PICTURE, "/sdcard/DCIM/Camera/IMG_20180503_113556.jpg"), new UploadListener() {
             @Override
             public void onUploadStarted(UploadTask uploadTask) {
                 LogUtil.v("yangzc", "onUploadStarted");
