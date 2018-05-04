@@ -211,7 +211,6 @@ public class SudokuCell extends TableCell {
         canvas.translate(rect.left, rect.top);
         mBorderPaint.setColor(mColor);
         mRectF.set(mRect.left + (mPadding + mPaddingLeft), mRect.top + (mPadding + mPaddingTop), mRect.right - (mPadding + mPaddingRight), mRect.bottom - (mPadding + mPaddingBottom));
-
         if (mCornerType == NONE) {
             canvas.drawRect(mRectF, mBorderPaint);
         } else {

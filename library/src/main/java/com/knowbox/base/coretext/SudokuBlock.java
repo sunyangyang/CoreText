@@ -202,12 +202,12 @@ public class SudokuBlock extends CYTableBlock {
 
     @Override
     public int getContentHeight() {
-        int height = 0;
-
-        for (int i = 0; i < this.mRows.length; ++i) {
-            height += this.mRows[i];
-        }
-        return (int) (height + mBorderPaint.getStrokeWidth() * 2);
+//        int height = 0;
+//
+//        for (int i = 0; i < this.mRows.length; ++i) {
+//            height += this.mRows[i];
+//        }
+        return (int) (getCellsHeight() + mBorderPaint.getStrokeWidth() * 2);
     }
 
     @Override
@@ -302,7 +302,12 @@ public class SudokuBlock extends CYTableBlock {
     }
 
     private int getCellsHeight () {
-        return mRows[0] * mLengthH;
+        int height = 0;
+
+        for (int i = 0; i < this.mRows.length; ++i) {
+            height += this.mRows[i];
+        }
+        return height;
     }
 
     private class Sudoku {
