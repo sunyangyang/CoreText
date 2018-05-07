@@ -106,12 +106,12 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         });
         mEditableValues = textEnv.getEditableValues();
         init(textEnv, content);
-        mPaddingTop = Const.DP_1 * 20;//牌转向时，会有一边比较大
-        mPaddingBottom = (int) (Const.DP_1 * 19.5f);
-        mCardWidth = Const.DP_1 * 125;
-        mCardHeight = Const.DP_1 * 154;
-        mVerticalSpace = Const.DP_1 * 20;
-        mHorizontalSpace = Const.DP_1 * 20;
+        mPaddingTop = Const.DP_1 * 25;//牌转向时，会有一边比较大
+        mPaddingBottom = Const.DP_1 * 20;
+        mCardWidth = Const.DP_1 * 110;
+        mCardHeight = Const.DP_1 * 136;
+        mVerticalSpace = Const.DP_1 * 25;
+        mHorizontalSpace = Const.DP_1 * 25;
         mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
         mPageBlockPaddingLeft = Const.DP_1 * 10;
         mPageBlockPaddingRight = Const.DP_1 * 10;
@@ -207,7 +207,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
                 }
             });
         }
-        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth());
+        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth() - Const.DP_1 * 56);
         mPageTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         try {
             JSONObject object = new JSONObject(mContent);
