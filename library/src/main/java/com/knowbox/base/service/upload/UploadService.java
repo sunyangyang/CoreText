@@ -11,6 +11,7 @@ public interface UploadService extends BaseService {
 
 	//七牛云上传服务
 	String SERVICE_NAME_QINIU = "com.knowbox.service.upload_qiniu";
+	String SERVICE_NAME_UFILE = "com.knowbox.service.upload_ufile";
 
 	/**
 	 * 上传本地文件
