@@ -43,6 +43,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import static com.knowbox.base.coretext.BlankBlock.TWPoint;
+
 /**
  * Created by sunyangyang on 2018/4/24.
  */
@@ -104,12 +106,12 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         });
         mEditableValues = textEnv.getEditableValues();
         init(textEnv, content);
-        mPaddingTop = Const.DP_1 * 20;//牌转向时，会有一边比较大
-        mPaddingBottom = (int) (Const.DP_1 * 19.5f);
-        mCardWidth = Const.DP_1 * 125;
-        mCardHeight = Const.DP_1 * 154;
-        mVerticalSpace = Const.DP_1 * 20;
-        mHorizontalSpace = Const.DP_1 * 20;
+        mPaddingTop = Const.DP_1 * 25;//牌转向时，会有一边比较大
+        mPaddingBottom = Const.DP_1 * 20;
+        mCardWidth = Const.DP_1 * 110;
+        mCardHeight = Const.DP_1 * 136;
+        mVerticalSpace = Const.DP_1 * 25;
+        mHorizontalSpace = Const.DP_1 * 25;
         mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
         mPageBlockPaddingLeft = Const.DP_1 * 10;
         mPageBlockPaddingRight = Const.DP_1 * 10;
@@ -175,12 +177,6 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         } else {
             postInvalidateSelf(0);
         }
-    }
-
-    @Override
-    public void onMeasure() {
-        super.onMeasure();
-        TextEnv textEnv = getTextEnv();
         if (mPageTextEnv == null) {
             mPageTextEnv = new TextEnv(textEnv.getContext());
             mPageTextEnv.setTextAlign(TextEnv.Align.CENTER);
@@ -211,7 +207,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
                 }
             });
         }
-        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth());
+        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth() - Const.DP_1 * 56);
         mPageTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         try {
             JSONObject object = new JSONObject(mContent);
@@ -219,8 +215,8 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
             String text = "";
             if (array != null) {
                 for (int i = 0; i < array.length(); i++) {
-                    text += "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#";
-                    text += "#" + array.optString(i) + "#" + BlankBlock.TWPoint;
+                    text += "#{\"type\":\"para_begin\",\"style\":\"24point\"}#";
+                    text += "#" + array.optString(i) + "#" + TWPoint;
                     text += "#{\"type\":\"para_end\"}#";
                 }
             }
@@ -240,12 +236,17 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     }
 
     @Override
+    public void onMeasure() {
+        super.onMeasure();
+    }
+
+    @Override
     public ICYEditable findEditable(float x, float y) {
         ICYEditable focusEditable = null;
 
         if (mPageBlock != null && mPageBlock.getBlocks() != null) {
-            x -= getContentRect().left + (getContentWidth() - mPageBlock.getWidth()) / 2;
-            y -= getContentRect().top + mCardLayoutHeight;
+            x -= (getContentWidth() - mPageBlock.getWidth()) / 2;
+            y -= mCardLayoutHeight;
             CYBlock focusBlock = CYBlockUtils.findBlockByPosition(mPageBlock, (int)x, (int)y);
             if (focusBlock != null) {
                 if (focusBlock instanceof ICYEditable) {
@@ -302,11 +303,10 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         for (int i = 0; i < mCellList.size(); i++) {
             list.add(mCellList.get(i).findEditable());
         }
-        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
-            for (int i = 0; i < mPageBlock.getBlocks().size(); i++) {
-                mPageBlock.getBlocks().get(i).findAllEditable(list);
-            }
+        if (mPageBlock != null) {
+            mPageBlock.findAllEditable(list);
         }
+
         return list;
     }
 

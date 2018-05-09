@@ -117,7 +117,7 @@ public class QuestionTextView extends CYSinglePageView {
                     mCur.setMargin(mCur.getWidth() * 2, 0);
                 }
                 isFirstCh = false;
-            } else if (mCur instanceof CYBreakLineBlock) {
+            } else if (mCur instanceof CYBreakLineBlock || mCur instanceof ParagraphBlock) {
                 CYBlock nextBlock = mCur.getNextBlock();
                 if (nextBlock != null) {
                     nextBlock.setPadding(0, 30 * Const.DP_1, 0, 0);
