@@ -1,5 +1,6 @@
 package com.knowbox.base.coretext;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
@@ -27,7 +30,9 @@ import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.animation.texture.BitmapManager;
+import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.utils.AnimationUtils;
+import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.R;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -108,13 +113,17 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         init(textEnv, content);
         mPaddingTop = Const.DP_1 * 25;//牌转向时，会有一边比较大
         mPaddingBottom = Const.DP_1 * 20;
-        mCardWidth = Const.DP_1 * 110;
-        mCardHeight = Const.DP_1 * 136;
+//        mCardWidth = Const.DP_1 * 110;
+//        mCardHeight = Const.DP_1 * 136;
         mVerticalSpace = Const.DP_1 * 25;
         mHorizontalSpace = Const.DP_1 * 25;
-        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
         mPageBlockPaddingLeft = Const.DP_1 * 10;
         mPageBlockPaddingRight = Const.DP_1 * 10;
+
+        mCardWidth = (textEnv.getSuggestedPageWidth() - mHorizontalSpace - Const.DP_1 * 130) / 2;
+        mCardHeight = (int) (mCardWidth * 1.24f);
+        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCardBitmap = mManager.getBitmap(mRes, R.drawable.tw_card);
         List<TwentyFourPointsInfo> list = getInfoList();
@@ -207,7 +216,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
                 }
             });
         }
-        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth() - Const.DP_1 * 56);
+        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth() - Const.DP_1 * 28);
         mPageTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         try {
             JSONObject object = new JSONObject(mContent);
@@ -238,6 +247,10 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     @Override
     public void onMeasure() {
         super.onMeasure();
+        mCardWidth = (getTextEnv().getSuggestedPageWidth() - mHorizontalSpace - Const.DP_1 * 130) / 2;
+        mCardHeight = (int) (mCardWidth * 1.24f);
+        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
+        postInvalidateThis();
     }
 
     @Override

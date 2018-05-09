@@ -195,10 +195,8 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         builder.build();
 
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
-        Log.e("XXXXX", "editableList = " + editableList.size());
         for (int i = 0; i < editableList.size(); i++) {
             ICYEditable editable = editableList.get(i);
-            Log.e("XXXXX", "editable = " + editable.getTabId());
         }
         return view;
     }
