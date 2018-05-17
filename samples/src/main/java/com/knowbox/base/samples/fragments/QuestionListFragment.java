@@ -52,22 +52,25 @@ public class QuestionListFragment extends Fragment {
 
         try {
             List<Item> items = new ArrayList<Item>();
-            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("questions.json"));
-            JSONObject jsonObject = new JSONObject(new String(buf));
-            JSONArray jsonArray = jsonObject.optJSONArray("RECORDS");
-            if (jsonArray != null) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject item = jsonArray.optJSONObject(i);
-                    items.add(new Item(item));
-                }
+//            byte buf[] = FileUtils.getBytes(getResources().getAssets().open("questions.json"));
+//            JSONObject jsonObject = new JSONObject(new String(buf));
+//            JSONArray jsonArray = jsonObject.optJSONArray("RECORDS");
+//            if (jsonArray != null) {
+//                for (int i = 0; i < jsonArray.length(); i++) {
+//                    JSONObject item = jsonArray.optJSONObject(i);
+//                    items.add(new Item(item));
+//                }
+//            }
+            for (int i = 0; i < 20; i++) {
+                Item item = new Item(new JSONObject());
+                item.question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"24point\",\"num_list\":[\"11\",\"12\",\"13\",\"7\"],\"blank_list\":[{\"type\":\"blank\",\"id\":\"1\",\"class\":\"fillin\",\"size\":\"24point_blank\"}]}##{\"type\":\"para_end\"}#";
+                items.add(item);
             }
-            items.addAll(items);
-            items.addAll(items);
+//            items.addAll(items);
+//            items.addAll(items);
             mQuestionAdapter.setItems(items);
             mListView.setAdapter(mQuestionAdapter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -95,9 +98,8 @@ public class QuestionListFragment extends Fragment {
             Item item = getItem(position);
 //            viewHolder.mQtvQuestion.getTextEnv().setFontScale(0.1f);
             viewHolder.mIndex.setText(position + "");
-            viewHolder.mQtvQuestion.getBuilder(parent, position + "", item.question)
-                    .setEditableValue(1, new EditableValue(Color.RED, "position" + position))
-                    .setEditable(false).build();
+            viewHolder.mQtvQuestion.getBuilder(item.question)
+                    .build();
 
 //            ICYEditable editable = viewHolder.mQtvQuestion.findEditableByTabId(1);
 //            if (editable != null) {

@@ -120,31 +120,54 @@ public class TwentyFourPointsCell {
         };
     }
 
+    public void setData(Bitmap contentBitmap,
+                         Bitmap varietyBitmap) {
+        if (contentBitmap != null) {
+            mContentBitmap = contentBitmap;
+        }
+        if (varietyBitmap != null) {
+            mVarietyBitmap = varietyBitmap;
+        }
+
+        if (mCamera == null) {
+            mCamera = new Camera();
+        }
+    }
+
     public void draw(Canvas canvas, Rect rect, Bitmap cardBitmap) {
         canvas.save();
         canvas.translate(rect.left + rect.width(), rect.top + rect.height() / 2);
-        mCamera.save();
-        mCamera.translate(0, rect.height() / 2, 0);
-        mCamera.rotateY(mRy);
+        if (mCamera != null) {
+            mCamera.save();
+            mCamera.translate(0, rect.height() / 2, 0);
+            mCamera.rotateY(mRy);
 
-        mCamera.getMatrix(mMatrix);
-        mCamera.restore();
+            mCamera.getMatrix(mMatrix);
+            mCamera.restore();
+        }
 
         mMatrix.preTranslate(-rect.width() / 2, 0);
         mMatrix.postTranslate(-rect.width() / 2, 0);
-
         if (mTargetVarietyBitmap == null && mVarietyBitmap != null) {
             mTargetVarietyBitmap = Bitmap.createScaledBitmap(mVarietyBitmap, rect.width(), rect.height(), false);
         }
 
-        if (mTargetContentBitmap == null && mContentBitmap != null && mVarietyBitmap != null) {
+        if (mTargetContentBitmap == null && (mContentBitmap != null)
+                && (mVarietyBitmap != null)) {
             float sx = rect.width() * 1.0f / mVarietyBitmap.getWidth();
             float sy = rect.height() * 1.0f / mVarietyBitmap.getHeight();
             mTargetContentBitmap = Bitmap.createScaledBitmap(mContentBitmap, (int) (mContentBitmap.getWidth() * sx), (int) (mContentBitmap.getHeight() * sy), false);
+            mVarietyBitmap = null;
+            mContentBitmap = null;
         }
 
-        float tx = (rect.width() - mTargetContentBitmap.getWidth()) / 2;
-        float ty = (rect.height() - mTargetContentBitmap.getHeight()) / 2;
+        float tx = 0;
+        float ty = 0;
+        if (mTargetContentBitmap != null && !mTargetContentBitmap.isRecycled()) {
+            tx = (rect.width() - mTargetContentBitmap.getWidth()) / 2;
+            ty = (rect.height() - mTargetContentBitmap.getHeight()) / 2;
+        }
+
         if (mRy > 90) {
             if (cardBitmap != null) {
                 canvas.drawBitmap(cardBitmap, mMatrix, mPaint);
@@ -160,13 +183,14 @@ public class TwentyFourPointsCell {
             }
         }
         canvas.restore();
-        if (mEditable.hasFocus()) {
+        if (mEditable != null && mEditable.hasFocus()) {
             canvas.save();
             canvas.translate(rect.left, rect.top);
             mMaskRectF.set(0, 0, rect.width(), rect.height());
             canvas.drawRoundRect(mMaskRectF, mCorner, mCorner, mMaskPaint);
             canvas.restore();
         }
+        mMatrix.reset();
     }
 
     public void setR(float ry) {
@@ -175,6 +199,24 @@ public class TwentyFourPointsCell {
 
     public ICYEditable findEditable() {
         return mEditable;
+    }
+
+    public void release() {
+        if (mVarietyBitmap != null) {
+            mVarietyBitmap = null;
+        }
+        if (mContentBitmap != null) {
+            mContentBitmap = null;
+        }
+        if (mTargetContentBitmap != null) {
+            mTargetContentBitmap = null;
+        }
+        if (mTargetContentBitmap != null) {
+            mTargetContentBitmap = null;
+        }
+        if (mCamera != null) {
+            mCamera = null;
+        }
     }
 
 }

@@ -138,7 +138,6 @@ public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockPro
                         mList.add(info);
                         info = null;
                     }
-
                 }
             }
         }

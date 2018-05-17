@@ -84,7 +84,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     private int mPageBlockPaddingRight;
     private Bitmap mCardBitmap;
     private Bitmap mTargetCardBitmap;
-    private BitmapManager mManager;
+//    private BitmapManager mManager;
     private Resources mRes;
     private String mContent;
     private SparseArray<EditableValue> mEditableValues;
@@ -92,7 +92,10 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     public TwentyFourPointsBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mContent = content;
-        mManager = BitmapManager.create();
+//        if (mManager == null) {
+//            mManager = BitmapManager.create();
+//        }
+
         mRes = textEnv.getContext().getResources();
         textEnv.setEditableValueChangeListener(new TextEnv.EditableValueChangeListener() {
             @Override
@@ -110,22 +113,242 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
             }
         });
         mEditableValues = textEnv.getEditableValues();
-        init(textEnv, content);
+
         mPaddingTop = Const.DP_1 * 25;//牌转向时，会有一边比较大
         mPaddingBottom = Const.DP_1 * 20;
-//        mCardWidth = Const.DP_1 * 110;
-//        mCardHeight = Const.DP_1 * 136;
         mVerticalSpace = Const.DP_1 * 25;
         mHorizontalSpace = Const.DP_1 * 25;
         mPageBlockPaddingLeft = Const.DP_1 * 10;
         mPageBlockPaddingRight = Const.DP_1 * 10;
 
-        mCardWidth = (textEnv.getSuggestedPageWidth() - mHorizontalSpace - Const.DP_1 * 130) / 2;
+        mCardWidth = (int) (textEnv.getSuggestedPageWidth() * 0.293f);
         mCardHeight = (int) (mCardWidth * 1.24f);
         mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
-
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCardBitmap = mManager.getBitmap(mRes, R.drawable.tw_card);
+        init(content);
+        createCells();
+    }
+
+    @Override
+    public void onMeasure() {
+        super.onMeasure();
+        mCardWidth = (int) (getTextEnv().getSuggestedPageWidth() * 0.293f);
+        ;
+        mCardHeight = (int) (mCardWidth * 1.24f);
+        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
+        postInvalidateThis();
+    }
+
+    @Override
+    public ICYEditable findEditable(float x, float y) {
+        ICYEditable focusEditable = null;
+
+        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
+            x -= (getContentWidth() - mPageBlock.getWidth()) / 2;
+            y -= mCardLayoutHeight;
+            CYBlock focusBlock = CYBlockUtils.findBlockByPosition(mPageBlock, (int) x, (int) y);
+            if (focusBlock != null) {
+                if (focusBlock instanceof ICYEditable) {
+                    focusEditable = (ICYEditable) focusBlock;
+                } else if (focusBlock instanceof ICYEditableGroup) {
+                    ICYEditable editable = ((ICYEditableGroup) focusBlock).findEditable(x - focusBlock.getX(),
+                            y - focusBlock.getLineY());
+                    if (editable != null) {
+                        focusEditable = editable;
+                    }
+                }
+            }
+        }
+        return focusEditable;
+    }
+
+    @Override
+    public ICYEditable getFocusEditable() {
+        ICYEditable focusEditable = null;
+        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
+            for (int i = 0; i < mPageBlock.getBlocks().size(); i++) {
+                CYBlock focusBlock = mPageBlock.getBlocks().get(i);
+                if (focusBlock instanceof ICYEditable) {
+                    focusEditable = (ICYEditable) mPageBlock.getBlocks().get(i);
+                } else if (focusBlock instanceof ICYEditableGroup) {
+                    focusEditable = ((ICYEditableGroup) focusBlock).getFocusEditable();
+                }
+            }
+        }
+        return focusEditable;
+    }
+
+    @Override
+    public ICYEditable findEditableByTabId(int id) {
+        ICYEditable focusEditable = null;
+        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
+            for (int i = 0; i < mPageBlock.getBlocks().size(); i++) {
+                CYBlock focusBlock = mPageBlock.getBlocks().get(i);
+                if (focusBlock instanceof ICYEditable) {
+                    if (((ICYEditable) focusBlock).getTabId() == id) {
+                        focusEditable = (ICYEditable) focusBlock;
+                    }
+                } else if (focusBlock instanceof ICYEditableGroup) {
+                    focusEditable = ((ICYEditableGroup) focusBlock).findEditableByTabId(id);
+                }
+            }
+        }
+        return focusEditable;
+    }
+
+    @Override
+    public List<ICYEditable> findAllEditable() {
+        List<ICYEditable> list = new ArrayList<ICYEditable>();
+        for (int i = 0; i < mCellList.size(); i++) {
+            list.add(mCellList.get(i).findEditable());
+        }
+        if (mPageBlock != null) {
+            mPageBlock.findAllEditable(list);
+        }
+
+        return list;
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        Rect rect = getContentRect();
+        canvas.save();
+        canvas.translate((getContentWidth() - (mCardWidth * 2 + mHorizontalSpace)) / 2, mPaddingTop);
+        for (int i = 0; i < mCellList.size(); i++) {
+            TwentyFourPointsCell cell = mCellList.get(i);
+            int line = i / 2;
+            int column = i % 2;
+            int top = rect.top + (line * (mCardHeight + mVerticalSpace));
+            int left = rect.left + (column * (mCardWidth + mHorizontalSpace));
+            Rect cellRect = new Rect(left, top, left + mCardWidth, top + mCardHeight);
+            if (getCardBitmap() != null && mTargetCardBitmap == null) {
+                mTargetCardBitmap = Bitmap.createScaledBitmap(getCardBitmap(), cellRect.width(), cellRect.height(), false);
+                if (mTargetCardBitmap != null) {
+                    mCardBitmap = null;
+                }
+            }
+            cell.draw(canvas, cellRect, mTargetCardBitmap);
+        }
+        canvas.restore();
+        if (mPageBlock != null) {
+            canvas.save();
+            mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setStrokeWidth(Const.DP_1 * 2);
+            mPaint.setColor(0xff5EBAFF);
+            canvas.translate(rect.left + (getContentWidth() - mPageBlock.getWidth()) / 2, rect.top + mCardLayoutHeight);
+            mPageBlock.draw(canvas);
+            RectF rectF = new RectF();
+            rectF.set(0, 0, mPageBlock.getWidth(), mPageBlock.getHeight());
+            canvas.drawRoundRect(rectF, Const.DP_1 * 10, Const.DP_1 * 10, mPaint);
+            canvas.restore();
+        }
+    }
+
+    @Override
+    public int getContentWidth() {
+        return getTextEnv().getSuggestedPageWidth();
+    }
+
+    @Override
+    public int getContentHeight() {
+        return mCardLayoutHeight + (mPageBlock != null ? mPageBlock.getHeight() : 0);
+    }
+
+    @Override
+    public int getLineHeight() {
+        return getContentHeight();
+    }
+
+    protected void setAnimatorListener(AnimationUtils.ValueAnimatorListener listener) {
+        mListener = listener;
+    }
+
+    protected void setAnimator(ValueAnimator animator) {
+        mAnimator = animator;
+    }
+
+    private void postInvalidateSelf(float ry) {
+        for (int i = 0; i < mCellList.size(); i++) {
+            mCellList.get(i).setR(ry);
+        }
+        postInvalidateThis();
+    }
+
+    protected Bitmap getCardBitmap() {
+        return mCardBitmap;
+    }
+
+    protected List<TwentyFourPointsInfo> getInfoList() {
+        return mInfoList;
+    }
+
+    public class TwentyFourPointsInfo {
+        String mContent;
+        int mVarietyBitmapId;
+        int mContentBitmapId;
+        int maskColor = 0x4d4F6171;
+        int corner = Const.DP_1 * 11;
+    }
+
+    protected void init(String content) {
+        try {
+            JSONObject object = new JSONObject(content);
+            JSONArray array = object.optJSONArray("num_list");
+            if (array != null) {
+                for (int i = 0; i < (array.length() > mMaxCount ? mMaxCount : array.length()); i++) {
+                    mNumList.add(array.optString(i));
+                }
+            }
+
+            Random random = new Random();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < mVarietyIds.length; i++) {
+                list.add(mVarietyIds[i]);
+            }
+
+            boolean isBlack = true;
+            if (mNumList.size() > 0) {
+                Collections.shuffle(mNumList);
+                for (int i = 0; i < mNumList.size(); i++) {
+                    TwentyFourPointsInfo info = new TwentyFourPointsInfo();
+                    info.mContent = mNumList.get(i);
+                    int index = random.nextInt(list.size());
+                    int id = list.get(index);
+                    list.remove(Integer.valueOf(id));
+                    if (id == mVarietyIds[0] || id == mVarietyIds[1]) {
+                        isBlack = true;
+                    } else {
+                        isBlack = false;
+                    }
+//                    info.mVarietyBitmap = mManager.getBitmap(mRes, id);
+                    info.mVarietyBitmapId = id;
+//                    info.mVarietyBitmap = BitmapFactory.decodeResource(mRes, id);
+                    for (int j = 0; j < mContents.length; j++) {
+                        if (TextUtils.equals(info.mContent, mContents[j])) {
+                            if (isBlack) {
+                                info.mContentBitmapId = mBlackIds[j];
+                            } else {
+                                info.mContentBitmapId = mRedIds[j];
+                            }
+                        }
+                    }
+                    mInfoList.add(info);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void createCells() {
+//        if (mManager == null) {
+//            mManager = BitmapManager.create();
+//        }
+        if (mCardBitmap == null) {
+            mCardBitmap = BitmapFactory.decodeResource(mRes, R.drawable.tw_card);
+        }
+
         List<TwentyFourPointsInfo> list = getInfoList();
         try {
             JSONObject object = new JSONObject(mContent);
@@ -136,14 +359,29 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         } catch (JSONException e) {
 
         }
+        boolean isResume = false;
         if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                TwentyFourPointsInfo info = list.get(i);
-                TwentyFourPointsCell cell = new TwentyFourPointsCell(i + CELL_ID, info.mContent, info.mContentBitmap, info.mVarietyBitmap, info.corner, info.maskColor);
-                mCellList.add(cell);
+            if (mCellList.size() != list.size()) {
+                mCellList.clear();
+                for (int i = 0; i < list.size(); i++) {
+                    TwentyFourPointsInfo info = list.get(i);
+                    TwentyFourPointsCell cell = new TwentyFourPointsCell(i + CELL_ID, info.mContent,
+                            BitmapFactory.decodeResource(mRes, info.mContentBitmapId),
+                            BitmapFactory.decodeResource(mRes, info.mVarietyBitmapId), info.corner, info.maskColor);
+                    mCellList.add(cell);
+                }
+            } else {
+                isResume = true;
+                for (int i = 0; i < list.size(); i++) {
+                    TwentyFourPointsCell cell = mCellList.get(i);
+                    TwentyFourPointsInfo info = list.get(i);
+                    cell.setData(BitmapFactory.decodeResource(mRes, info.mContentBitmapId),
+                            BitmapFactory.decodeResource(mRes, info.mVarietyBitmapId));
+                }
             }
+
         }
-        if (textEnv.isEditable()) {
+        if (getTextEnv().isEditable()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 if (mAnimator == null) {
                     mAnimator = ValueAnimator.ofFloat(180, 0);
@@ -181,18 +419,22 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
 
                 mAnimator.addListener(mListener);
                 mAnimator.addUpdateListener(mListener);
-                mAnimator.start();
+                if (!isResume) {
+                    mAnimator.start();
+                } else {
+                    postInvalidateSelf(0);
+                }
             }
         } else {
             postInvalidateSelf(0);
         }
         if (mPageTextEnv == null) {
-            mPageTextEnv = new TextEnv(textEnv.getContext());
+            mPageTextEnv = new TextEnv(getTextEnv().getContext());
             mPageTextEnv.setTextAlign(TextEnv.Align.CENTER);
-            mPageTextEnv.setTextColor(textEnv.getTextColor());
-            mPageTextEnv.setEditable(textEnv.isEditable());
-            mPageTextEnv.setTextColor(textEnv.getTextColor());
-            mPageTextEnv.setFontSize(textEnv.getFontSize());
+            mPageTextEnv.setTextColor(getTextEnv().getTextColor());
+            mPageTextEnv.setEditable(getTextEnv().isEditable());
+            mPageTextEnv.setTextColor(getTextEnv().getTextColor());
+            mPageTextEnv.setFontSize(getTextEnv().getFontSize());
             if (mEditableValues != null) {
                 for (int i = 0; i < mEditableValues.size(); i++) {
                     int key = mEditableValues.keyAt(i);
@@ -216,7 +458,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
                 }
             });
         }
-        mPageTextEnv.setSuggestedPageWidth(textEnv.getSuggestedPageWidth() - Const.DP_1 * 28);
+        mPageTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 28);
         mPageTextEnv.setSuggestedPageHeight(Integer.MAX_VALUE);
         try {
             JSONObject object = new JSONObject(mContent);
@@ -245,219 +487,21 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     }
 
     @Override
-    public void onMeasure() {
-        super.onMeasure();
-        mCardWidth = (getTextEnv().getSuggestedPageWidth() - mHorizontalSpace - Const.DP_1 * 130) / 2;
-        mCardHeight = (int) (mCardWidth * 1.24f);
-        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
-        postInvalidateThis();
-    }
-
-    @Override
-    public ICYEditable findEditable(float x, float y) {
-        ICYEditable focusEditable = null;
-
-        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
-            x -= (getContentWidth() - mPageBlock.getWidth()) / 2;
-            y -= mCardLayoutHeight;
-            CYBlock focusBlock = CYBlockUtils.findBlockByPosition(mPageBlock, (int)x, (int)y);
-            if (focusBlock != null) {
-                if (focusBlock instanceof ICYEditable) {
-                    focusEditable = (ICYEditable) focusBlock;
-                } else if (focusBlock instanceof ICYEditableGroup) {
-                    ICYEditable editable = ((ICYEditableGroup) focusBlock).findEditable(x - focusBlock.getX(),
-                            y - focusBlock.getLineY());
-                    if (editable != null) {
-                        focusEditable = editable;
-                    }
-                }
-            }
-        }
-        return focusEditable;
-    }
-
-    @Override
-    public ICYEditable getFocusEditable() {
-        ICYEditable focusEditable = null;
-        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
-            for (int i = 0; i < mPageBlock.getBlocks().size(); i++) {
-                CYBlock focusBlock = mPageBlock.getBlocks().get(i);
-                if (focusBlock instanceof ICYEditable) {
-                    focusEditable = (ICYEditable) mPageBlock.getBlocks().get(i);
-                } else if (focusBlock instanceof ICYEditableGroup) {
-                    focusEditable = ((ICYEditableGroup)focusBlock).getFocusEditable();
-                }
-            }
-        }
-        return focusEditable;
-    }
-
-    @Override
-    public ICYEditable findEditableByTabId(int id) {
-        ICYEditable focusEditable = null;
-        if (mPageBlock != null && mPageBlock.getBlocks() != null) {
-            for (int i = 0; i < mPageBlock.getBlocks().size(); i++) {
-                CYBlock focusBlock = mPageBlock.getBlocks().get(i);
-                if (focusBlock instanceof ICYEditable) {
-                    if (((ICYEditable) focusBlock).getTabId() == id) {
-                        focusEditable = (ICYEditable) focusBlock;
-                    }
-                } else if (focusBlock instanceof ICYEditableGroup) {
-                    focusEditable = ((ICYEditableGroup)focusBlock).findEditableByTabId(id);
-                }
-            }
-        }
-        return focusEditable;
-    }
-
-    @Override
-    public List<ICYEditable> findAllEditable() {
-        List<ICYEditable> list = new ArrayList<ICYEditable>();
-        for (int i = 0; i < mCellList.size(); i++) {
-            list.add(mCellList.get(i).findEditable());
-        }
-        if (mPageBlock != null) {
-            mPageBlock.findAllEditable(list);
-        }
-
-        return list;
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        Rect rect = getContentRect();
-        canvas.save();
-        canvas.translate((getContentWidth() - (mCardWidth * 2 + mHorizontalSpace)) / 2, mPaddingTop);
-        for (int i = 0; i < mCellList.size(); i++) {
-            TwentyFourPointsCell cell = mCellList.get(i);
-            int line = i / 2;
-            int column = i % 2;
-            int top = rect.top + (line * (mCardHeight + mVerticalSpace));
-            int left = rect.left + (column * (mCardWidth + mHorizontalSpace));
-            Rect cellRect = new Rect(left, top, left + mCardWidth, top + mCardHeight);
-            if (getCardBitmap() != null && mTargetCardBitmap == null) {
-                mTargetCardBitmap = Bitmap.createScaledBitmap(getCardBitmap(), cellRect.width(), cellRect.height(), false);
-            }
-            cell.draw(canvas, cellRect, mTargetCardBitmap);
-        }
-        canvas.restore();
-        if (mPageBlock != null) {
-            canvas.save();
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setStrokeWidth(Const.DP_1 * 2);
-            mPaint.setColor(0xff5EBAFF);
-            canvas.translate(rect.left + (getContentWidth() - mPageBlock.getWidth()) / 2, rect.top + mCardLayoutHeight);
-            mPageBlock.draw(canvas);
-            RectF rectF = new RectF();
-            rectF.set(0, 0, mPageBlock.getWidth(), mPageBlock.getHeight());
-            canvas.drawRoundRect(rectF, Const.DP_1 * 10, Const.DP_1 * 10, mPaint);
-            canvas.restore();
-        }
-    }
-
-    @Override
-    public int getContentWidth() {
-        return getTextEnv().getSuggestedPageWidth();
-    }
-
-    @Override
-    public int getContentHeight() {
-        return mCardLayoutHeight + (mPageBlock != null ? mPageBlock.getHeight() : 0);
-    }
-
-    @Override
-    public int getLineHeight() {
-        return getContentHeight();
-    }
-
-    @Override
     public void resume() {
         super.resume();
+        createCells();
     }
 
-    protected void setAnimatorListener(AnimationUtils.ValueAnimatorListener listener) {
-        mListener = listener;
-    }
-
-    protected void setAnimator(ValueAnimator animator) {
-        mAnimator = animator;
-    }
-
-    private void postInvalidateSelf(float ry) {
+    @Override
+    public void pause() {
+        super.pause();
         for (int i = 0; i < mCellList.size(); i++) {
-//            float rotateY = ry - ((mCellList.size() - 1 - i) * 90);
-//            if (rotateY <= 0) {
-//                rotateY = 0;
-//            } else if (rotateY >= 180) {
-//                rotateY = 180;
-//            }
-//            mCellList.get(i).setR(rotateY);
-            mCellList.get(i).setR(ry);
+            mCellList.get(i).release();
         }
-        postInvalidateThis();
-    }
-
-    protected Bitmap getCardBitmap() {
-        return mCardBitmap;
-    }
-
-    protected List<TwentyFourPointsInfo> getInfoList() {
-        Collections.shuffle(mInfoList);
-        return mInfoList;
-    }
-
-    public class TwentyFourPointsInfo {
-        String mContent;
-        Bitmap mVarietyBitmap;
-        Bitmap mContentBitmap;
-        int maskColor = 0x4d4F6171;
-        int corner = Const.DP_1 * 11;
-    }
-
-    protected void init(TextEnv textEnv, String content) {
-        try {
-            JSONObject object = new JSONObject(content);
-            JSONArray array = object.optJSONArray("num_list");
-            if (array != null) {
-                for (int i = 0; i < (array.length() > mMaxCount ? mMaxCount : array.length()); i++) {
-                    mNumList.add(array.optString(i));
-                }
-            }
-
-            Random random = new Random();
-            List<Integer> list = new ArrayList<>();
-            for (int i = 0; i < mVarietyIds.length; i++) {
-                list.add(mVarietyIds[i]);
-            }
-            boolean isBlack = true;
-            if (mNumList.size() > 0) {
-                for (int i = 0; i < mNumList.size(); i++) {
-                    TwentyFourPointsInfo info = new TwentyFourPointsInfo();
-                    info.mContent = mNumList.get(i);
-                    int index = random.nextInt(list.size());
-                    int id = list.get(index);
-                    list.remove(Integer.valueOf(id));
-                    if (id == mVarietyIds[0] || id == mVarietyIds[1]) {
-                        isBlack = true;
-                    } else {
-                        isBlack = false;
-                    }
-                    info.mVarietyBitmap = BitmapFactory.decodeResource(mRes, id);
-                    for (int j = 0; j < mContents.length; j++) {
-                        if (TextUtils.equals(info.mContent, mContents[j])) {
-                            if (isBlack) {
-                                info.mContentBitmap = mManager.getBitmap(mRes, mBlackIds[j]);
-                            } else {
-                                info.mContentBitmap = mManager.getBitmap(mRes, mRedIds[j]);
-                            }
-                        }
-                    }
-                    mInfoList.add(info);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        mCardBitmap = null;
+        if (mAnimator != null && mAnimator.isRunning()) {
+            mAnimator.cancel();
+            mAnimator = null;
         }
     }
 }

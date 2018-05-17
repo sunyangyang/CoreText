@@ -338,6 +338,15 @@ public class DeliveryBlock extends CYPlaceHolderBlock implements ICYEditableGrou
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        if (!getTextEnv().isEditable()) {
+            mIsEditable = false;
+            List<ICYEditable> list = findAllEditable();
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setEditable(false);
+                }
+            }
+        }
         Rect rect = getContentRect();
         canvas.save();
         //减10dp是因为DefaultBlockMaker中para_begin 增加了style.setMarginBottom(Const.DP_1 * 20);后期找UI调整

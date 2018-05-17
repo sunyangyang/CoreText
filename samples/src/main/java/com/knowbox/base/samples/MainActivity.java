@@ -17,6 +17,7 @@ import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;
 import com.knowbox.base.samples.fragments.QuestionFragment;
+import com.knowbox.base.samples.fragments.QuestionListFragment;
 import com.knowbox.base.service.log.BoxLogService;
 import com.knowbox.base.service.log.LogService;
 import com.knowbox.base.service.push.GetuiPushIntentService;
@@ -41,8 +42,8 @@ public class MainActivity extends FragmentActivity {
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GetuiPushIntentService.class);
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-////        ft.replace(R.id.main, new SamplesVideoFragment());
-////        ft.replace(R.id.main, new QuestionListFragment());
+//        ft.replace(R.id.main, new SamplesVideoFragment());
+//        ft.replace(R.id.main, new QuestionListFragment());
         ft.replace(R.id.main, new QuestionFragment());
 ////        ft.replace(R.id.main, new NumberCalculationFragment());
         ft.commitAllowingStateLoss();
