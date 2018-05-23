@@ -46,4 +46,6 @@ public interface ShareService {
      * @param content
      */
     public void shareToQQZone(final Activity activity, ShareContent content, ShareListener listener);
+
+    public ShareServiceObserver getObserver();
 }

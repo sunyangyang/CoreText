@@ -136,7 +136,7 @@ public class BlankBlock extends CYEditBlock {
     }
 
     public void insertText(String text) {
-        if (((EditFace)getEditFace()).getFlashPosition() < 0) {
+        if (((EditFace) getEditFace()).getFlashPosition() < 0) {
             return;
         }
         TextEnv textEnv = getTextEnv();

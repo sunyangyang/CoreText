@@ -198,7 +198,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        builder.setEditable(false);
         builder.build();
 
-//        builder.setEditable(false);
+        builder.setEditable(false);
 
 //        handler.sendEmptyMessageDelayed(0, 1000);
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
@@ -241,14 +241,14 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
-                        if ("删除".equals(text)) {
-                            editable.setText("");
+                        if ("#".equals(text)) {
+                            ((BlankBlock)editable).breakLine();
 //                            if (currentText.length() >= 1)
 //                                editable.setText(currentText.substring(0, currentText.length() - 1));
 //                        } else if ("#".equals(text)) {
 //                            ((BlankBlock)editable).breakLine();
                         } else {
-                            editable.setText(currentText + text);
+                            ((BlankBlock)editable).insertText(text);
                             ICYEditable editable1 = mQtvQuestion.findEditableByTabId(1001);
                             if (editable1 != null) {
                                 if (editable1.hasFocus()) {

@@ -30,6 +30,8 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class ShareSDKService implements ShareService {
 
+    private ShareServiceObserver mObserver = new ShareServiceObserver();
+
     @Override
     public void initConfig(final Activity activity) {
         MobSDK.init(BaseApp.getAppContext());
@@ -59,6 +61,11 @@ public class ShareSDKService implements ShareService {
             return;
         }
         share(platform, getShareData(content), new SharePlatformActionListener(activity, listener));
+    }
+
+    @Override
+    public ShareServiceObserver getObserver() {
+        return mObserver;
     }
 
     @Override
@@ -119,6 +126,7 @@ public class ShareSDKService implements ShareService {
             if (listener != null) {
                 listener.onComplete(platform, i, hashMap);
             }
+            mObserver.onComplete(platform, i, hashMap);
             ToastUtils.showShortToast(activity, "分享成功");
         }
 
@@ -127,6 +135,7 @@ public class ShareSDKService implements ShareService {
             if (listener != null) {
                 listener.onError(platform, i, throwable);
             }
+            mObserver.onError(platform, i, throwable);
             ToastUtils.showShortToast(activity, "分享失败");
         }
 
@@ -135,6 +144,7 @@ public class ShareSDKService implements ShareService {
             if (listener != null) {
                 listener.onCancel(platform, i);
             }
+            mObserver.onCancel(platform, i);
             ToastUtils.showShortToast(activity, "分享取消");
         }
     	

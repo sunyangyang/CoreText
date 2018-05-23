@@ -50,6 +50,9 @@ public class DeliveryCell {
         mBlock = new BlankBlock(mTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + mId + "}") {
             @Override
             public void breakLine() {
+                if (!getTextEnv().isEditable()) {
+                    return;
+                }
                 int pos = ((EditFace)getEditFace()).getFlashPosition();
                 if (pos < 0) {
                     return;
@@ -66,6 +69,9 @@ public class DeliveryCell {
             @Override
             public void insertText(String text) {
                 super.insertText(text);
+                if (!getTextEnv().isEditable()) {
+                    return;
+                }
                 int pos = ((EditFace)getEditFace()).getFlashPosition();
                 if (pos < 0) {
                     return;
@@ -77,6 +83,9 @@ public class DeliveryCell {
 
             @Override
             public void removeText() {
+                if (!getTextEnv().isEditable()) {
+                    return;
+                }
                 int pos = ((EditFace)getEditFace()).getFlashPosition();
                 if (pos < 0) {
                     return;
