@@ -22,7 +22,8 @@ android {
         manifestPlaceholders = [
                 GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
                 GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",
-                GETUI_APP_SECRET: "m57FYRmEdnA9DV5CkLqVk4"
+                GETUI_APP_SECRET: "m57FYRmEdnA9DV5CkLqVk4",
+                PACKAGE_NAME    : applicationId
         ]
 
         ndk {

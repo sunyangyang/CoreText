@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.hyena.coretext.TextEnv;
@@ -74,10 +75,16 @@ public class ImageBlock extends CYImageBlock {
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
+            Log.e("XXXXX", "mScale = " + mScale);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                setWidth((int) (mWidth * mScale));
-                setHeight((int) (mHeight * mScale));
+                if (mScale < 1.0f) {
+                    setWidth((int) (mWidth * mScale));
+                    setHeight((int) (mHeight * mScale));
+                } else {
+                    setWidth(mWidth);
+                    setHeight(mHeight);
+                }
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
@@ -97,8 +104,13 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
-                setWidth((int) (mWidth * mScale / 2));
-                setHeight((int) (mHeight * mScale / 2));
+                if (mScale < 2.0f) {
+                    setWidth((int) (mWidth * mScale / 2));
+                    setHeight((int) (mHeight * mScale / 2));
+                } else {
+                    setWidth(mWidth);
+                    setHeight(mHeight);
+                }
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             }
@@ -127,6 +139,19 @@ public class ImageBlock extends CYImageBlock {
             }
         }
         mScale = width * 1.0f / mWidth;
+        if ("big_image".equals(size)) {
+            if (mScale < 1.0f) {
+                return (int) (mWidth * mScale);
+            } else {
+                return mWidth;
+            }
+        } else if ("mid_image".equals(size)) {
+            if (mScale < 2.0f) {
+                return(int) (mWidth * mScale / 2);
+            } else {
+                return mWidth;
+            }
+        }
         return width;
     }
 
@@ -134,6 +159,18 @@ public class ImageBlock extends CYImageBlock {
     public int getContentHeight() {
         if ("small_image".equals(size)) {
             return super.getContentHeight();
+        } else if ("big_image".equals(size)) {
+            if (mScale < 1.0f) {
+                return (int) (mHeight * mScale);
+            } else {
+                return mHeight;
+            }
+        } else if ("mid_image".equals(size)) {
+            if (mScale < 2.0f) {
+                return(int) (mHeight * mScale / 2);
+            } else {
+                return mHeight;
+            }
         }
         return (int) (mHeight * mScale);
     }
@@ -173,11 +210,16 @@ public class ImageBlock extends CYImageBlock {
                 mImageRect.set(rect);
             }
             drawable.setBounds(mImageRect);
+            canvas.save();
+            if ("big_image".equals(size)) {
+                canvas.translate((getTextEnv().getSuggestedPageWidth() - mImageRect.width())/ 2, 0);
+            }
             drawable.draw(canvas);
             if (!getTextEnv().isEditable()) {//绘制边框
                 mRect.set(mImageRect);
                 canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
             }
+            canvas.restore();
         }
     }
 
