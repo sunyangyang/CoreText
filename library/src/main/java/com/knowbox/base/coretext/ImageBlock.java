@@ -13,7 +13,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.hyena.coretext.TextEnv;
@@ -44,17 +43,30 @@ public class ImageBlock extends CYImageBlock {
     private static final int DP_83 = Const.DP_1 * 83;
     private static final int DP_110 = Const.DP_1 * 110;
 
+    protected static final int DEFAULT_SCALE = 0;
+    protected static final int FILL_IMG_SCALE = 1;
+
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
     protected Drawable drawable = null;
     protected IDisplayer mDisplayer;
     protected int mLoadingResId, mErrorResId;
     private boolean isSuccess = false;
+    private int mScaleType = DEFAULT_SCALE;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
+        setScaleType(getScaleType());
         ImageFetcher.getImageFetcher();
         init(textEnv.getContext(), content);
+    }
+
+    protected void setScaleType(int scaleType) {
+        mScaleType = scaleType;
+    }
+
+    protected int getScaleType() {
+        return mScaleType;
     }
 
     private void init(Context context, String content) {
@@ -75,15 +87,19 @@ public class ImageBlock extends CYImageBlock {
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
-            Log.e("XXXXX", "mScale = " + mScale);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                if (mScale < 1.0f) {
+                if (DEFAULT_SCALE == mScaleType) {
+                    if (mScale < 1.0f) {
+                        setWidth((int) (mWidth * mScale));
+                        setHeight((int) (mHeight * mScale));
+                    } else {
+                        setWidth(mWidth);
+                        setHeight(mHeight);
+                    }
+                } else {
                     setWidth((int) (mWidth * mScale));
                     setHeight((int) (mHeight * mScale));
-                } else {
-                    setWidth(mWidth);
-                    setHeight(mHeight);
                 }
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
@@ -104,13 +120,19 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
-                if (mScale < 2.0f) {
+                if (DEFAULT_SCALE == mScaleType) {
+                    if (mScale < 2.0f) {
+                        setWidth((int) (mWidth * mScale / 2));
+                        setHeight((int) (mHeight * mScale / 2));
+                    } else {
+                        setWidth(mWidth);
+                        setHeight(mHeight);
+                    }
+                } else {
                     setWidth((int) (mWidth * mScale / 2));
                     setHeight((int) (mHeight * mScale / 2));
-                } else {
-                    setWidth(mWidth);
-                    setHeight(mHeight);
                 }
+
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             }
@@ -139,19 +161,22 @@ public class ImageBlock extends CYImageBlock {
             }
         }
         mScale = width * 1.0f / mWidth;
-        if ("big_image".equals(size)) {
-            if (mScale < 1.0f) {
-                return (int) (mWidth * mScale);
-            } else {
-                return mWidth;
-            }
-        } else if ("mid_image".equals(size)) {
-            if (mScale < 2.0f) {
-                return(int) (mWidth * mScale / 2);
-            } else {
-                return mWidth;
+        if (DEFAULT_SCALE == mScaleType) {
+            if ("big_image".equals(size)) {
+                if (mScale < 1.0f) {
+                    return (int) (mWidth * mScale);
+                } else {
+                    return mWidth;
+                }
+            } else if ("mid_image".equals(size)) {
+                if (mScale < 2.0f) {
+                    return(int) (mWidth * mScale / 2);
+                } else {
+                    return mWidth;
+                }
             }
         }
+
         return width;
     }
 
@@ -159,17 +184,20 @@ public class ImageBlock extends CYImageBlock {
     public int getContentHeight() {
         if ("small_image".equals(size)) {
             return super.getContentHeight();
-        } else if ("big_image".equals(size)) {
-            if (mScale < 1.0f) {
-                return (int) (mHeight * mScale);
-            } else {
-                return mHeight;
-            }
-        } else if ("mid_image".equals(size)) {
-            if (mScale < 2.0f) {
-                return(int) (mHeight * mScale / 2);
-            } else {
-                return mHeight;
+        }
+        if (DEFAULT_SCALE == mScaleType) {
+            if ("big_image".equals(size)) {
+                if (mScale < 1.0f) {
+                    return (int) (mHeight * mScale);
+                } else {
+                    return mHeight;
+                }
+            } else if ("mid_image".equals(size)) {
+                if (mScale < 2.0f) {
+                    return(int) (mHeight * mScale / 2);
+                } else {
+                    return mHeight;
+                }
             }
         }
         return (int) (mHeight * mScale);
@@ -211,7 +239,7 @@ public class ImageBlock extends CYImageBlock {
             }
             drawable.setBounds(mImageRect);
             canvas.save();
-            if ("big_image".equals(size)) {
+            if (DEFAULT_SCALE == mScaleType && "big_image".equals(size)) {
                 canvas.translate((getTextEnv().getSuggestedPageWidth() - mImageRect.width())/ 2, 0);
             }
             drawable.draw(canvas);

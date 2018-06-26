@@ -115,18 +115,24 @@ public class ShareSDKService implements ShareService {
     	
     	private Activity activity;
     	private ShareListener listener;
+    	private String mTag = "";
     	
     	public SharePlatformActionListener(Activity activity, ShareListener listener) {
     		this.activity = activity;
     		this.listener = listener;
+    		mTag = listener.getTag();
 		}
-    	
+
+		public String getTag() {
+    	    return mTag;
+        }
+
     	@Override
         public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
             if (listener != null) {
                 listener.onComplete(platform, i, hashMap);
             }
-            mObserver.onComplete(platform, i, hashMap);
+            mObserver.onComplete(platform, i, hashMap, mTag);
             ToastUtils.showShortToast(activity, "分享成功");
         }
 
@@ -135,7 +141,7 @@ public class ShareSDKService implements ShareService {
             if (listener != null) {
                 listener.onError(platform, i, throwable);
             }
-            mObserver.onError(platform, i, throwable);
+            mObserver.onError(platform, i, throwable, mTag);
             ToastUtils.showShortToast(activity, "分享失败");
         }
 
@@ -144,10 +150,9 @@ public class ShareSDKService implements ShareService {
             if (listener != null) {
                 listener.onCancel(platform, i);
             }
-            mObserver.onCancel(platform, i);
+            mObserver.onCancel(platform, i, mTag);
             ToastUtils.showShortToast(activity, "分享取消");
         }
-    	
     }
 
     private HashMap<String, Object> getShareData(ShareContent content) {

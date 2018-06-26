@@ -32,6 +32,11 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
         loadBlanks(content);
     }
 
+    @Override
+    protected int getScaleType() {
+        return FILL_IMG_SCALE;
+    }
+
     private void loadBlanks(String content) {
         try {
             blankBlocks.clear();
