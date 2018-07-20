@@ -311,7 +311,7 @@ public class ImageBlock extends CYImageBlock {
 
         @Override
         public int getId() {
-            return TextUtils.isEmpty(mUrl)?super.hashCode():mUrl.hashCode();
+            return TextUtils.isEmpty(mUrl) ? super.hashCode() : mUrl.hashCode() + ImageBlock.this.hashCode();
         }
 
         @Override

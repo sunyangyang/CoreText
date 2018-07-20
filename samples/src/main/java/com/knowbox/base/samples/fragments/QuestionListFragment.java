@@ -61,13 +61,33 @@ public class QuestionListFragment extends Fragment {
 //                    items.add(new Item(item));
 //                }
 //            }
-            for (int i = 0; i < 20; i++) {
-                Item item = new Item(new JSONObject());
-                item.question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"24point\",\"num_list\":[\"11\",\"12\",\"13\",\"7\"],\"blank_list\":[{\"type\":\"blank\",\"id\":\"1\",\"class\":\"fillin\",\"size\":\"24point_blank\"}]}##{\"type\":\"para_end\"}#";
-                items.add(item);
-            }
+//            for (int i = 0; i < 20; i++) {
+//                Item item = new Item(new JSONObject());
+//                item.question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"24point\",\"num_list\":[\"11\",\"12\",\"13\",\"7\"],\"blank_list\":[{\"type\":\"blank\",\"id\":\"1\",\"class\":\"fillin\",\"size\":\"24point_blank\"}]}##{\"type\":\"para_end\"}#";
+//                items.add(item);
+//            }
 //            items.addAll(items);
 //            items.addAll(items);
+            Item item = new Item(new JSONObject());
+            item.question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":1,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":2,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FuU1KJxjsyEOz9NR18o8kfaXZF1H\",\"size\":\"small_image\",\"id\":3,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FtrGfZfhNxFaZhfsTOCmLp7eeyV_\",\"size\":\"small_image\",\"id\":4,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FtrGfZfhNxFaZhfsTOCmLp7eeyV_\",\"size\":\"small_image\",\"id\":5,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fml6-Ch9eEdJ5TdzueuTfAQQKL5Z\",\"size\":\"small_image\",\"id\":6,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":7,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":8,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FuU1KJxjsyEOz9NR18o8kfaXZF1H\",\"size\":\"small_image\",\"id\":9,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FtrGfZfhNxFaZhfsTOCmLp7eeyV_\",\"size\":\"small_image\",\"id\":10,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FtrGfZfhNxFaZhfsTOCmLp7eeyV_\",\"size\":\"small_image\",\"id\":11,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fml6-Ch9eEdJ5TdzueuTfAQQKL5Z\",\"size\":\"small_image\",\"id\":12,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":13,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"small_image\",\"id\":14,\"width\":\"88px\",\"height\":\"88px\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FuU1KJxjsyEOz9NR18o8kfaXZF1H\",\"size\":\"small_image\",\"id\":15,\"width\":\"88px\",\"height\":\"88px\"}#……按这样的规律排下去，第25个图形是(    )。#{\"type\":\"para_end\"}#";
+            items.add(item);
+
+            Item item1 = new Item(new JSONObject());
+            item1.question = "#{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/Fh_SZQUAp61oRaaT6j5wWJW53MB-\",\"size\":\"big_image\",\"id\":1,\"width\":\"88px\",\"height\":\"88px\"}#";
+            items.add(item1);
+
+            Item item2 = new Item(new JSONObject());
+            item2.question = "#{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FhJWka3eNbx3q9BpI_CPyQA0Vrj3\",\"size\":\"big_image\",\"id\":1,\"width\":\"88px\",\"height\":\"88px\"}#";
+            items.add(item2);
+
+            Item item3 = new Item(new JSONObject());
+            item3.question = "#{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FtrGfZfhNxFaZhfsTOCmLp7eeyV_\",\"size\":\"big_image\",\"id\":1,\"width\":\"88px\",\"height\":\"88px\"}#";
+            items.add(item3);
+
+            Item item4 = new Item(new JSONObject());
+            item4.question = "#{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FhC9RgjQIY9tl5sb2xwDkQawTVwn\",\"size\":\"big_image\",\"id\":1,\"width\":\"88px\",\"height\":\"88px\"}#";
+            items.add(item4);
+
             mQuestionAdapter.setItems(items);
             mListView.setAdapter(mQuestionAdapter);
         } catch (Exception e) {

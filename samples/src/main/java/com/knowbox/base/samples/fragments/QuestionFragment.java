@@ -205,7 +205,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        builder.setEditable(false);
         builder.build();
 
-        builder.setEditable(false);
+//        builder.setEditable(false);
 
 //        handler.sendEmptyMessageDelayed(0, 1000);
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
