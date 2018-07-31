@@ -30,21 +30,27 @@ public class ShareServiceObserver {
     protected void onComplete(Platform platform, int i, HashMap<String, Object> hashMap, String tag) {
         for (int index = 0; index < mListeners.size(); index++) {
             ShareListener listener = mListeners.get(index);
-            listener.onComplete(platform, i, hashMap, tag);
+            if (listener != null) {
+                listener.onComplete(platform, i, hashMap, tag);
+            }
         }
     }
 
     protected void onError(Platform platform, int i, Throwable throwable, String tag) {
         for (int index = 0; index < mListeners.size(); index++) {
             ShareListener listener = mListeners.get(index);
-            listener.onError(platform, i, throwable, tag);
+            if (listener != null) {
+                listener.onError(platform, i, throwable, tag);
+            }
         }
     }
 
     protected void onCancel(Platform platform, int i, String tag) {
         for (int index = 0; index < mListeners.size(); index++) {
             ShareListener listener = mListeners.get(index);
-            listener.onCancel(platform, i, tag);
+            if (listener != null) {
+                listener.onCancel(platform, i, tag);
+            }
         }
     }
 }

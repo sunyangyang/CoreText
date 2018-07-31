@@ -120,7 +120,9 @@ public class ShareSDKService implements ShareService {
     	public SharePlatformActionListener(Activity activity, ShareListener listener) {
     		this.activity = activity;
     		this.listener = listener;
-    		mTag = listener.getTag();
+    		if (listener != null) {
+                mTag = listener.getTag();
+            }
 		}
 
 		public String getTag() {

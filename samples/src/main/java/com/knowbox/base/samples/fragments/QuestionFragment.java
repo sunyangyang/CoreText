@@ -35,6 +35,8 @@ import com.nineoldandroids.animation.AnimatorSet;
 import java.util.List;
 
 import static com.knowbox.base.coretext.MatchBlock.MATCH_VALUE_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_ANSWER_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_CONTENT_ID;
 
 /**
  * Created by yangzc on 17/2/16.
@@ -157,7 +159,6 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read\"}#西边天上的朵朵白云，#{\"type\":\"P\"}#变成了红彤彤的晚霞；#{\"type\":\"P\"}#从东山上升起的太阳，#{\"type\":\"P\"}#到西山上就要落下！#{\"type\":\"P\"}##{\"type\":\"P\"}#一天中太阳做了多少好事：#{\"type\":\"P\"}#她把金光往鲜花上洒，#{\"type\":\"P\"}#她把小树往高处拔；#{\"type\":\"P\"}#她陪着小朋友在海边戏水，#{\"type\":\"P\"}#看他们扬起欢乐的浪花……#{\"type\":\"P\"}##{\"type\":\"para_begin\"}##{\"type\":\"para_end\"}#太阳就要从西山落啦！#{\"type\":\"P\"}#她要去哪儿？#{\"type\":\"P\"}#她要趁人们睡觉的时侯，#{\"type\":\"P\"}#走向另外的国家。#{\"type\":\"P\"}##{\"type\":\"P\"}#在别的国家里，#{\"type\":\"P\"}#也有快乐的小朋友，#{\"type\":\"P\"}#也有小树和鲜花。#{\"type\":\"P\"}#我知道，此时，#{\"type\":\"P\"}#那里的小朋友和鲜花，#{\"type\":\"P\"}#正在睡梦中等她、盼她……#{\"type\":\"para_end\"}#\"";
 //        question = "#{\"type\":\"para_begin\",\"size\":34,\"align\":\"left\",\"color\":\"#808080\",\"margin\":40,\"style\":\"\"}#la#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50\"}##{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"letter\", \"id\": 17}##{\"type\":\"para_end\"}#";
 //        question = "#{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\": 10\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/Fho4BygJ8Yabs-_AD--a29_T1DWX\",\"width\":\"680px\",\"height\":\"408px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"small_img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"3.4\"},{\"type\":\"blank\",\"id\":2,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"23.0\"},{\"type\":\"blank\",\"id\":3,\"size\":\"small_img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"42.6\"},{\"type\":\"blank\",\"id\":4,\"size\":\"big_img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"62.3\"},{\"type\":\"blank\",\"id\":5,\"size\":\"img_blank\",\"x_pos\":\"79.9\",\"class\":\"fillin\",\"y_pos\":\"81.9\"}]}##{\"type\":\"para_end\"}#";
@@ -201,10 +202,13 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
 //        "src":"https://imgqiniu.knowbox.cn/tiku-img/FvAmq86ueT-D0G2GhN1cAh_LfFSc"
         question = "#{\"type\":\"latex\",\"content\":\"\\\\frac{4}{5}\\\\text{+}\\\\frac{3}{5}=\\\\frac{7}{5}\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#有一些数：-2、+5、0、-0.25、+3.6、-7，其中负数有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}#、#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":2}#、#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":3}#；大于-3而小于+4的数有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":4}#个。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#看图回答问题。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FhgLomk_LmIVkj5tZ2GJKVQW4kYb\",\"size\":\"big_image\",\"id\":1,\"width\":\"310px\",\"height\":\"112px\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/tikuqiniu.knowbox.cn\\/FjzBihOKg0kIVDven5GiAex0E2kv\",\"size\":\"small_image\",\"id\":1,\"width\":\"22px\",\"height\":\"34px\"}#有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}#只。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50\"}##{\"type\":\"para_end\"}#";
+
         builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditable(false);
         builder.build();
-
+        builder.setEditableValue(DELIVERY_CONTENT_ID, "=123+123213=0372");
 //        builder.setEditable(false);
 
 //        handler.sendEmptyMessageDelayed(0, 1000);
