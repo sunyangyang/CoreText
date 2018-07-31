@@ -10,7 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
+import com.hyena.coretext.blocks.CYHorizontalAlign;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
@@ -66,6 +68,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mFlagRectSize = FLAG_RECT_SIZE;
     private int mRectPaddingSize = RECT_PADDING_SIZE;
     private TextEnv.EditableValueChangeListener mListener;
+    private CYHorizontalAlign mAlign;
 
     public enum CalculationStyle {
         Plus,
@@ -450,9 +453,20 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         Rect rect = getContentRect();
         canvas.save();
         int offsetX = (getTextEnv().getSuggestedPageWidth() - mLeftColumns * mCellRectWidth) / 2;
+        if (getParagraphStyle() != null && getParagraphStyle().getHorizontalAlign() != null) {
+            mAlign = getParagraphStyle().getHorizontalAlign();
+        } else {
+            mAlign = CYHorizontalAlign.CENTER;
+        }
+        if (mAlign == CYHorizontalAlign.LEFT) {
+            offsetX = 0;
+        } else if (mAlign == CYHorizontalAlign.RIGHT) {
+            offsetX = getTextEnv().getSuggestedPageWidth() - mLeftColumns * mCellRectWidth;
+        }
         if (offsetX <= 0) {
             offsetX = 0;
         }
+
         canvas.translate(rect.left + offsetX, rect.top);
         drawLeft(canvas, offsetX);
         for (int i = 0; i < mHorizontalLines.length - 1; i++) {//去除最后一行
