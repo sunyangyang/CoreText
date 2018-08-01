@@ -25,4 +25,6 @@ public class ShareContent {
     public String mShareUrl;
     //描述
     public String mDescription;
+    //本地图片路径
+    public String mLocalImgPath;
 }

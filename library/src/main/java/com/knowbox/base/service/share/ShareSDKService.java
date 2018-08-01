@@ -161,6 +161,7 @@ public class ShareSDKService implements ShareService {
         Platform.ShareParams params = new Platform.ShareParams();
         params.setTitle(content.mShareTitle);
         params.setTitleUrl(content.mShareTitleUrl);
+        params.setImagePath(content.mLocalImgPath);
         params.setText(content.mShareContent);
         //确保必须可以下载到
         params.setImageUrl(content.mUrlImage);
@@ -182,22 +183,22 @@ public class ShareSDKService implements ShareService {
         if (plat == null || data == null) {
             return false;
         }
-        try {
-            String imagePath = ResHelper.forceCast(data.get("imagePath"));
-            Bitmap viewToShare = ResHelper.forceCast(data.get("viewToShare"));
-            if (TextUtils.isEmpty(imagePath) && viewToShare != null && !viewToShare.isRecycled()) {
-                String path = ResHelper.getCachePath(MobSDK.getContext(), "screenshot");
-                File ss = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-                FileOutputStream fos = new FileOutputStream(ss);
-                viewToShare.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-                data.put("imagePath", ss.getAbsolutePath());
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return false;
-        }
+//        try {
+//            String imagePath = ResHelper.forceCast(data.get("imagePath"));
+//            Bitmap viewToShare = ResHelper.forceCast(data.get("viewToShare"));
+//            if (TextUtils.isEmpty(imagePath) && viewToShare != null && !viewToShare.isRecycled()) {
+//                String path = ResHelper.getCachePath(MobSDK.getContext(), "screenshot");
+//                File ss = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+//                FileOutputStream fos = new FileOutputStream(ss);
+//                viewToShare.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//                fos.flush();
+//                fos.close();
+//                data.put("imagePath", ss.getAbsolutePath());
+//            }
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            return false;
+//        }
 
         String name = plat.getName();
         boolean isWechat = "WechatFavorite".equals(name) || "Wechat".equals(name) || "WechatMoments".equals(name);
