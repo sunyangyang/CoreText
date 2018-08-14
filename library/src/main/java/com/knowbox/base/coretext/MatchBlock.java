@@ -216,7 +216,6 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     JSONObject rightAnswer = object.optJSONObject("rightAnswer");
                     JSONObject userAnswer = object.optJSONObject("userAnswer");
                     if (rightAnswer != null || userAnswer != null) {
-                        mCanOperate = false;
                         mFocusCell = null;
                         for (int i = 0; i < mRightCells.length; i++) {
                             mRightCells[i].setWait(false);
@@ -1008,12 +1007,13 @@ public class MatchBlock extends CYPlaceHolderBlock {
         }
         String result = "";
         for (int i = 0; i < answers.length; i++) {
-            if (i == 0 || TextUtils.isEmpty(answers[i].toString())) {
+            if (TextUtils.isEmpty(answers[i].toString())) {
                 result += answers[i].toString();
             } else {
-                result += "," + answers[i].toString();
+                result += answers[i].toString() + ",";
             }
         }
+        result = result.substring(0, result.length() - 1);
 
         String resultForLayout = "";
         for (int i = 0; i < mList.size(); i++) {

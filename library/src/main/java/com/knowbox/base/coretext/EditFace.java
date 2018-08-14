@@ -70,6 +70,11 @@ public class EditFace extends CYEditFace {
     protected void drawBorder(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) || "24point_blank".equals(mSize))
             return;
+        if (blockRect.width() <= Const.DP_1 * 10) {
+            mRoundCorner = Const.DP_1 * 2;
+        } else {
+            mRoundCorner = Const.DP_1 * 5;
+        }
 
         if ("sudoku_blank".equals(mSize) && editable.hasFocus()) {
             mRoundCorner = Const.DP_1 * 2;

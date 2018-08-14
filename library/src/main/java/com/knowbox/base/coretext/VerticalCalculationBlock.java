@@ -7,12 +7,10 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYHorizontalAlign;
 import com.hyena.coretext.blocks.CYPlaceHolderBlock;
-import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
@@ -24,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,11 +29,15 @@ import java.util.List;
  */
 
 public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYEditableGroup {
+
+    public static final int TYPE_DEFAULT = 0;
+    public static final int TYPE_HU = 1;//沪教版
+
     public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;//16
     public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;//
     public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;//20
     public static final int FLAG_RECT_SIZE = Const.DP_1 * 16;
-    public static final int RECT_PADDING_SIZE = Const.DP_1 * 4;
+    public static final int RECT_PADDING_SIZE = Const.DP_1 * 10;
     private float mScale = 1.0f;
     private float mFlagScale = 1.37f;
     public static final int SCALE = Integer.MAX_VALUE;
@@ -69,6 +70,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mRectPaddingSize = RECT_PADDING_SIZE;
     private TextEnv.EditableValueChangeListener mListener;
     private CYHorizontalAlign mAlign;
+    private int mStyleType = TYPE_DEFAULT;
 
     public enum CalculationStyle {
         Plus,
@@ -148,6 +150,10 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             content = content.replaceAll("#\\{", "");
             content = content.replaceAll("\\}#", "");
             object = new JSONObject(content);
+            mStyleType = object.optInt("style_type");
+            if (mStyleType != TYPE_DEFAULT && mStyleType != TYPE_HU) {
+                mStyleType = TYPE_DEFAULT;
+            }
         } catch (JSONException e) {
 
         }
@@ -236,14 +242,16 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         int leftMargin = Const.DP_1 * 10;
         //加法和乘法中有进位的时候，设置宽度
-        for (int i = 0; i < length; i++) {
-            JSONObject jsonObject = array.optJSONObject(i);
-            String method = jsonObject.optString("method");
-            JSONArray carryArray = jsonObject.optJSONArray("carry_flag");
-            if (method.equals("multiplication") || method.equals("plus")) {
-                if (carryArray != null && carryArray.length() > 0) {
-                    mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;
-                    leftMargin = Const.DP_1 * 20;
+        if (mStyleType == TYPE_DEFAULT) {
+            for (int i = 0; i < length; i++) {
+                JSONObject jsonObject = array.optJSONObject(i);
+                String method = jsonObject.optString("method");
+                JSONArray carryArray = jsonObject.optJSONArray("carry_flag");
+                if (method.equals("multiplication") || method.equals("plus")) {
+                    if (carryArray != null && carryArray.length() > 0) {
+                        mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;
+                        leftMargin = Const.DP_1 * 20;
+                    }
                 }
             }
         }
@@ -332,15 +340,32 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             for (; k < mHorizontalLines[linesPosition - 1]; k++) {
                 //每行高度保持一致，有无借位
                 int topMargin;
-                if (k == mHorizontalLines[linesPosition - 1] - (arrayLength + topLines) &&
-                        mStyle[i] == CalculationStyle.Minus &&
-                        (flagArray != null && flagArray.length() > 0)) {
-                    mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
-                    topMargin = Const.DP_1 * 20;
+                if (mStyle[i] == CalculationStyle.Minus) {
+                    if (k == mHorizontalLines[linesPosition - 1] - (arrayLength + topLines) &&
+                            (flagArray != null && flagArray.length() > 0)) {
+                        topMargin = Const.DP_1 * 20;
+                        mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
+                    } else {
+                        topMargin = Const.DP_1 * 10;
+                        mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                    }
                 } else {
-                    topMargin = Const.DP_1 * 10;
-                    mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                    if (mStyleType == TYPE_DEFAULT) {
+                        topMargin = Const.DP_1 * 10;
+                        mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                    } else {
+                        if (k == mHorizontalLines[linesPosition - 1] - topLines - 1 &&
+                                mStyleType == TYPE_HU &&
+                                (flagArray != null && flagArray.length() > 0)) {
+                            topMargin = Const.DP_1 * 10;
+                            mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
+                        } else {
+                            topMargin = Const.DP_1 * 10;
+                            mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                        }
+                    }
                 }
+
 
                 for (int j = 0; j < mLeftColumns; j++) {
                     if (TextUtils.isEmpty(mValues[k][j]) && TextUtils.isEmpty(mFlag[k][j])) {
@@ -349,7 +374,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j], k, j, mNormalTextPaint, mSmallTextPaint, mBlankPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize);
+                            mStyle[i], mValues[k][j], mFlag[k][j], mNormalTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mStyleType);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {

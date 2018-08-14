@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
+import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
@@ -15,6 +16,8 @@ import com.hyena.coretext.utils.PaintManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.knowbox.base.coretext.VerticalCalculationBlock.TYPE_DEFAULT;
 
 /**
  * Created by sunyangyang on 2017/10/12.
@@ -43,11 +46,12 @@ public class NumberCell {
     private int mNumberId;
     private int mFlagId;
     private int mOffsetX;
+    private int mStyleType;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
-                      String value, String flag, int row, int column, Paint valuePaint,
-                      Paint flagPaint, Paint blankPaint, int valueTopMargin, int valueLeftMargin,
-                      int sideWidth, int flagSideWidth) {
+                      String value, String flag, Paint valuePaint,
+                      Paint flagPaint, int valueTopMargin, int valueLeftMargin,
+                      int sideWidth, int flagSideWidth, int styleType) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
@@ -57,6 +61,7 @@ public class NumberCell {
         mValuePaint.set(valuePaint);
         mFlagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mFlagPaint.set(flagPaint);
+        mStyleType = styleType;
         int flagLeftMargin = 0;
         int flagTopMargin = 0;
         if (valueLeftMargin > mFlagSideWidth) {
@@ -91,10 +96,17 @@ public class NumberCell {
             if (!TextUtils.isEmpty(mFlag)) {
                 if (style == VerticalCalculationBlock.CalculationStyle.Plus ||
                         style == VerticalCalculationBlock.CalculationStyle.Multiplication) {
-                    mFlagRect = new Rect(rect.left + flagLeftMargin,
-                            rect.bottom - mFlagSideWidth - Const.DP_1,
-                            rect.left + flagLeftMargin + mFlagSideWidth,
-                            rect.bottom - Const.DP_1);
+                    if (mStyleType == TYPE_DEFAULT) {
+                        mFlagRect = new Rect(rect.left + flagLeftMargin,
+                                rect.bottom - mFlagSideWidth - Const.DP_1,
+                                rect.left + flagLeftMargin + mFlagSideWidth,
+                                rect.bottom - Const.DP_1);
+                    } else {
+                        mFlagRect = new Rect(rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2,
+                                rect.bottom - mFlagSideWidth - Const.DP_1,
+                                (int) (rect.left + valueLeftMargin + (mSideWidth + mFlagSideWidth) / 2),
+                                rect.bottom - Const.DP_1);
+                    }
                 } else {
                     mFlagRect = new Rect((int) (rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2),
                             rect.top + flagTopMargin,
