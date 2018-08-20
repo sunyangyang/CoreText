@@ -113,6 +113,8 @@ public class BlankBlock extends CYEditBlock {
             } catch (Exception e) {
 
             }
+        } else {
+            mPaddingHorizontal = getPaddingLeft() + getPaddingRight() + getMarginLeft() + getMarginRight();
         }
         updateSize(getText());
     }
@@ -127,7 +129,11 @@ public class BlankBlock extends CYEditBlock {
                 return;
 
             getTextEnv().setEditableValue(getTabId(), text);
-            if (!getTextEnv().isEditable() || "express".equals(size) || "letter".equals(size) || "delivery".equals(size)) {
+            if (!getTextEnv().isEditable() ||
+                    "express".equals(size) ||
+                    "letter".equals(size) ||
+                    "delivery".equals(size) ||
+                    "mutiline".equals(size)) {
                 ((EditFace)getEditFace()).setFlashPosition(text.length());
                 updateSize(text);
                 requestLayout();
@@ -237,62 +243,18 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                int line = 0;
-                if (width > maxWidth) {
-                    mWidth = maxWidth;
-                    int startPosition = 0;
-                    for (int i = 0; i < text.length(); i++) {
-                        if (PaintManager.getInstance().getWidth(getTextEnv()
-                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
-                                PaintManager.getInstance().getWidth(getTextEnv()
-                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
-                            line++;
-                            startPosition = i;
-                        }
-                    }
-                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
-                        line++;
-                    }
-                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
-                } else {
-                    this.mWidth = (int) width;
-                    this.mHeight = textHeight;
-                }
-                this.mHeight += Const.DP_1 * 3;
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
             } else if ("sudoku_blank".equals(size)) {
                 this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
                 this.mHeight = mWidth + Const.DP_1 * 3;
             } else if ("24point_blank".equals(size)) {
                 this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
                 this.mHeight = Const.DP_1 * 45;
-            }
-//            else if ("mutiline".equals(size)) {
-//                float width = Math.max(getTextWidth(((EditFace)getEditFace()).getTextPaint(), text), PaintManager.getInstance().getWidth(getTextEnv()
-//                        .getPaint(), text));
-//                int line = 0;
-//                if (width > maxWidth) {
-//                    mWidth = maxWidth;
-//                    int startPosition = 0;
-//                    for (int i = 0; i < text.length(); i++) {
-//                        if (PaintManager.getInstance().getWidth(getTextEnv()
-//                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
-//                                PaintManager.getInstance().getWidth(getTextEnv()
-//                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
-//                            line++;
-//                            startPosition = i;
-//                        }
-//                    }
-//                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
-//                        line++;
-//                    }
-//                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
-//                } else {
-//                    this.mWidth = (int) width;
-//                    this.mHeight = textHeight;
-//                }
-//                this.mHeight += Const.DP_1 * 3;
-//            }
-            else {
+            } else if ("mutiline".equals(size)) {
+                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text));
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+            } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
                 this.mHeight = textHeight;
@@ -336,32 +298,11 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                int line = 0;
-                if (width > maxWidth) {
-                    mWidth = maxWidth;
-                    int startPosition = 0;
-                    for (int i = 0; i < text.length(); i++) {
-                        if (PaintManager.getInstance().getWidth(getTextEnv()
-                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
-                                PaintManager.getInstance().getWidth(getTextEnv()
-                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
-                            line++;
-                            startPosition = i;
-                        }
-                    }
-                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
-                        line++;
-                    }
-                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
-                    if (mLines != line) {
-                        mLines = line;
-                        notifyLayoutChange();
-                    }
-                } else {
-                    this.mWidth = (int) width;
-                    this.mHeight = textHeight;
-                }
-                this.mHeight += Const.DP_1 * 3;
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+            } else if ("mutiline".equals(size)) {
+                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text));
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
             } else if ("sudoku_blank".equals(size)) {
                 this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
                 this.mHeight = mWidth + Const.DP_1 * 3;
@@ -373,6 +314,35 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = textHeight;
             }
         }
+    }
+
+    private void setBlankWidthAndHeight(float width, int maxWidth, String text, int textHeight) {
+        int line = 0;
+        if (width > maxWidth) {
+            mWidth = maxWidth;
+            int startPosition = 0;
+            for (int i = 0; i < text.length(); i++) {
+                if (PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text.substring(startPosition, i)) <= mWidth &&
+                        PaintManager.getInstance().getWidth(getTextEnv()
+                                .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
+                    line++;
+                    startPosition = i;
+                }
+            }
+            if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+                line++;
+            }
+            this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+            if (mLines != line) {
+                mLines = line;
+                notifyLayoutChange();
+            }
+        } else {
+            this.mWidth = (int) width;
+            this.mHeight = textHeight;
+        }
+        this.mHeight += Const.DP_1 * 3;
     }
 
 //    @Override

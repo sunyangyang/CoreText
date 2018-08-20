@@ -7,12 +7,9 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
@@ -135,23 +132,23 @@ public class EditFace extends CYEditFace {
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
         String text = getText();
-//        if (mSize.equals("mutiline")) {
-//            if (mTextList.size() > 0) {
-//                TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
-//                try {
-//                    float width = PaintManager.getInstance().getWidth(mTextPaint, text.substring(lastLineInfo.mStartPos, lastLineInfo.mEndPos));
-//                    float height = PaintManager.getInstance().getHeight(mTextPaint);
-//                    float y = lastLineInfo.mY;
-//                    canvas.drawLine(width + contentRect.left,
-//                            y - height + this.mTextPaintMetrics.bottom,
-//                            width + contentRect.left,
-//                            y + this.mTextPaintMetrics.bottom,
-//                            mFlashPaint);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        } else {
+        if (mSize.equals("mutiline")) {
+            if (mTextList.size() > 0) {
+                TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
+                try {
+                    float width = PaintManager.getInstance().getWidth(mTextPaint, text.substring(lastLineInfo.mStartPos, lastLineInfo.mEndPos));
+                    float height = PaintManager.getInstance().getHeight(mTextPaint);
+                    float y = lastLineInfo.mY;
+                    canvas.drawLine(width + contentRect.left,
+                            y - height + this.mTextPaintMetrics.bottom,
+                            width + contentRect.left,
+                            y + this.mTextPaintMetrics.bottom,
+                            mFlashPaint);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
             if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
                 if (editable.isEditable() && editable.hasFocus()) {
                     float left = 0;
@@ -293,13 +290,12 @@ public class EditFace extends CYEditFace {
                 }
 
             }
-//        }
+        }
     }
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-//         || mSize.equals("mutiline")
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("mutiline")) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
                 canvas.save();
