@@ -88,6 +88,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     private Resources mRes;
     private String mContent;
     private SparseArray<EditableValue> mEditableValues;
+    private RectF mRectF;
 
     public TwentyFourPointsBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -125,6 +126,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         mCardHeight = (int) (mCardWidth * 1.24f);
         mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mRectF = new RectF();
         init(content);
         createCells();
     }
@@ -238,9 +240,9 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
             mPaint.setColor(0xff5EBAFF);
             canvas.translate(rect.left + (getContentWidth() - mPageBlock.getWidth()) / 2, rect.top + mCardLayoutHeight);
             mPageBlock.draw(canvas);
-            RectF rectF = new RectF();
-            rectF.set(0, 0, mPageBlock.getWidth(), mPageBlock.getHeight());
-            canvas.drawRoundRect(rectF, Const.DP_1 * 10, Const.DP_1 * 10, mPaint);
+
+            mRectF.set(0, 0, mPageBlock.getWidth(), mPageBlock.getHeight());
+            canvas.drawRoundRect(mRectF, Const.DP_1 * 10, Const.DP_1 * 10, mPaint);
             canvas.restore();
         }
     }

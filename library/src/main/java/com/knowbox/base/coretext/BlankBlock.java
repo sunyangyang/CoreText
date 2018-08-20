@@ -72,6 +72,8 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 400;
             } else if ("sudoku_blank".equals(getSize())) {
                 mTextLength = 1;
+            } else if ("mutiline".equals(getSize())) {
+                mTextLength = 200;
             } else {
                 mTextLength = 20;
             }
@@ -263,7 +265,34 @@ public class BlankBlock extends CYEditBlock {
             } else if ("24point_blank".equals(size)) {
                 this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
                 this.mHeight = Const.DP_1 * 45;
-            } else {
+            }
+//            else if ("mutiline".equals(size)) {
+//                float width = Math.max(getTextWidth(((EditFace)getEditFace()).getTextPaint(), text), PaintManager.getInstance().getWidth(getTextEnv()
+//                        .getPaint(), text));
+//                int line = 0;
+//                if (width > maxWidth) {
+//                    mWidth = maxWidth;
+//                    int startPosition = 0;
+//                    for (int i = 0; i < text.length(); i++) {
+//                        if (PaintManager.getInstance().getWidth(getTextEnv()
+//                                .getPaint(), text.substring(startPosition, i)) <= mWidth &&
+//                                PaintManager.getInstance().getWidth(getTextEnv()
+//                                        .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
+//                            line++;
+//                            startPosition = i;
+//                        }
+//                    }
+//                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+//                        line++;
+//                    }
+//                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+//                } else {
+//                    this.mWidth = (int) width;
+//                    this.mHeight = textHeight;
+//                }
+//                this.mHeight += Const.DP_1 * 3;
+//            }
+            else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
                 this.mHeight = textHeight;

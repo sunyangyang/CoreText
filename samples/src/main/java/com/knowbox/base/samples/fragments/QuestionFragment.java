@@ -205,6 +205,9 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，按听到的内容连线。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_audio\"}##{\"type\":\"audio\",\"src\":\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU3L2-6.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_matching\"}##{\"right\": [{\"content\": \"#{\\\"type\\\":\\\"img\\\",\\\"id\\\":1,\\\"size\\\" : \\\"big_match_image\\\", \\\"src\\\":\\\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU2L2-1s.png\\\"}#\", \"id\": 1}, {\"content\": \"#{\\\"type\\\":\\\"img\\\",\\\"id\\\":2,\\\"size\\\" : \\\"big_match_image\\\", \\\"src\\\":\\\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU3L1-4s.png\\\"}#\", \"id\": 2}, {\"content\": \"#{\\\"type\\\":\\\"img\\\",\\\"id\\\":3,\\\"size\\\" : \\\"big_match_image\\\", \\\"src\\\":\\\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU3L2-1s.png\\\"}#\", \"id\": 3}, {\"content\": \"#{\\\"type\\\":\\\"img\\\",\\\"id\\\":4,\\\"size\\\" : \\\"big_match_image\\\", \\\"src\\\":\\\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU3L1-3s.png\\\"}#\", \"id\": 4}, {\"content\": \"#{\\\"type\\\":\\\"img\\\",\\\"id\\\":5,\\\"size\\\" : \\\"big_match_image\\\", \\\"src\\\":\\\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU2L1-5s.png\\\"}#\", \"id\": 5}], \"left\": [{\"content\": \"It's ____ today.\", \"id\": 1}, {\"content\": \"What's the weather like in ____?\", \"id\": 2}, {\"content\": \"It's cold and ____.\", \"id\": 3}, {\"content\": \"It's very ____ today. \", \"id\": 4}, {\"content\": \"I like ____.\", \"id\": 5}], \"type\": \"match\"}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#218-174=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 4}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"1\", \"left_column\": 5, \"right_column\": 0, \"content\": [{\"method\": \"minus\", \"members\": [{\"value\": [\"2\", \"1\", \"8\"], \"explain\": []}, {\"value\": [\"-\", \"\", \"1\", \"7\", \"4\"], \"explain\": []}], \"borrow_flag\": [\"#{blank2}#\", \"\", \"\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank1}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#验算：#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"1\", \"left_column\": 5, \"right_column\": 0, \"content\": [{\"method\": \"plus\", \"members\": [{\"value\": [\"#{blank6}#\", \"#{blank5}#\"], \"explain\": []}, {\"value\": [\"+\", \"\", \"1\", \"7\", \"4\"], \"explain\": []}], \"carry_flag\": [\"#{blank8}#\", \"\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank10}#\", \"#{blank9}#\", \"#{blank7}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#15+78=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 4}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"1\", \"left_column\": 3, \"right_column\": 0, \"content\": [{\"method\": \"plus\", \"members\": [{\"value\": [\"1\", \"5\"], \"explain\": []}, {\"value\": [\"+\", \"7\", \"8\"], \"explain\": []}], \"carry_flag\": [\"#{blank2}#\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank1}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
+        question = "“+”理解错误。#{\"type\":\"P\"}#未掌握加法（+）的含义。把两个数合并在一起,求一共是多少的运算方法，叫做加法。#{\"type\":\"P\"}#计算时，你可以利用数的组成知识算出得数。#{\"type\":\"P\"}#例如8+2=？，可以联想到8和2组成10，得数是10。#{\"type\":\"img\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/Fh0DOaAst13294Sj74Q_Xebgpwrc\",\"size\":\"big_image\",\"width\":\"631px\",\"height\":\"227px\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"24point\",\"num_list\":[\"11\",\"12\",\"13\",\"7\"],\"blank_list\":[{\"type\":\"blank\",\"id\":\"1\",\"class\":\"fillin\",\"size\":\"24point_blank\"}]}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#218-174=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 4}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"1\", \"left_column\": 5, \"right_column\": 0, \"content\": [{\"method\": \"minus\", \"members\": [{\"value\": [\"2\", \"1\", \"8\"], \"explain\": []}, {\"value\": [\"-\", \"\", \"1\", \"7\", \"4\"], \"explain\": []}], \"borrow_flag\": [\"#{blank2}#\", \"\", \"\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank1}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#验算：#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"1\", \"left_column\": 5, \"right_column\": 0, \"content\": [{\"method\": \"plus\", \"members\": [{\"value\": [\"#{blank6}#\", \"#{blank5}#\"], \"explain\": []}, {\"value\": [\"+\", \"\", \"1\", \"7\", \"4\"], \"explain\": []}], \"carry_flag\": [\"#{blank8}#\", \"\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank10}#\", \"#{blank9}#\", \"#{blank7}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditable(false);
         builder.build();
@@ -252,24 +255,26 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
-                        if ("#".equals(text)) {
-                            ((BlankBlock)editable).breakLine();
-//                            if (currentText.length() >= 1)
-//                                editable.setText(currentText.substring(0, currentText.length() - 1));
-//                        } else if ("#".equals(text)) {
+                        editable.setText(currentText + text);
+//                        if ("#".equals(text)) {
 //                            ((BlankBlock)editable).breakLine();
-                        } else {
-                            ((BlankBlock)editable).insertText(text);
-                            ICYEditable editable1 = mQtvQuestion.findEditableByTabId(1001);
-                            if (editable1 != null) {
-                                if (editable1.hasFocus()) {
-                                    editable1.setFocus(false);
-                                } else {
-                                    editable1.setFocus(true);
-                                }
-
-                            }
-                        }
+////                            if (currentText.length() >= 1)
+////                                editable.setText(currentText.substring(0, currentText.length() - 1));
+////                        } else if ("#".equals(text)) {
+////                            ((BlankBlock)editable).breakLine();
+//                        } else {
+////                            ((BlankBlock)editable).insertText(text);
+//
+//                            ICYEditable editable1 = mQtvQuestion.findEditableByTabId(1001);
+//                            if (editable1 != null) {
+//                                if (editable1.hasFocus()) {
+//                                    editable1.setFocus(false);
+//                                } else {
+//                                    editable1.setFocus(true);
+//                                }
+//
+//                            }
+//                        }
                         editable.setTextColor(0xff5d758b);
                     }
 

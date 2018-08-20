@@ -134,153 +134,171 @@ public class EditFace extends CYEditFace {
             return;
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
-            if (editable.isEditable() && editable.hasFocus()) {
-                String text = getText();
-                float left = 0;
-                int textHeight = PaintManager.getInstance().getHeight(mTextPaint);
-                float top = 0;
-                float textWidth = 0;
-                float flashLeft = 0;
-                float flashRight = 0;
-                float textX = mTextX;
-                if (!TextUtils.isEmpty(text)) {
-                    textX = 0;
-                    flashLeft = textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, 1)) / 2;
-                    //ontouch时，position等于-1，否则大于等于0，当position大于等于0时候，按照position来判断，否则按照x，y值来判断
-                    if (mFlashPosition >= 0) {
-                        if (mFlashPosition == 0) {
-                            left = contentRect.left;
-                            top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
-                        } else {
-                            String lineText = "";
-                            for (int i = 0; i < mTextList.size(); i++) {
-                                TextInfo info = mTextList.get(i);
-                                if (mFlashPosition > info.mStartPos && mFlashPosition <= info.mEndPos) {
-                                    lineText = info.mText;
-                                    top = info.mY;
-                                    left = contentRect.left +
-                                            PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, mFlashPosition - info.mStartPos));
-                                    break;
+        String text = getText();
+//        if (mSize.equals("mutiline")) {
+//            if (mTextList.size() > 0) {
+//                TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
+//                try {
+//                    float width = PaintManager.getInstance().getWidth(mTextPaint, text.substring(lastLineInfo.mStartPos, lastLineInfo.mEndPos));
+//                    float height = PaintManager.getInstance().getHeight(mTextPaint);
+//                    float y = lastLineInfo.mY;
+//                    canvas.drawLine(width + contentRect.left,
+//                            y - height + this.mTextPaintMetrics.bottom,
+//                            width + contentRect.left,
+//                            y + this.mTextPaintMetrics.bottom,
+//                            mFlashPaint);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } else {
+            if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+                if (editable.isEditable() && editable.hasFocus()) {
+                    float left = 0;
+                    int textHeight = PaintManager.getInstance().getHeight(mTextPaint);
+                    float top = 0;
+                    float textWidth = 0;
+                    float flashLeft = 0;
+                    float flashRight = 0;
+                    float textX = mTextX;
+                    if (!TextUtils.isEmpty(text)) {
+                        textX = 0;
+                        flashLeft = textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, 1)) / 2;
+                        //ontouch时，position等于-1，否则大于等于0，当position大于等于0时候，按照position来判断，否则按照x，y值来判断
+                        if (mFlashPosition >= 0) {
+                            if (mFlashPosition == 0) {
+                                left = contentRect.left;
+                                top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
+                            } else {
+                                String lineText = "";
+                                for (int i = 0; i < mTextList.size(); i++) {
+                                    TextInfo info = mTextList.get(i);
+                                    if (mFlashPosition > info.mStartPos && mFlashPosition <= info.mEndPos) {
+                                        lineText = info.mText;
+                                        top = info.mY;
+                                        left = contentRect.left +
+                                                PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, mFlashPosition - info.mStartPos));
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        int prePosition = 0;
-                        String lineText = "";
-                        TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
-                        if (contentRect.top + mFlashY > lastLineInfo.mY) {
-                            prePosition = lastLineInfo.mStartPos;
-                            lineText = lastLineInfo.mText;
-                            top = lastLineInfo.mY;
                         } else {
-                            for (int i = 0; i < mTextList.size(); i++) {
-                                TextInfo info = mTextList.get(i);
-                                if (i == 0) {
-                                    if (contentRect.top + mFlashY <= info.mY) {
+                            int prePosition = 0;
+                            String lineText = "";
+                            TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
+                            if (contentRect.top + mFlashY > lastLineInfo.mY) {
+                                prePosition = lastLineInfo.mStartPos;
+                                lineText = lastLineInfo.mText;
+                                top = lastLineInfo.mY;
+                            } else {
+                                for (int i = 0; i < mTextList.size(); i++) {
+                                    TextInfo info = mTextList.get(i);
+                                    if (i == 0) {
+                                        if (contentRect.top + mFlashY <= info.mY) {
+                                            lineText = info.mText;
+                                            prePosition = info.mStartPos;
+                                            top = info.mY;
+                                            break;
+                                        }
+                                    } else if (contentRect.top + mFlashY > mTextList.get(i - 1).mY &&
+                                            contentRect.top + mFlashY <= info.mY) {
                                         lineText = info.mText;
                                         prePosition = info.mStartPos;
                                         top = info.mY;
                                         break;
                                     }
-                                } else if (contentRect.top + mFlashY > mTextList.get(i - 1).mY &&
-                                        contentRect.top + mFlashY <= info.mY) {
-                                    lineText = info.mText;
-                                    prePosition = info.mStartPos;
-                                    top = info.mY;
-                                    break;
                                 }
                             }
-                        }
-                        textWidth = PaintManager.getInstance().getWidth(mTextPaint, lineText);
-                        if (textWidth > contentRect.width()) {
-                            flashRight = textX + contentRect.width();
-                        } else {
-                            flashRight = textX + textWidth;
-                        }
-
-                        if (mFlashY <= DEFAULT_FLASH_X) {
-                            if (!TextUtils.isEmpty(lineText)) {
-                                if (textWidth > contentRect.width()) {
-                                    left = contentRect.right;
-                                } else {
-                                    left = contentRect.left + textWidth;
-                                }
-                                mFlashPosition = lineText.length();
+                            textWidth = PaintManager.getInstance().getWidth(mTextPaint, lineText);
+                            if (textWidth > contentRect.width()) {
+                                flashRight = textX + contentRect.width();
                             } else {
-                                left = contentRect.left + contentRect.width() / 2;
-                                mFlashPosition = 0;
+                                flashRight = textX + textWidth;
                             }
-                        } else if (!TextUtils.isEmpty(lineText) && mFlashX < flashLeft) {
-                            mFlashPosition = 0;
-                            left = contentRect.left + textX;
-                        } else if ((!TextUtils.isEmpty(lineText) && mFlashX >= flashRight)) {
-                            mFlashPosition = lineText.length();
-                            left = contentRect.left + textWidth;
-                        } else {
-                            if (!TextUtils.isEmpty(lineText)) {
-                                for (int i = 1; i < lineText.length(); i++) {
-                                    if (mFlashX >= textX +
-                                            PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i)) -
-                                            PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(i - 1, i)) / 2 &&
-                                            mFlashX < textX
-                                                    + PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i + 1)) -
-                                                    +PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(i, i + 1)) / 2) {
-                                        left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i)));
-                                        mFlashPosition = i;
-                                        break;
+
+                            if (mFlashY <= DEFAULT_FLASH_X) {
+                                if (!TextUtils.isEmpty(lineText)) {
+                                    if (textWidth > contentRect.width()) {
+                                        left = contentRect.right;
+                                    } else {
+                                        left = contentRect.left + textWidth;
                                     }
+                                    mFlashPosition = lineText.length();
+                                } else {
+                                    left = contentRect.left + contentRect.width() / 2;
+                                    mFlashPosition = 0;
                                 }
-                            } else {
+                            } else if (!TextUtils.isEmpty(lineText) && mFlashX < flashLeft) {
                                 mFlashPosition = 0;
-                                left = contentRect.left + contentRect.width() / 2;
+                                left = contentRect.left + textX;
+                            } else if ((!TextUtils.isEmpty(lineText) && mFlashX >= flashRight)) {
+                                mFlashPosition = lineText.length();
+                                left = contentRect.left + textWidth;
+                            } else {
+                                if (!TextUtils.isEmpty(lineText)) {
+                                    for (int i = 1; i < lineText.length(); i++) {
+                                        if (mFlashX >= textX +
+                                                PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i)) -
+                                                PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(i - 1, i)) / 2 &&
+                                                mFlashX < textX
+                                                        + PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i + 1)) -
+                                                        +PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(i, i + 1)) / 2) {
+                                            left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, lineText.substring(0, i)));
+                                            mFlashPosition = i;
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    mFlashPosition = 0;
+                                    left = contentRect.left + contentRect.width() / 2;
+                                }
                             }
+                            mFlashPosition += prePosition;
                         }
-                        mFlashPosition += prePosition;
-                    }
-                } else {
-                    mFlashPosition = 0;
-                    top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
-                    left = contentRect.left;
-                }
-
-                left += Const.DP_1;
-                int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
-                if (padding <= 0) {
-                    padding = Const.DP_1 * 2;
-                }
-                canvas.drawLine(left, top - textHeight + this.mTextPaintMetrics.bottom, left, top + this.mTextPaintMetrics.bottom, mFlashPaint);
-            }
-        } else if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
-            if ("24point_blank".equals(mSize)) {
-                if(this.mEditable.isEditable() && this.mEditable.hasFocus() && this.mInputFlash) {
-                    String text = this.getText();
-                    float left;
-                    if(!TextUtils.isEmpty(text)) {
-                        float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
-                        left = contentRect.left + textWidth;
                     } else {
+                        mFlashPosition = 0;
+                        top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
                         left = contentRect.left;
                     }
 
-                    left += (float)Const.DP_1;
-                    int textHeight = PaintManager.getInstance().getHeight(this.mTextPaint);
+                    left += Const.DP_1;
                     int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
-                    if(padding <= 0) {
+                    if (padding <= 0) {
                         padding = Const.DP_1 * 2;
                     }
-
-                    canvas.drawLine(left, (float)(contentRect.top + padding), left, (float)(contentRect.bottom - padding), this.mFlashPaint);
+                    canvas.drawLine(left, top - textHeight + this.mTextPaintMetrics.bottom, left, top + this.mTextPaintMetrics.bottom, mFlashPaint);
                 }
-            } else {
-                super.drawFlash(canvas, blockRect, blockRect);
-            }
+            } else if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
+                if ("24point_blank".equals(mSize)) {
+                    if(this.mEditable.isEditable() && this.mEditable.hasFocus() && this.mInputFlash) {
+                        float left;
+                        if(!TextUtils.isEmpty(text)) {
+                            float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
+                            left = contentRect.left + textWidth;
+                        } else {
+                            left = contentRect.left;
+                        }
 
-        }
+                        left += (float)Const.DP_1;
+                        int textHeight = PaintManager.getInstance().getHeight(this.mTextPaint);
+                        int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
+                        if(padding <= 0) {
+                            padding = Const.DP_1 * 2;
+                        }
+
+                        canvas.drawLine(left, (float)(contentRect.top + padding), left, (float)(contentRect.bottom - padding), this.mFlashPaint);
+                    }
+                } else {
+                    super.drawFlash(canvas, blockRect, blockRect);
+                }
+
+            }
+//        }
     }
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
+//         || mSize.equals("mutiline")
         if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
