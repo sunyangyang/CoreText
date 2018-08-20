@@ -11,8 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.servcie.IServiceManager;
-import com.hyena.framework.servcie.ServiceProvider;
+import com.hyena.framework.service.IServiceManager;
+import com.hyena.framework.service.ServiceProvider;
 import com.hyena.framework.utils.MsgCenter;
 import com.hyena.framework.utils.ToastUtils;
 import com.igexin.sdk.PushManager;

@@ -5,7 +5,7 @@ package com.knowbox.base.service.push;
 
 import android.content.Context;
 
-import com.hyena.framework.servcie.BaseService;
+import com.hyena.framework.service.BaseService;
 
 /**
  * 消息推送服务

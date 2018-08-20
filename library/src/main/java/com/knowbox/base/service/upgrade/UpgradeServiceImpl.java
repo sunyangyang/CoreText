@@ -3,7 +3,7 @@ package com.knowbox.base.service.upgrade;
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
-import com.hyena.framework.servcie.action.IOHandlerService;
+import com.hyena.framework.service.action.IOHandlerService;
 import com.hyena.framework.utils.AppPreferences;
 import com.hyena.framework.utils.BaseApp;
 import com.hyena.framework.utils.VersionUtils;

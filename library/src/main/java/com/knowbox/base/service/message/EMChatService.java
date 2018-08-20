@@ -3,7 +3,7 @@
  */
 package com.knowbox.base.service.message;
 
-import com.hyena.framework.servcie.BaseService;
+import com.hyena.framework.service.BaseService;
 
 /**
  * 环信消息服务
