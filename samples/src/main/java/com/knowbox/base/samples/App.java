@@ -20,13 +20,12 @@ import com.hyena.framework.download.task.TaskFactory;
 import com.hyena.framework.download.task.UrlTask;
 import com.hyena.framework.network.DefaultNetworkSensor;
 import com.hyena.framework.network.NetworkProvider;
-import com.hyena.framework.servcie.BaseServiceManager;
-import com.hyena.framework.servcie.ServiceProvider;
+import com.hyena.framework.service.BaseServiceManager;
+import com.hyena.framework.service.ServiceProvider;
 import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.coretext.DefaultBlockBuilder;
 import com.knowbox.base.service.log.BoxLogServerImpl;
 import com.knowbox.base.service.log.BoxLogService;
-import com.knowbox.base.service.log.LogService;
 import com.knowbox.base.service.log.db.LogTable;
 
 /**
@@ -38,7 +37,7 @@ public class App extends BaseApp {
     public void initApp() {
         super.initApp();
         LogUtil.setDebug(true);
-        LogUtil.setLevel(Logger.DO_NOT_WRITE_LOG);
+        LogUtil.setLevel(Logger.NONE);
         LogUtil.v("yangzc", "pid: " + Process.myPid());
         //初始化底层服务配置
         FrameworkConfig.init(this).setAppRootDir(Environment.getExternalStorageDirectory())

@@ -7,7 +7,7 @@ import com.hyena.framework.config.FrameworkConfig;
 import com.hyena.framework.database.DataBaseManager;
 import com.hyena.framework.network.NetworkProvider;
 import com.hyena.framework.network.NetworkSensor;
-import com.hyena.framework.servcie.action.IOHandlerService;
+import com.hyena.framework.service.action.IOHandlerService;
 import com.hyena.framework.utils.AppPreferences;
 import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.service.log.db.LogItem;

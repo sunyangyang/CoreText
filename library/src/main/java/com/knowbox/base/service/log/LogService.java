@@ -1,6 +1,6 @@
 package com.knowbox.base.service.log;
 
-import com.hyena.framework.servcie.BaseService;
+import com.hyena.framework.service.BaseService;
 
 /**
  * Created by yangzc on 17/9/19.

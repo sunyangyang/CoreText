@@ -1,6 +1,6 @@
 package com.knowbox.base.service.upload;
 
-import com.hyena.framework.servcie.BaseService;
+import com.hyena.framework.service.BaseService;
 
 
 /**

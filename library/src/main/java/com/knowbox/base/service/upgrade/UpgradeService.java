@@ -4,7 +4,7 @@
 package com.knowbox.base.service.upgrade;
 
 
-import com.hyena.framework.servcie.BaseService;
+import com.hyena.framework.service.BaseService;
 import com.knowbox.base.online.Version;
 
 /**
