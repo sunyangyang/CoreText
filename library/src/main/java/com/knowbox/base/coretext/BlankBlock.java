@@ -72,7 +72,7 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 400;
             } else if ("sudoku_blank".equals(getSize())) {
                 mTextLength = 1;
-            } else if ("mutiline".equals(getSize())) {
+            } else if ("multiline".equals(getSize())) {
                 mTextLength = 200;
             } else {
                 mTextLength = 20;
@@ -133,7 +133,7 @@ public class BlankBlock extends CYEditBlock {
                     "express".equals(size) ||
                     "letter".equals(size) ||
                     "delivery".equals(size) ||
-                    "mutiline".equals(size)) {
+                    "multiline".equals(size)) {
                 ((EditFace)getEditFace()).setFlashPosition(text.length());
                 updateSize(text);
                 requestLayout();
@@ -250,7 +250,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("24point_blank".equals(size)) {
                 this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
                 this.mHeight = Const.DP_1 * 45;
-            } else if ("mutiline".equals(size)) {
+            } else if ("multiline".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight);
@@ -299,7 +299,7 @@ public class BlankBlock extends CYEditBlock {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight);
-            } else if ("mutiline".equals(size)) {
+            } else if ("multiline".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight);

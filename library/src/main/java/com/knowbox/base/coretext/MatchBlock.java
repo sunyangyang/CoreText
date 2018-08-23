@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.hyena.coretext.TextEnv;
@@ -1013,7 +1012,9 @@ public class MatchBlock extends CYPlaceHolderBlock {
                 result += answers[i].toString() + ",";
             }
         }
-        result = result.substring(0, result.length() - 1);
+        if (!TextUtils.isEmpty(result)) {
+            result = result.substring(0, result.length() - 1);
+        }
 
         String resultForLayout = "";
         for (int i = 0; i < mList.size(); i++) {

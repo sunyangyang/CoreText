@@ -328,8 +328,20 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                         }
                     }
                 }
-
+                //沪教版将进位提前一位
+                if (mStyle[i] == CalculationStyle.Multiplication || mStyle[i] == CalculationStyle.Plus && mStyleType == TYPE_HU) {
+                    for (int k = 0; k < mFlag.length; k++) {
+                        String[] flags = mFlag[k];
+                        for (int j = 0; j < flags.length - 1; j++) {
+                            if (flags[j + 1] != null) {
+                                flags[j] = flags[j + 1];
+                                flags[j + 1] = null;
+                            }
+                        }
+                    }
+                }
             }
+
             //linesPosition 在之前++过
             int k;
             if (linesPosition - 1 == 0) {

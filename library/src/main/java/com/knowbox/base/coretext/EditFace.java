@@ -132,7 +132,7 @@ public class EditFace extends CYEditFace {
         mFlashPaint.setColor(0xff3eabff);
         mFlashPaint.setStrokeWidth(Const.DP_1);
         String text = getText();
-        if (mSize.equals("mutiline")) {
+        if (mSize.equals("multiline")) {
             if (mTextList.size() > 0) {
                 TextInfo lastLineInfo = mTextList.get(mTextList.size() - 1);
                 try {
@@ -295,7 +295,7 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("mutiline")) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("multiline")) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
                 canvas.save();
