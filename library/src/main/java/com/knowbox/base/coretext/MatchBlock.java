@@ -25,15 +25,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import static com.knowbox.base.utils.BaseConstant.ERROR_COLOR;
+import static com.knowbox.base.utils.BaseConstant.MATCH_VALUE_ID;
+import static com.knowbox.base.utils.BaseConstant.RIGHT_COLOR;
+import static com.knowbox.base.utils.BaseConstant.SAVE_STATUS_ID;
+
 /**
  * Created by sunyangyang on 2017/10/23.
  */
 
 public class MatchBlock extends CYPlaceHolderBlock {
-    public static final int MATCH_VALUE_ID = Integer.MAX_VALUE;
-    public static final int RIGHT_COLOR = Integer.MAX_VALUE - 2;
-    public static final int ERROR_COLOR = Integer.MAX_VALUE - 3;
-    private final int SAVE_STATUS_ID = Integer.MAX_VALUE - 1;
     private List<MyMatchStatus> mList = new ArrayList<MyMatchStatus>();
     private List<MatchInfo> mLeftList = new ArrayList<MatchInfo>();
     private List<MatchInfo> mRightList = new ArrayList<MatchInfo>();

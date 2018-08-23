@@ -34,7 +34,6 @@ import com.nineoldandroids.animation.AnimatorSet;
 
 import java.util.List;
 
-import static com.knowbox.base.coretext.MatchBlock.MATCH_VALUE_ID;
 import static com.knowbox.base.utils.BaseConstant.DELIVERY_ANSWER_ID;
 import static com.knowbox.base.utils.BaseConstant.DELIVERY_CONTENT_ID;
 

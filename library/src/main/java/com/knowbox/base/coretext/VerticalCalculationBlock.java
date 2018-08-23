@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.knowbox.base.utils.BaseConstant.VERTICAL_SCALE;
+
 /**
  * Created by sunyangyang on 2017/10/11.
  */
@@ -40,7 +42,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     public static final int RECT_PADDING_SIZE = Const.DP_1 * 10;
     private float mScale = 1.0f;
     private float mFlagScale = 1.37f;
-    public static final int SCALE = Integer.MAX_VALUE;
 
     private int mLeftColumns = 5;
     private int mRows;
@@ -99,7 +100,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     }
 
     private void init(TextEnv textEnv, String content) {
-        EditableValue value = textEnv.getEditableValue(SCALE);
+        EditableValue value = textEnv.getEditableValue(VERTICAL_SCALE);
         try {
             if (value != null) {
                 mScale = Float.parseFloat(value.getValue());
