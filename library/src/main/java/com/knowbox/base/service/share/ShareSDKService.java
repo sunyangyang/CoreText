@@ -169,6 +169,8 @@ public class ShareSDKService implements ShareService {
         params.setComment(content.mDescription);
         params.setSite(content.mSiteName);
         params.setSiteUrl(content.mSiteUrl);
+        params.setWxUserName(content.mWxUserName);
+        params.setWxPath(content.mWxPath);
         return params.toMap();
     }
 
@@ -217,36 +219,42 @@ public class ShareSDKService implements ShareService {
     private int getShareType(HashMap<String, Object> data, boolean isWechat){
         int shareType = Platform.SHARE_TEXT;
         String imagePath = String.valueOf(data.get("imagePath"));
-        if (imagePath != null && (new File(imagePath)).exists()) {
-            shareType = Platform.SHARE_IMAGE;
-            if (imagePath.endsWith(".gif") && isWechat) {
-                shareType = Platform.SHARE_EMOJI;
-            } else if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
-                shareType = Platform.SHARE_WEBPAGE;
-                if (data.containsKey("musicUrl") && !TextUtils.isEmpty(data.get("musicUrl").toString()) && isWechat) {
-                    shareType = Platform.SHARE_MUSIC;
-                }
-            }
+        if (data.containsKey("wxUserName") && !TextUtils.isEmpty(data.get("wxUserName").toString()) &&
+                data.containsKey("wxPath") && !TextUtils.isEmpty(data.get("wxPath").toString()) &&
+                isWechat) {
+            shareType = Platform.SHARE_WXMINIPROGRAM;
         } else {
-            Bitmap viewToShare = ResHelper.forceCast(data.get("viewToShare"));
-            if (viewToShare != null && !viewToShare.isRecycled()) {
+            if (imagePath != null && (new File(imagePath)).exists()) {
                 shareType = Platform.SHARE_IMAGE;
-                if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
+                if (imagePath.endsWith(".gif") && isWechat) {
+                    shareType = Platform.SHARE_EMOJI;
+                } else if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
                     shareType = Platform.SHARE_WEBPAGE;
                     if (data.containsKey("musicUrl") && !TextUtils.isEmpty(data.get("musicUrl").toString()) && isWechat) {
                         shareType = Platform.SHARE_MUSIC;
                     }
                 }
             } else {
-                Object imageUrl = data.get("imageUrl");
-                if (imageUrl != null && !TextUtils.isEmpty(String.valueOf(imageUrl))) {
+                Bitmap viewToShare = ResHelper.forceCast(data.get("viewToShare"));
+                if (viewToShare != null && !viewToShare.isRecycled()) {
                     shareType = Platform.SHARE_IMAGE;
-                    if (String.valueOf(imageUrl).endsWith(".gif") && isWechat) {
-                        shareType = Platform.SHARE_EMOJI;
-                    } else if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
+                    if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
                         shareType = Platform.SHARE_WEBPAGE;
                         if (data.containsKey("musicUrl") && !TextUtils.isEmpty(data.get("musicUrl").toString()) && isWechat) {
                             shareType = Platform.SHARE_MUSIC;
+                        }
+                    }
+                } else {
+                    Object imageUrl = data.get("imageUrl");
+                    if (imageUrl != null && !TextUtils.isEmpty(String.valueOf(imageUrl))) {
+                        shareType = Platform.SHARE_IMAGE;
+                        if (String.valueOf(imageUrl).endsWith(".gif") && isWechat) {
+                            shareType = Platform.SHARE_EMOJI;
+                        } else if (data.containsKey("url") && !TextUtils.isEmpty(data.get("url").toString())) {
+                            shareType = Platform.SHARE_WEBPAGE;
+                            if (data.containsKey("musicUrl") && !TextUtils.isEmpty(data.get("musicUrl").toString()) && isWechat) {
+                                shareType = Platform.SHARE_MUSIC;
+                            }
                         }
                     }
                 }

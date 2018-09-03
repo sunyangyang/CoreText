@@ -243,7 +243,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("sudoku_blank".equals(size)) {
                 this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
                 this.mHeight = mWidth + Const.DP_1 * 3;
@@ -253,7 +253,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("multiline".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -298,11 +298,11 @@ public class BlankBlock extends CYEditBlock {
             } else if ("delivery".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("multiline".equals(size)) {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
-                setBlankWidthAndHeight(width, maxWidth, text, textHeight);
+                setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("sudoku_blank".equals(size)) {
                 this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;
                 this.mHeight = mWidth + Const.DP_1 * 3;
@@ -316,7 +316,7 @@ public class BlankBlock extends CYEditBlock {
         }
     }
 
-    private void setBlankWidthAndHeight(float width, int maxWidth, String text, int textHeight) {
+    private void setBlankWidthAndHeight(float width, int maxWidth, String text, int textHeight, boolean isEditable) {
         int line = 0;
         if (width > maxWidth) {
             mWidth = maxWidth;
@@ -336,7 +336,9 @@ public class BlankBlock extends CYEditBlock {
             this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
             if (mLines != line) {
                 mLines = line;
-                notifyLayoutChange();
+                if (isEditable) {
+                    notifyLayoutChange();
+                }
             }
         } else {
             this.mWidth = (int) width;

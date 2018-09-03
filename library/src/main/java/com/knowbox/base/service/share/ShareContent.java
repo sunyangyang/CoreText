@@ -27,4 +27,8 @@ public class ShareContent {
     public String mDescription;
     //本地图片路径
     public String mLocalImgPath;
+    //微信小程序原始ID
+    public String mWxUserName;
+    //微信小程序页面路径
+    public String mWxPath;
 }
