@@ -5,17 +5,20 @@ package com.knowbox.base.utils;
  */
 
 public class BaseConstant {
-    public static final int BLANK_SET_PADDING = 10000;
+    public static final int BLANK_SET_PADDING = 100;
 
-    public static final int DELIVERY_CONTENT_ID = 20000;
-    public static final int DELIVERY_COLOR_ID = 20001;
-    public static final int DELIVERY_ANSWER_ID = 20002;
-    public static final int DELIVERY_MAX_COUNT = 20003;
+    public static final int DELIVERY_CONTENT_ID = 200;
+    public static final int DELIVERY_COLOR_ID = 201;
+    public static final int DELIVERY_ANSWER_ID = 202;
+    public static final int DELIVERY_MAX_COUNT = 203;
 
-    public static final int MATCH_VALUE_ID = 3000;
-    public static final int RIGHT_COLOR = 3001;
-    public static final int ERROR_COLOR = 30002;
-    public static final int SAVE_STATUS_ID = 3003;
+    public static final int MATCH_VALUE_ID = 300;
+    public static final int RIGHT_COLOR = 301;
+    public static final int ERROR_COLOR = 3002;
+    public static final int SAVE_STATUS_ID = 303;
 
-    public static final int VERTICAL_SCALE = 4000;
+    public static final int VERTICAL_SCALE = 400;
+
+    public static final int BLANK_SIZE = 500;
+    public static final String BLANK_WITH_PINYIN_HEIGHT = "pinyin_height";
 }
