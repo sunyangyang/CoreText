@@ -10,25 +10,25 @@ package com.knowbox.base.service.share;
 public class ShareContent {
 
     //图片标题
-    public String mShareTitleUrl;
+    public String mShareTitleUrl = "";
     //分享的图片
-    public String mUrlImage;
+    public String mUrlImage = "";
     //分享的内容
-    public String mShareContent;
+    public String mShareContent = "";
     //分享的标题
-    public String mShareTitle;
+    public String mShareTitle = "";
     //网站名称
-    public String mSiteName;
+    public String mSiteName = "";
     //点击目标
-    public String mSiteUrl;
+    public String mSiteUrl = "";
     //分享的URL
-    public String mShareUrl;
+    public String mShareUrl = "";
     //描述
-    public String mDescription;
+    public String mDescription = "";
     //本地图片路径
-    public String mLocalImgPath;
+    public String mLocalImgPath = "";
     //微信小程序原始ID
-    public String mWxUserName;
+    public String mWxUserName = "";
     //微信小程序页面路径
-    public String mWxPath;
+    public String mWxPath = "";
 }
