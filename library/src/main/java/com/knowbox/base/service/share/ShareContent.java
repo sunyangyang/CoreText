@@ -10,7 +10,7 @@ package com.knowbox.base.service.share;
 public class ShareContent {
 
     //图片标题
-    public String mShareTitleUrl;
+    public String mShareTitleUrlz;
     //分享的图片
     public String mUrlImage;
     //分享的内容

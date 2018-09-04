@@ -39,10 +39,18 @@ public class EditFace extends CYEditFace {
     private int mFlashPosition = -1;
     private Paint mBorderFillPaint;
     private Paint mBorderOutPaint;
+    private Paint mPinYinPaint;
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
         this.editable = editable;
+        Paint textPaint = getTextPaint();
+        mPinYinPaint = new Paint(textPaint);
+        mPinYinPaint.setTextSize(textPaint.getTextSize() * 0.6f);
+    }
+
+    public Paint getPinYinPaint() {
+        return mPinYinPaint;
     }
 
     public int getRowsVerticalSpacing() {
@@ -350,7 +358,10 @@ public class EditFace extends CYEditFace {
 
     @Override
     public void onDraw(Canvas canvas, Rect blockRect, Rect contentRect) {
-        getTextList(contentRect);
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("multiline")) {
+            getTextList(contentRect);
+        }
+        mPinYinPaint.setColor(getTextPaint().getColor());
         super.onDraw(canvas, blockRect, contentRect);
     }
 

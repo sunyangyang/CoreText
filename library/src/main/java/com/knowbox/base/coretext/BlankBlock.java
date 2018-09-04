@@ -58,6 +58,10 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
+            if (TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_PIN_YIN_SIZE)) {
+                this.size = "pinyin";
+            }
+
             if ("img_blank".equals(getSize())) {
                 mTextLength = 4;
             } else if ("big_img_blank".equals(getSize())) {
@@ -74,6 +78,8 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("multiline".equals(getSize())) {
                 mTextLength = 200;
+            } else if ("pinyin".equals(getSize())) {
+                mTextLength = 100;
             } else {
                 mTextLength = 20;
             }
