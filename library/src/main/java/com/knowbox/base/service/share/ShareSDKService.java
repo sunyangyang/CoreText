@@ -219,8 +219,8 @@ public class ShareSDKService implements ShareService {
     private int getShareType(HashMap<String, Object> data, boolean isWechat){
         int shareType = Platform.SHARE_TEXT;
         String imagePath = String.valueOf(data.get("imagePath"));
-        if (data.containsKey("wxUserName") && data.get("wxUserName") != null && !TextUtils.isEmpty(data.get("wxUserName").toString()) &&
-                data.containsKey("wxPath") && data.get("wxPath") != null && !TextUtils.isEmpty(data.get("wxPath").toString()) &&
+        if (data.containsKey("wxUserName") && !TextUtils.isEmpty(data.get("wxUserName").toString()) &&
+                data.containsKey("wxPath") && !TextUtils.isEmpty(data.get("wxPath").toString()) &&
                 isWechat) {
             shareType = Platform.SHARE_WXMINIPROGRAM;
         } else {

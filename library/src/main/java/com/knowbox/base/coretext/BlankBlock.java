@@ -10,7 +10,6 @@ import android.util.Log;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
-import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
@@ -18,11 +17,6 @@ import com.knowbox.base.utils.BaseConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by yangzc on 17/2/6.
@@ -64,10 +58,6 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
-            if (TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_WITH_PINYIN_HEIGHT)) {
-                size = "pinyin";
-            }
-
             if ("img_blank".equals(getSize())) {
                 mTextLength = 4;
             } else if ("big_img_blank".equals(getSize())) {
@@ -84,8 +74,6 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("multiline".equals(getSize())) {
                 mTextLength = 200;
-            } else if ("pinyin".equals(size)) {
-                mTextLength = 100;
             } else {
                 mTextLength = 20;
             }
@@ -151,27 +139,6 @@ public class BlankBlock extends CYEditBlock {
                 requestLayout();
             } else {
                 postInvalidateThis();
-            }
-        }
-    }
-
-    private boolean getPinyin(String content) {
-        List<CYTextBlock.Word> words = new ArrayList();
-        Pattern pattern = Pattern.compile(".*?\\(!.*?!\\)");
-        Matcher matcher = pattern.matcher(content);
-        String text = content;
-        int count;
-        if (content.contains("(!") && content.contains("!)")) {
-            for(; matcher.find(); text = content.substring(matcher.end())) {
-                String value = matcher.group();
-                String word = value.replaceFirst("\\(!.*?!\\)", "");
-                String pinyin = value.replace(word, "").replaceAll("\\(!", "").replaceAll("!\\)", "");
-                if (!TextUtils.isEmpty(word)) {
-                    for(count = 0; count < word.length(); ++count) {
-                        String wordItem = word.charAt(count) + "";
-                        words.add(new CYTextBlock.Word(wordItem, count == word.length() - 1 ? pinyin : ""));
-                    }
-                }
             }
         }
     }
@@ -254,14 +221,6 @@ public class BlankBlock extends CYEditBlock {
         return size;
     }
 
-    protected void updateSize(String text, String pinyin) {
-        if (TextUtils.isEmpty(pinyin)) {
-            updateSize(text);
-        } else {
-
-        }
-    }
-
     protected void updateSize(String text) {
         int textHeight = getTextHeight(((EditFace)getEditFace()).getTextPaint());
         int maxWidth = getTextEnv().getSuggestedPageWidth() - mPaddingHorizontal;
@@ -295,10 +254,6 @@ public class BlankBlock extends CYEditBlock {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
-            } else if ("pinyin".equals(size)) {
-                int textWidth = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
-                int pinyinWidth = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
-                this.mHeight = textHeight + getTextHeight(((EditFace)getEditFace()).getPinyinTextPaint());
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
