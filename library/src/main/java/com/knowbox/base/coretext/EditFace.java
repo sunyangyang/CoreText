@@ -10,17 +10,22 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
+import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
+import static com.knowbox.base.coretext.BlankBlock.PLACE_HOLDER_WORD;
 
 /**
  * Created by yangzc on 17/2/14.
@@ -40,6 +45,7 @@ public class EditFace extends CYEditFace {
     private Paint mBorderFillPaint;
     private Paint mBorderOutPaint;
     private Paint mPinYinPaint;
+    private Paint.FontMetrics mPinYinPaintMetrics;
 
     public EditFace(TextEnv textEnv, ICYEditable editable) {
         super(textEnv, editable);
@@ -47,6 +53,7 @@ public class EditFace extends CYEditFace {
         Paint textPaint = getTextPaint();
         mPinYinPaint = new Paint(textPaint);
         mPinYinPaint.setTextSize(textPaint.getTextSize() * 0.6f);
+        mPinYinPaintMetrics = mPinYinPaint.getFontMetrics();
     }
 
     public Paint getPinYinPaint() {
@@ -155,6 +162,45 @@ public class EditFace extends CYEditFace {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        } else if ("pinyin".equals(mSize)) {
+            if (this.mEditable.isEditable() && this.mEditable.hasFocus() && this.mInputFlash) {
+                List<CYTextBlock.Word> words = parseWords(text);
+
+                float left;
+                if (!TextUtils.isEmpty(text)) {
+                    float textWidth = PaintManager.getInstance().getWidth(this.mTextPaint, text);
+                    String pinyin = "";
+                    if (words != null && words.size() > 0) {
+                        for (int i = 0; i < words.size(); i++) {
+                            pinyin += words.get(i).pinyin;
+                        }
+                        textWidth = PaintManager.getInstance().getWidth(mPinYinPaint, pinyin) + PLACE_HOLDER_WORD * words.size();
+                    }
+                    if (textWidth > (float)contentRect.width()) {
+                        left = (float)contentRect.right;
+                    } else {
+                        if (words != null && words.size() > 0) {
+                            for (int i = 0; i < words.size(); i++) {
+                                pinyin += words.get(i).pinyin;
+                            }
+                            left = (float)contentRect.left + ((float)contentRect.width() + textWidth) / 2.0F;
+                        } else {
+                            left = (float)(contentRect.left + contentRect.width() / 2);
+                        }
+                    }
+                } else {
+                    left = (float)(contentRect.left + contentRect.width() / 2);
+                }
+
+                left += (float)Const.DP_1;
+                int textHeight = PaintManager.getInstance().getHeight(this.mTextPaint);
+                int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
+                if (padding <= 0) {
+                    padding = Const.DP_1 * 2;
+                }
+
+                canvas.drawLine(left, (float)(contentRect.top + padding), left, (float)(contentRect.bottom - padding), this.mFlashPaint);
             }
         } else {
             if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
@@ -331,6 +377,36 @@ public class EditFace extends CYEditFace {
                 canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
             }
+        } else if ("pinyin".equals(mSize)) {
+            List<CYTextBlock.Word> words = parseWords(text);
+            if (words != null && words.size() > 0) {
+                canvas.save();
+                canvas.clipRect(contentRect);
+                float x = contentRect.left;
+                TextEnv.Align align = this.mTextEnv.getTextAlign();
+                float y;
+                int height = PaintManager.getInstance().getHeight(this.mTextPaint) + PaintManager.getInstance().getHeight(this.mPinYinPaint);
+                int textHeight = PaintManager.getInstance().getHeight(this.mTextPaint);
+                if(align == TextEnv.Align.TOP) {
+                    y = (float)(contentRect.top + height) - this.mTextPaintMetrics.bottom;
+                } else if(align == TextEnv.Align.CENTER) {
+                    y = (float)(contentRect.top + (contentRect.height() + height) / 2) - this.mTextPaintMetrics.bottom;
+                } else {
+                    y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom;
+                }
+                canvas.translate(x, 0);
+                for (int i = 0; i < words.size(); i++) {
+                    CYTextBlock.Word word = words.get(i);
+                    if (i > 0) {
+                        canvas.translate(PaintManager.getInstance().getWidth(mPinYinPaint, words.get(i - 1).pinyin) + PLACE_HOLDER_WORD, 0);
+                    }
+                    canvas.drawText(word.pinyin, PLACE_HOLDER_WORD / 2, y - textHeight, mPinYinPaint);
+                    canvas.drawText(word.word, (PLACE_HOLDER_WORD + PaintManager.getInstance().getWidth(mPinYinPaint, word.pinyin) - PaintManager.getInstance().getWidth(mTextPaint, word.word)) / 2, y, mTextPaint);
+                }
+                canvas.restore();
+            }
+
+
         } else if (!mTextEnv.isEditable()) {
             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 mBottomLinePaint.set(mTextPaint);
@@ -441,5 +517,45 @@ public class EditFace extends CYEditFace {
             info.mY = y;
             mTextList.add(info);
         }
+    }
+
+    public List<CYTextBlock.Word> parseWords(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return null;
+        }
+        List<CYTextBlock.Word> words = new ArrayList();
+        Pattern pattern = Pattern.compile(".*?\\(!.*?!\\)");
+        Matcher matcher = pattern.matcher(content);
+        String text = content;
+        int count;
+        if (content.contains("(!") && content.contains("!)")) {
+            for(; matcher.find(); text = content.substring(matcher.end())) {
+                String value = matcher.group();
+                String word = value.replaceFirst("\\(!.*?!\\)", "");
+                String pinyin = value.replace(word, "").replaceAll("\\(!", "").replaceAll("!\\)", "");
+                if (!TextUtils.isEmpty(word)) {
+                    for(count = 0; count < word.length(); ++count) {
+                        String wordItem = word.charAt(count) + "";
+                        words.add(new CYTextBlock.Word(wordItem, count == word.length() - 1 ? pinyin : ""));
+                    }
+                }
+            }
+        }
+
+        if (!TextUtils.isEmpty(text)) {
+            char[] chs = text.toCharArray();
+
+            for(int i = 0; i < chs.length; ++i) {
+                int wordStart = i;
+
+                for(count = 1; i + 1 < chs.length && PaintManager.isEnglish(chs[i + 1]); ++i) {
+                    ++count;
+                }
+
+                words.add(new CYTextBlock.Word(new String(chs, wordStart, count), ""));
+            }
+        }
+
+        return words;
     }
 }

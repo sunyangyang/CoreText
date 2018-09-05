@@ -215,6 +215,8 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\sqrt{16}\"}#+#{\"type\":\"latex\",\"content\":\"\\\\sqrt{9}\"}#=#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}##{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#3.14×5#{\"type\":\"latex\",\"content\":\"^{2}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{90}{360}\"}#=#{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"express\"}##{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
+        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
+        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
 //        builder.setEditable(false);
         builder.build();
         builder.setEditableValue(2, "5");
@@ -260,7 +262,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                         String currentText = mQtvQuestion.getText(mFocusTabId);
                         if (currentText == null)
                             currentText = "";
-                        String text = textView.getText().toString();
+                        String text = textView.getText().toString() + "(!fnasjkf!)";
                         editable.setText(currentText + text);
 //                        if ("#".equals(text)) {
 //                            ((BlankBlock)editable).breakLine();

@@ -20,5 +20,6 @@ public class BaseConstant {
     public static final int VERTICAL_SCALE = 400;
 
     public static final int BLANK_SIZE = 500;
+    public static final int BLANK_PIN_YIN_PADDING = 501;
     public static final String BLANK_PIN_YIN_SIZE = "blank_pin_yin_size";
 }

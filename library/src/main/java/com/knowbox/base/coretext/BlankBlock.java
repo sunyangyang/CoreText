@@ -10,6 +10,7 @@ import android.util.Log;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditBlock;
 import com.hyena.coretext.blocks.CYEditFace;
+import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
@@ -17,6 +18,11 @@ import com.knowbox.base.utils.BaseConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by yangzc on 17/2/6.
@@ -45,6 +51,8 @@ public class BlankBlock extends CYEditBlock {
     public static final int DEFAULT_FLASH_X = -1000;
     public static final int DEFAULT_FLASH_Y = -1000;
     public static final String TWPoint = "=24 ";
+    public static int PLACE_HOLDER_WORD = 4;//字母大小为字的0.6倍，但是至少有两个字母，所以按照字母宽度来算，拼音之间应有间距
+
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         init(content);
@@ -58,8 +66,16 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
-            if (TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_PIN_YIN_SIZE)) {
+            if (getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE) != null &&
+                    TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_PIN_YIN_SIZE)) {
                 this.size = "pinyin";
+                if (getTextEnv().getEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING) != null) {
+                    try {
+                        PLACE_HOLDER_WORD = Integer.valueOf(getTextEnv().getEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING).getValue());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             if ("img_blank".equals(getSize())) {
@@ -139,7 +155,8 @@ public class BlankBlock extends CYEditBlock {
                     "express".equals(size) ||
                     "letter".equals(size) ||
                     "delivery".equals(size) ||
-                    "multiline".equals(size)) {
+                    "multiline".equals(size) ||
+                    "pinyin".equals(size)) {
                 ((EditFace)getEditFace()).setFlashPosition(text.length());
                 updateSize(text);
                 requestLayout();
@@ -260,6 +277,21 @@ public class BlankBlock extends CYEditBlock {
                 float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
+            } else if ("pinyin".equals(size)) {
+                List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                int width = 0;
+                String content = "";
+                if (words != null) {
+                    for (int i = 0; i < words.size(); i++) {
+                        content += words.get(i).pinyin;
+                    }
+                    width = (int) Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(((EditFace)getEditFace())
+                            .getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
+                } else {
+                    width = Const.DP_1 * 32;
+                }
+                this.mWidth = width;
+                this.mHeight = textHeight + getTextHeight(((EditFace)getEditFace()).getPinYinPaint());
             } else {
                 int width = getTextWidth(((EditFace)getEditFace()).getTextPaint(), text);
                 this.mWidth = width;
@@ -315,6 +347,24 @@ public class BlankBlock extends CYEditBlock {
             } else if ("24point_blank".equals(size)) {
                 this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
                 this.mHeight = Const.DP_1 * 45;
+            } else if ("pinyin".equals(size)) {
+                List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                int width = 0;
+                String content = "";
+                if (words != null) {
+                    for (int i = 0; i < words.size(); i++) {
+                        content += words.get(i).pinyin;
+                    }
+                    width = (int) Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(((EditFace)getEditFace())
+                            .getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
+                } else {
+                    width = Const.DP_1 * 32;
+                }
+                this.mWidth = width;
+                if (mWidth > getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4) {
+                    mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 4;
+                }
+                this.mHeight = textHeight + getTextHeight(((EditFace)getEditFace()).getPinYinPaint());
             } else {
                 this.mWidth = Const.DP_1 * 50;
                 this.mHeight = textHeight;
