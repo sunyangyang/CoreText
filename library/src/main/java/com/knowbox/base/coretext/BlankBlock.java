@@ -51,7 +51,7 @@ public class BlankBlock extends CYEditBlock {
     public static final int DEFAULT_FLASH_X = -1000;
     public static final int DEFAULT_FLASH_Y = -1000;
     public static final String TWPoint = "=24 ";
-    public static int PLACE_HOLDER_WORD = 4;//字母大小为字的0.6倍，但是至少有两个字母，所以按照字母宽度来算，拼音之间应有间距
+    public static int PLACE_HOLDER_WORD = 20;//字母大小为字的0.6倍，但是至少有两个字母，所以按照字母宽度来算，拼音之间应有间距
 
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
