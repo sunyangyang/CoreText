@@ -215,12 +215,16 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\sqrt{16}\"}#+#{\"type\":\"latex\",\"content\":\"\\\\sqrt{9}\"}#=#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}##{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#3.14×5#{\"type\":\"latex\",\"content\":\"^{2}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{90}{360}\"}#=#{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"express\"}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#23×6=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 5}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"1\", \"left_column\": 4, \"right_column\": 0, \"content\": [{\"method\": \"multiplication\", \"members\": [{\"value\": [\"2\", \"3\"], \"explain\": []}, {\"value\": [\"×\", \"\", \"\", \"6\"], \"explain\": []}], \"carry_flag\": [\"#{blank2}#\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank4}#\", \"#{blank3}#\", \"#{blank1}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#小(!xiǎo!)姑(!gū!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，被(!bèi!)大(!dà!)灰(!huī!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"letter\"}#吃(!chī!)。#{\"type\":\"para_end\"}#";
+//        question = "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FpTxSCYkBROhOx3kAsc54d76WaTw\",\"size\":\"big_image\",\"id\":1,\"width\":\"89px\",\"height\":\"89px\"}#比轻";
+        question = "#{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom often #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}# to school.#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
+        builder.setEditableValue(1, " nlkandl  nkldnkal kl k dnkla nkld nlkasdnkan dklsand klank adlk asndkl nakld nakl ndlka nklfn ");
 //        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
 //        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
-//        builder.setEditable(false);
+        builder.setEditable(false);
+
         builder.build();
-        builder.setEditableValue(2, "5");
 //        builder.setEditable(false);
 
 //        handler.sendEmptyMessageDelayed(0, 1000);
