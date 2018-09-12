@@ -349,13 +349,21 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("multiline")) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || "multiline".equals(mSize)) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
                 canvas.save();
                 canvas.clipRect(contentRect);
                 for (int i = 0; i < mTextList.size(); i++) {
-                    canvas.drawText(mTextList.get(i).mText, x, mTextList.get(i).mY, this.mTextPaint);
+                    TextInfo info = mTextList.get(i);
+                    canvas.drawText(info.mText, x, info.mY, this.mTextPaint);
+                    if (!mTextEnv.isEditable() && hasBottomLine) {
+                        mBottomLinePaint.set(mTextPaint);
+                        mBottomLinePaint.setStrokeWidth(Const.DP_1);
+                        float y = info.mY + this.mTextPaintMetrics.descent;
+                        float textWidth = PaintManager.getInstance().getWidth(mTextPaint, info.mText);
+                        canvas.drawLine(x, y, x + textWidth, y, this.mBottomLinePaint);
+                    }
                 }
                 canvas.restore();
             }
@@ -402,11 +410,15 @@ public class EditFace extends CYEditFace {
                     }
                     canvas.drawText(word.pinyin, PLACE_HOLDER_WORD / 2, y - textHeight, mPinYinPaint);
                     canvas.drawText(word.word, (PLACE_HOLDER_WORD + PaintManager.getInstance().getWidth(mPinYinPaint, word.pinyin) - PaintManager.getInstance().getWidth(mTextPaint, word.word)) / 2, y, mTextPaint);
+                    if (!mTextEnv.isEditable() && hasBottomLine) {
+                        mBottomLinePaint.set(mTextPaint);
+                        mBottomLinePaint.setStrokeWidth(Const.DP_1);
+                        float lineY = y + this.mTextPaintMetrics.descent;
+                        canvas.drawLine(0, lineY, PaintManager.getInstance().getWidth(mPinYinPaint, word.pinyin) + PLACE_HOLDER_WORD, lineY, this.mBottomLinePaint);
+                    }
                 }
                 canvas.restore();
             }
-
-
         } else if (!mTextEnv.isEditable()) {
             if (BlankBlock.CLASS_FILL_IN.equals(mClass)) {
                 mBottomLinePaint.set(mTextPaint);
@@ -487,18 +499,55 @@ public class EditFace extends CYEditFace {
         int startPosition = 0;
         float y = (float) (contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
         if (PaintManager.getInstance().getWidth(mTextPaint, getText()) > contentRect.width()) {
-            for (int i = 0; i < text.length(); i++) {
-                if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= contentRect.width() &&
-                        PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > contentRect.width()) {
-                    String content = text.substring(startPosition, i);
-                    TextInfo info = new TextInfo();
-                    info.mStartPos = startPosition;
-                    info.mEndPos = i;
-                    info.mText = content;
-                    info.mY = y;
-                    mTextList.add(info);
-                    startPosition = i;
-                    y += (textHeight + mVerticalSpacing);
+            //脱式题按照单个数字来划分
+            if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+                for (int i = 0; i < text.length(); i++) {
+                    if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i)) <= contentRect.width() &&
+                            PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, i + 1)) > contentRect.width()) {
+                        String content = text.substring(startPosition, i);
+                        TextInfo info = new TextInfo();
+                        info.mStartPos = startPosition;
+                        info.mEndPos = i;
+                        info.mText = content;
+                        info.mY = y;
+                        mTextList.add(info);
+                        startPosition = i;
+                        y += (textHeight + mVerticalSpacing);
+                    }
+                }
+            } else if ("multiline".equals(mSize)) {
+                //英文按照单词来划分
+                List<CYTextBlock.Word> words = new ArrayList();
+                int count = 0;
+                char[] chs = text.toCharArray();
+
+                for(int i = 0; i < chs.length; ++i) {
+                    int wordStart = i;
+
+                    for(count = 1; i + 1 < chs.length && PaintManager.isEnglish(chs[i + 1]); ++i) {
+                        ++count;
+                    }
+                    words.add(new CYTextBlock.Word(new String(chs, wordStart, count), ""));
+                }
+                if (words.size() > 0) {
+                    int length = words.get(0).word.length();
+                    int preLength = length;
+                    for (int i = 1; i < words.size(); i++) {
+                        length += words.get(i).word.length();
+                        if (PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, preLength)) <= contentRect.width() &&
+                                PaintManager.getInstance().getWidth(mTextPaint, text.substring(startPosition, length)) > contentRect.width()) {
+                            String content = text.substring(startPosition, preLength);
+                            TextInfo info = new TextInfo();
+                            info.mStartPos = startPosition;
+                            info.mEndPos = preLength;
+                            info.mText = content;
+                            info.mY = y;
+                            mTextList.add(info);
+                            y += (textHeight + mVerticalSpacing);
+                            startPosition = preLength;
+                        }
+                        preLength = length;
+                    }
                 }
             }
             if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {

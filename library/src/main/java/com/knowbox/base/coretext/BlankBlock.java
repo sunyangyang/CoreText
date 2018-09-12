@@ -274,8 +274,8 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = (int) (getTextEnv().getSuggestedPageWidth() - PaintManager.getInstance().getWidth(getTextEnv().getPaint(), TWPoint) * 2);
                 this.mHeight = Const.DP_1 * 45;
             } else if ("multiline".equals(size)) {
-                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
-                        .getPaint(), text));
+                float width = PaintManager.getInstance().getWidth(getTextEnv()
+                        .getPaint(), text);
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("pinyin".equals(size)) {
                 List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
@@ -285,8 +285,7 @@ public class BlankBlock extends CYEditBlock {
                     for (int i = 0; i < words.size(); i++) {
                         content += words.get(i).pinyin;
                     }
-                    width = (int) Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(((EditFace)getEditFace())
-                            .getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
+                    width = (int) (PaintManager.getInstance().getWidth(((EditFace)getEditFace()).getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
                 } else {
                     width = Const.DP_1 * 32;
                 }
@@ -377,23 +376,64 @@ public class BlankBlock extends CYEditBlock {
         if (width > maxWidth) {
             mWidth = maxWidth;
             int startPosition = 0;
-            for (int i = 0; i < text.length(); i++) {
-                if (PaintManager.getInstance().getWidth(getTextEnv()
-                        .getPaint(), text.substring(startPosition, i)) <= mWidth &&
-                        PaintManager.getInstance().getWidth(getTextEnv()
-                                .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
-                    line++;
-                    startPosition = i;
+            if ("delivery".equals(size)) {
+                //脱式题按照单个数字来划分
+                for (int i = 0; i < text.length(); i++) {
+                    if (PaintManager.getInstance().getWidth(getTextEnv()
+                            .getPaint(), text.substring(startPosition, i)) <= mWidth &&
+                            PaintManager.getInstance().getWidth(getTextEnv()
+                                    .getPaint(), text.substring(startPosition, i + 1)) > mWidth) {
+                        line++;
+                        startPosition = i;
+                    }
                 }
-            }
-            if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
-                line++;
-            }
-            this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
-            if (mLines != line) {
-                mLines = line;
-                if (isEditable) {
-                    notifyLayoutChange();
+                if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+                    line++;
+                }
+                this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                if (mLines != line) {
+                    mLines = line;
+                    if (isEditable) {
+                        notifyLayoutChange();
+                    }
+                }
+            } else if ("multiline".equals(size)) {
+                //英文按照单词来划分
+                if (!TextUtils.isEmpty(text)) {
+                    List<CYTextBlock.Word> words = new ArrayList();
+                    int count = 0;
+                    char[] chs = text.toCharArray();
+
+                    for(int i = 0; i < chs.length; ++i) {
+                        int wordStart = i;
+
+                        for(count = 1; i + 1 < chs.length && PaintManager.isEnglish(chs[i + 1]); ++i) {
+                            ++count;
+                        }
+                        words.add(new CYTextBlock.Word(new String(chs, wordStart, count), ""));
+                    }
+                    if (words.size() > 0) {
+                        int length = words.get(0).word.length();
+                        int preLength = length;
+                        for (int i = 1; i < words.size(); i++) {
+                            length += words.get(i).word.length();
+                            if (PaintManager.getInstance().getWidth(getTextEnv()
+                                    .getPaint(), text.substring(startPosition, preLength)) <= mWidth &&
+                                    PaintManager.getInstance().getWidth(getTextEnv()
+                                            .getPaint(), text.substring(startPosition, length)) > mWidth) {
+                                line++;
+                                startPosition = preLength;
+                            }
+                            preLength = length;
+                        }
+                    }
+                    if (!TextUtils.isEmpty(text.substring(startPosition, text.length()))) {
+                        line++;
+                    }
+                    this.mHeight = (line - 1) * ((EditFace)getEditFace()).getRowsVerticalSpacing() + textHeight * line;
+                    if (mLines != line) {
+                        mLines = line;
+                    }
                 }
             }
         } else {
@@ -403,7 +443,13 @@ public class BlankBlock extends CYEditBlock {
         this.mHeight += Const.DP_1 * 3;
     }
 
-//    @Override
+    @Override
+    public void onMeasure() {
+        super.onMeasure();
+        updateSize(getText());
+    }
+
+    //    @Override
 //    public void setStyle(CYStyle style) {
 //        super.setStyle(style);
 //        if (style != null) {

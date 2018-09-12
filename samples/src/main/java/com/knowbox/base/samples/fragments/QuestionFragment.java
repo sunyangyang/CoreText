@@ -218,8 +218,9 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#小(!xiǎo!)姑(!gū!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，被(!bèi!)大(!dà!)灰(!huī!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"letter\"}#吃(!chī!)。#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FpTxSCYkBROhOx3kAsc54d76WaTw\",\"size\":\"big_image\",\"id\":1,\"width\":\"89px\",\"height\":\"89px\"}#比轻";
         question = "#{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom often #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}# to school.#{\"type\":\"para_end\"}#";
+
         builder = mQtvQuestion.getBuilder(question);
-        builder.setEditableValue(1, " nlkandl  nkldnkal kl k dnkla nkld nlkasdnkan dklsand klank adlk asndkl nakld nakl ndlka nklfn ");
+        builder.setEditableValue(1, "hjksdnndjkas nasjkdnkjandjka ndjlandlan jldnajl ndljasnd klan kladndlkand ljand jlasnd jlasnd jlasn ljkd");
 //        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
 //        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
         builder.setEditable(false);
