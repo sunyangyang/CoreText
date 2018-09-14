@@ -337,8 +337,8 @@ public class BlankBlock extends CYEditBlock {
                         .getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("multiline".equals(size)) {
-                float width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
-                        .getPaint(), text));
+                float width = Math.max(PaintManager.getInstance().getHeight(getTextEnv().getPaint()),
+                        PaintManager.getInstance().getWidth(getTextEnv().getPaint(), text));
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("sudoku_blank".equals(size)) {
                 this.mWidth = getTextEnv().getSuggestedPageWidth() - Const.DP_1 * 5;

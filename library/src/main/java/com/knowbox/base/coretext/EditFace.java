@@ -154,9 +154,18 @@ public class EditFace extends CYEditFace {
                     float width = PaintManager.getInstance().getWidth(mTextPaint, text.substring(lastLineInfo.mStartPos, lastLineInfo.mEndPos));
                     float height = PaintManager.getInstance().getHeight(mTextPaint);
                     float y = lastLineInfo.mY;
-                    canvas.drawLine(width + contentRect.left,
+                    float x = 0;
+                    if (width > 0) {
+                        x = width;
+                        if (text.length() == 1) {
+                            x = width + (contentRect.width() - width) / 2f;
+                        }
+                    } else {
+                        x = (float)contentRect.width() / 2.0F;
+                    }
+                    canvas.drawLine(x + contentRect.left,
                             y - height + this.mTextPaintMetrics.bottom,
-                            width + contentRect.left,
+                            x + contentRect.left,
                             y + this.mTextPaintMetrics.bottom,
                             mFlashPaint);
                 } catch (Exception e) {
@@ -349,13 +358,28 @@ public class EditFace extends CYEditFace {
 
     @Override
     protected void drawText(Canvas canvas, String text, Rect blockRect, Rect contentRect, boolean hasBottomLine) {
-        if (BlankBlock.CLASS_DELIVERY.equals(mClass) || "multiline".equals(mSize)) {
+        if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
             if (!TextUtils.isEmpty(text)) {
                 float x = (float) contentRect.left;
                 canvas.save();
                 canvas.clipRect(contentRect);
                 for (int i = 0; i < mTextList.size(); i++) {
                     TextInfo info = mTextList.get(i);
+                    canvas.drawText(info.mText, x, info.mY, this.mTextPaint);
+                }
+                canvas.restore();
+            }
+        } else if ("multiline".equals(mSize)) {
+            if (!TextUtils.isEmpty(text)) {
+                float x = (float) contentRect.left;
+                canvas.save();
+                canvas.clipRect(contentRect);
+                for (int i = 0; i < mTextList.size(); i++) {
+                    TextInfo info = mTextList.get(i);
+                    x = (float) contentRect.left;
+                    if (i == 0 && !TextUtils.isEmpty(info.mText) && info.mText.length() == 1) {
+                        x = (float) contentRect.left + (contentRect.width() - PaintManager.getInstance().getWidth(mTextPaint, info.mText)) / 2F;
+                    }
                     canvas.drawText(info.mText, x, info.mY, this.mTextPaint);
                     if (!mTextEnv.isEditable() && hasBottomLine) {
                         mBottomLinePaint.set(mTextPaint);

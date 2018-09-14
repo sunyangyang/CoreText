@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -218,9 +219,12 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#小(!xiǎo!)姑(!gū!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，被(!bèi!)大(!dà!)灰(!huī!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"letter\"}#吃(!chī!)。#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FpTxSCYkBROhOx3kAsc54d76WaTw\",\"size\":\"big_image\",\"id\":1,\"width\":\"89px\",\"height\":\"89px\"}#比轻";
         question = "#{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom often #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}# to school.#{\"type\":\"para_end\"}#";
-
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#想一想，说的物品是( )。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"img\",\"id\":\"1\",\"src\":\"https://tikuqiniu.knowbox.cn/FsP7wg8r9sFzowW4Zj0hEds6pkZt\",\"size\":\"big_image\",\"width\":680,\"height\":390}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#这个物品在柜子的最下层，是从左数的第三个物品。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#选句填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_picture\"}##{\"type\":\"img\",\"id\":1,\"src\":\"https://tikuqiniu.knowbox.cn/english_pkg_media/PEP6A-1.png\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Where are you going this afternoon?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Who are you going with?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 2,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 3,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: I’m going to buy a dictionary.#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: What time are you going?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 4,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 5,\"class\":\"fillin\",\"size\":\"multiline\"}# #{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: We are going by car.#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
-        builder.setEditableValue(1, "hjksdnndjkas nasjkdnkjandjka ndjlandlan jldnajl ndljasnd klan kladndlkand ljand jlasnd jlasnd jlasn ljkd");
+        builder.setEditableValue(1, "A");
+        builder.setEditableValue(2, "B");
+        builder.setEditableValue(3, "C");
 //        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
 //        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
         builder.setEditable(false);
@@ -232,6 +236,7 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
         for (int i = 0; i < editableList.size(); i++) {
             ICYEditable editable = editableList.get(i);
+            editable.setFocus(true);
         }
         return view;
     }
@@ -268,8 +273,16 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
                         String currentText = mQtvQuestion.getText(mFocusTabId);
                         if (currentText == null)
                             currentText = "";
-                        String text = textView.getText().toString() + "(!fnasjkf!)";
-                        editable.setText(currentText + text);
+                        String text = textView.getText().toString();
+                        if ("删除".equals(text)) {
+                            if (!TextUtils.isEmpty(currentText)) {
+                                editable.setText(currentText.substring(0, currentText.length() - 1));
+                            }
+                        } else {
+                            editable.setText(currentText + text);
+                        }
+
+
 //                        if ("#".equals(text)) {
 //                            ((BlankBlock)editable).breakLine();
 ////                            if (currentText.length() >= 1)
