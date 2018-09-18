@@ -89,18 +89,8 @@ public class ImageBlock extends CYImageBlock {
             this.size = size;
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
-                if (DEFAULT_SCALE == mScaleType) {
-                    if (mScale < 1.0f) {
-                        setWidth((int) (mWidth * mScale));
-                        setHeight((int) (mHeight * mScale));
-                    } else {
-                        setWidth(mWidth);
-                        setHeight(mHeight);
-                    }
-                } else {
-                    setWidth((int) (mWidth * mScale));
-                    setHeight((int) (mHeight * mScale));
-                }
+                setWidth((int) (mWidth * mScale));
+                setHeight((int) (mHeight * mScale));
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
@@ -120,19 +110,8 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
-                if (DEFAULT_SCALE == mScaleType) {
-                    if (mScale < 2.0f) {
-                        setWidth((int) (mWidth * mScale / 2));
-                        setHeight((int) (mHeight * mScale / 2));
-                    } else {
-                        setWidth(mWidth);
-                        setHeight(mHeight);
-                    }
-                } else {
-                    setWidth((int) (mWidth * mScale / 2));
-                    setHeight((int) (mHeight * mScale / 2));
-                }
-
+                setWidth((int) (mWidth * mScale / 2));
+                setHeight((int) (mHeight * mScale / 2));
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             }
@@ -161,22 +140,6 @@ public class ImageBlock extends CYImageBlock {
             }
         }
         mScale = width * 1.0f / mWidth;
-        if (DEFAULT_SCALE == mScaleType) {
-            if ("big_image".equals(size)) {
-                if (mScale < 1.0f) {
-                    return (int) (mWidth * mScale);
-                } else {
-                    return mWidth;
-                }
-            } else if ("mid_image".equals(size)) {
-                if (mScale < 2.0f) {
-                    return(int) (mWidth * mScale / 2);
-                } else {
-                    return mWidth;
-                }
-            }
-        }
-
         return width;
     }
 
@@ -184,20 +147,17 @@ public class ImageBlock extends CYImageBlock {
     public int getContentHeight() {
         if ("small_image".equals(size)) {
             return super.getContentHeight();
-        }
-        if (DEFAULT_SCALE == mScaleType) {
-            if ("big_image".equals(size)) {
-                if (mScale < 1.0f) {
-                    return (int) (mHeight * mScale);
-                } else {
-                    return mHeight;
-                }
-            } else if ("mid_image".equals(size)) {
-                if (mScale < 2.0f) {
-                    return(int) (mHeight * mScale / 2);
-                } else {
-                    return mHeight;
-                }
+        } else if ("big_image".equals(size)) {
+            if (mScale < 1.0f) {
+                return (int) (mHeight * mScale);
+            } else {
+                return mHeight;
+            }
+        } else if ("mid_image".equals(size)) {
+            if (mScale < 2.0f) {
+                return(int) (mHeight * mScale / 2);
+            } else {
+                return mHeight;
             }
         }
         return (int) (mHeight * mScale);
@@ -238,16 +198,11 @@ public class ImageBlock extends CYImageBlock {
                 mImageRect.set(rect);
             }
             drawable.setBounds(mImageRect);
-            canvas.save();
-            if (DEFAULT_SCALE == mScaleType && "big_image".equals(size)) {
-                canvas.translate((getTextEnv().getSuggestedPageWidth() - mImageRect.width())/ 2, 0);
-            }
             drawable.draw(canvas);
             if (!getTextEnv().isEditable()) {//绘制边框
                 mRect.set(mImageRect);
                 canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
             }
-            canvas.restore();
         }
     }
 
