@@ -177,16 +177,17 @@ public class MatchBlock extends CYPlaceHolderBlock {
     private void refreshLayout(int id, String content) {
         if (id < 0) {
             return;
-        } else {
-            if (TextUtils.isEmpty(content)) {
-                EditableValue editableValue = getTextEnv().getEditableValue(id);
-                if (editableValue == null) {
-                    return;
-                } else {
-                    content = editableValue.getValue();
-                }
-            }
         }
+//        else {
+//            if (TextUtils.isEmpty(content)) {
+//                EditableValue editableValue = getTextEnv().getEditableValue(id);
+//                if (editableValue == null) {
+//                    return;
+//                } else {
+//                    content = editableValue.getValue();
+//                }
+//            }
+//        }
         if (!TextUtils.isEmpty(content)) {
             mList.clear();
             if (id == SAVE_STATUS_ID) {
