@@ -106,7 +106,7 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
         if (y * getContentHeight() + blankBlock.getHeight() > getContentHeight()) {
             y = (getContentHeight() - blankBlock.getHeight()) * 1.0f / getContentHeight();
         }
-
+        Log.e("XXXXX", "x = " + x + "， y = " + y);
         blankBlock.setOffset(x, y);
         return blankBlock;
     }
