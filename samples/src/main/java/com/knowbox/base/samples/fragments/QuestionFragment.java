@@ -4,6 +4,7 @@
 
 package com.knowbox.base.samples.fragments;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -219,20 +220,21 @@ question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，�
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#小(!xiǎo!)姑(!gū!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，被(!bèi!)大(!dà!)灰(!huī!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"letter\"}#吃(!chī!)。#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"img\",\"src\":\"https://tikuqiniu.knowbox.cn/FpTxSCYkBROhOx3kAsc54d76WaTw\",\"size\":\"big_image\",\"id\":1,\"width\":\"89px\",\"height\":\"89px\"}#比轻";
         question = "#{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom often #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}# to school.#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#想一想，说的物品是( )。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"img\",\"id\":\"1\",\"src\":\"https://tikuqiniu.knowbox.cn/FsP7wg8r9sFzowW4Zj0hEds6pkZt\",\"size\":\"big_image\",\"width\":680,\"height\":390}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#这个物品在柜子的最下层，是从左数的第三个物品。#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#选句填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_picture\"}##{\"type\":\"img\",\"id\":1,\"src\":\"https://tikuqiniu.knowbox.cn/english_pkg_media/PEP6A-1.png\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Where are you going this afternoon?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Who are you going with?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 2,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 3,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: I’m going to buy a dictionary.#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: What time are you going?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 4,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 5,\"class\":\"fillin\",\"size\":\"multiline\"}# #{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: We are going by car.#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#想一想，说的物品是( )。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"img\",\"id\":\"1\",\"src\":\"http://img2.imgtn.bdimg.com/it/u=508346722,3235150240&fm=27&gp=0.jpg\",\"size\":\"big_image\",\"width\":680,\"height\":390}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#这个物品在柜子的最下层，是从左数的第三个物品。#{\"type\":\"para_end\"}#";
+//        question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#选句填空。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_picture\"}##{\"type\":\"img\",\"id\":1,\"src\":\"https://tikuqiniu.knowbox.cn/english_pkg_media/PEP6A-1.png\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Where are you going this afternoon?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 1,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: Who are you going with?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 2,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 3,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: I’m going to buy a dictionary.#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: What time are you going?#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: #{\"type\":\"blank\",\"id\": 4,\"class\":\"fillin\",\"size\":\"multiline\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#Tom: #{\"type\":\"blank\",\"id\": 5,\"class\":\"fillin\",\"size\":\"multiline\"}# #{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_text\"}#John: We are going by car.#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#太(!tài!)阳(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#黑兔的数量是白兔的#{\"type\":\"latex\",\"content\":\"\\\\frac{3}{4}\"}#，把#{\"type\":\"blank\",\"id\":\"1\",\"class\":\"choice\",\"size\":\"express\"}#看作单位1，#{\"type\":\"blank\",\"id\":\"2\",\"class\":\"choice\",\"size\":\"express\"}#数量多。#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
-        builder.setEditableValue(1, "A");
-        builder.setEditableValue(2, "B");
-        builder.setEditableValue(3, "C");
 //        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
 //        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
-        builder.setEditable(false);
-
-        builder.build();
+//        builder.setEditableValue(BaseConstant.IMAGE_BORDER_COLOR, "{" +
+//                "\"corner\": 10," +
+//                "\"color\": 0xff111111," +
+//                "\"width\": 10" +
+//                "}");
 //        builder.setEditable(false);
+        builder.build();
 
-//        handler.sendEmptyMessageDelayed(0, 1000);
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
         for (int i = 0; i < editableList.size(); i++) {
             ICYEditable editable = editableList.get(i);
