@@ -147,18 +147,6 @@ public class ImageBlock extends CYImageBlock {
     public int getContentHeight() {
         if ("small_image".equals(size)) {
             return super.getContentHeight();
-        } else if ("big_image".equals(size)) {
-            if (mScale < 1.0f) {
-                return (int) (mHeight * mScale);
-            } else {
-                return mHeight;
-            }
-        } else if ("mid_image".equals(size)) {
-            if (mScale < 2.0f) {
-                return(int) (mHeight * mScale / 2);
-            } else {
-                return mHeight;
-            }
         }
         return (int) (mHeight * mScale);
     }
