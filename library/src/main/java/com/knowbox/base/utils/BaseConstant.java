@@ -22,4 +22,6 @@ public class BaseConstant {
     public static final int BLANK_SIZE = 500;
     public static final int BLANK_PIN_YIN_PADDING = 501;
     public static final String BLANK_PIN_YIN_SIZE = "blank_pin_yin_size";
+
+    public static final int IMAGE_BORDER_COLOR = 600;
 }

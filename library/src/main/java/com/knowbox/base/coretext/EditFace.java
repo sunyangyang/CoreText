@@ -92,7 +92,7 @@ public class EditFace extends CYEditFace {
             mRoundCorner = Const.DP_1 * 2;
             int length = Const.DP_1 * 11;
             int padding = Const.DP_1 * 1;
-            mRectF.set(contentRect.left, contentRect.top + padding, contentRect.right, contentRect.bottom + padding);
+            mRectF.set(contentRect.left, contentRect.top + padding, contentRect.right, contentRect.bottom + padding - getBorderPaint().getStrokeWidth() / 2);
             if (mBorderFillPaint == null) {
                 mBorderFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 mBorderOutPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -116,7 +116,7 @@ public class EditFace extends CYEditFace {
                     mRectF.right, mRectF.top + length, mRectF.right, mRectF.bottom - length,};
             canvas.drawLines(path, mBorderOutPaint);
         } else if (editable.hasFocus()) {
-            mRectF.set(blockRect);
+            mRectF.set(blockRect.left, blockRect.top, blockRect.right, blockRect.bottom - getBorderPaint().getStrokeWidth() / 2);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);

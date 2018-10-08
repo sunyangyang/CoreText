@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,10 +16,10 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
-import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
 import com.hyena.framework.imageloader.ImageLoader;
 import com.hyena.framework.imageloader.base.IDisplayer;
@@ -26,6 +27,8 @@ import com.hyena.framework.imageloader.base.LoadedFrom;
 import com.hyena.framework.utils.ImageFetcher;
 import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
+import com.knowbox.base.utils.BaseConstant;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,10 +52,12 @@ public class ImageBlock extends CYImageBlock {
     protected int mWidth, mHeight;
     private float mScale = 1.0f;
     protected Drawable drawable = null;
+    protected Bitmap bitmap = null;
     protected IDisplayer mDisplayer;
     protected int mLoadingResId, mErrorResId;
     private boolean isSuccess = false;
     private int mScaleType = DEFAULT_SCALE;
+    private Path mPath;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -75,6 +80,8 @@ public class ImageBlock extends CYImageBlock {
             mPaint.setStrokeWidth(Const.DP_1);
             mPaint.setStyle(Paint.Style.STROKE);
 
+            mPath = new Path();
+
             JSONObject json = new JSONObject(content);
             String url = json.optString("src");
             String size = json.optString("size");
@@ -83,7 +90,7 @@ public class ImageBlock extends CYImageBlock {
             String heightPx = json.optString("height", "270px").replace("px", "");
             int width = MathUtils.valueOfInt(widthPx);
             int height = MathUtils.valueOfInt(heightPx);
-            this.mWidth = (width == 0 ? 680: width);
+            this.mWidth = (width == 0 ? 680 : width);
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
@@ -104,7 +111,7 @@ public class ImageBlock extends CYImageBlock {
                 setHeight(DP_44);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
-            }  else if ("big_match_image".equals(size) || "big_category_image".equals(size) || "order_image".equals(size)) {
+            } else if ("big_match_image".equals(size) || "big_category_image".equals(size) || "order_image".equals(size)) {
                 setWidth(DP_110);
                 setHeight(DP_83);
                 this.mLoadingResId = R.drawable.image_loading;
@@ -165,11 +172,12 @@ public class ImageBlock extends CYImageBlock {
     }
 
     private RectF mRect = new RectF();
+
     @Override
     public void draw(Canvas canvas) {
 //        tryLoadFromCache();
         if (drawable != null) {
-            Rect rect= getContentRect();
+            Rect rect = getContentRect();
             if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
                 if (rect.width() * drawable.getIntrinsicHeight() > rect.height() * drawable.getIntrinsicWidth()) {
                     //按照图片的高度缩放
@@ -185,6 +193,7 @@ public class ImageBlock extends CYImageBlock {
             } else {
                 mImageRect.set(rect);
             }
+            mImageRectF.set(mImageRect);
             drawable.setBounds(mImageRect);
             drawable.draw(canvas);
             if (!getTextEnv().isEditable()) {//绘制边框
@@ -214,9 +223,12 @@ public class ImageBlock extends CYImageBlock {
     }
 
     private Rect mImageRect = new Rect();
+    private RectF mImageRectF = new RectF();
+
     /* ImageAware实现 */
     private class ThisImageAware implements IDisplayer {
         private int width, height;
+
         public ThisImageAware() {
             this.width = ImageBlock.this.getWidth();
             this.height = ImageBlock.this.getHeight();
@@ -237,7 +249,7 @@ public class ImageBlock extends CYImageBlock {
                     .getDisplayMetrics().heightPixels;
             float scale = 1.0f;
             if (height > screenHeight) {
-                scale = screenHeight * 1.0f/height;
+                scale = screenHeight * 1.0f / height;
             }
             return scale;
         }
@@ -278,8 +290,7 @@ public class ImageBlock extends CYImageBlock {
             setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
                     .getResources(), bitmap));
         }
-    };
-
+    }
 
     @Override
     public void onLoadComplete(String imageUrl, Bitmap bitmap, Object tag) {
