@@ -527,6 +527,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     public boolean onTouchEvent(int action, float x, float y) {
         switch (action) {
             case MotionEvent.ACTION_UP:
+                mCanOperate = getTextEnv().isEditable();
                 if (!mAnimationEnd || !mCanOperate) {
                     return super.onTouchEvent(action, x, y);
                 }
@@ -787,6 +788,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     }
                 }
             }
+            mCanOperate = getTextEnv().isEditable();
             if (mCanOperate) {
                 mLinePaint.setColor(mCommonColor);
             } else {
