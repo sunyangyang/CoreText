@@ -195,11 +195,39 @@ public class ImageBlock extends CYImageBlock {
             }
             mImageRectF.set(mImageRect);
             drawable.setBounds(mImageRect);
-            drawable.draw(canvas);
-            if (!getTextEnv().isEditable()) {//绘制边框
-                mRect.set(mImageRect);
-                canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
+            canvas.save();
+            if (getTextEnv().getEditableValue(BaseConstant.IMAGE_BORDER_COLOR) != null) {
+                try {
+                    JSONObject object = new JSONObject(getTextEnv().getEditableValue(BaseConstant.IMAGE_BORDER_COLOR).getValue());
+                    int color = object.optInt("color");
+                    int width = object.optInt("width");
+                    int corner = object.optInt("corner");
+                    mPaint.setColor(color);
+                    mPaint.setStrokeWidth(width);
+                    canvas.save();
+                    mPath.close();
+                    mPath.addRoundRect(mImageRectF, corner, corner, Path.Direction.CW);
+                    canvas.clipPath(mPath);
+                    drawable.draw(canvas);
+                    canvas.restore();
+                    canvas.drawRoundRect(mImageRectF, corner, corner, mPaint);
+                } catch (Exception e) {
+                    //数据出错情况下的补救措施
+                    drawable.draw(canvas);
+                    if (!getTextEnv().isEditable()) {//绘制边框
+                        mRect.set(mImageRect);
+                        canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
+                    }
+                }
+
+            } else {
+                drawable.draw(canvas);
+                if (!getTextEnv().isEditable()) {//绘制边框
+                    mRect.set(mImageRect);
+                    canvas.drawRoundRect(mRect, Const.DP_1, Const.DP_1, mPaint);
+                }
             }
+            canvas.restore();
         }
     }
 
