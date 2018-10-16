@@ -259,34 +259,35 @@ public class MatchBlock extends CYPlaceHolderBlock {
                                     }
                                 }
                             }
-                        } else {//只给正确答案
-                            if (rightAnswer != null) {
-                                JSONArray onlyAnswer = rightAnswer.optJSONArray(String.valueOf(leftId));
-                                if (onlyAnswer != null) {
-                                    MatchCell cell = null;
-                                    for (int k = 0; k < mLeftCells.length; k++) {
-                                        if (mLeftCells[k].getId() == leftId) {
-                                            cell = mLeftCells[k];
-                                            break;
-                                        }
-                                    }
-                                    for (int j = 0; j < onlyAnswer.length(); j++) {
-                                        int answerId = onlyAnswer.optInt(j);
-                                        for (int k = 0; k < mRightCells.length; k++) {
-                                            if (answerId == mRightCells[k].getId()) {
-                                                MyMatchStatus status = new MyMatchStatus();
-                                                status.cells[0] = cell;
-                                                status.cells[1] = mRightCells[k];
-                                                status.isRight = true;
-                                                if (status != null && status.cells != null && status.cells[0] != null && status.cells[1] != null) {
-                                                    mList.add(status);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
+//                        else {//只给正确答案
+//                            if (rightAnswer != null) {
+//                                JSONArray onlyAnswer = rightAnswer.optJSONArray(String.valueOf(leftId));
+//                                if (onlyAnswer != null) {
+//                                    MatchCell cell = null;
+//                                    for (int k = 0; k < mLeftCells.length; k++) {
+//                                        if (mLeftCells[k].getId() == leftId) {
+//                                            cell = mLeftCells[k];
+//                                            break;
+//                                        }
+//                                    }
+//                                    for (int j = 0; j < onlyAnswer.length(); j++) {
+//                                        int answerId = onlyAnswer.optInt(j);
+//                                        for (int k = 0; k < mRightCells.length; k++) {
+//                                            if (answerId == mRightCells[k].getId()) {
+//                                                MyMatchStatus status = new MyMatchStatus();
+//                                                status.cells[0] = cell;
+//                                                status.cells[1] = mRightCells[k];
+//                                                status.isRight = true;
+//                                                if (status != null && status.cells != null && status.cells[0] != null && status.cells[1] != null) {
+//                                                    mList.add(status);
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                 } catch (JSONException e) {
                 }
@@ -527,6 +528,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
     public boolean onTouchEvent(int action, float x, float y) {
         switch (action) {
             case MotionEvent.ACTION_UP:
+                mCanOperate = getTextEnv().isEditable();
                 if (!mAnimationEnd || !mCanOperate) {
                     return super.onTouchEvent(action, x, y);
                 }
@@ -787,6 +789,7 @@ public class MatchBlock extends CYPlaceHolderBlock {
                     }
                 }
             }
+            mCanOperate = getTextEnv().isEditable();
             if (mCanOperate) {
                 mLinePaint.setColor(mCommonColor);
             } else {
