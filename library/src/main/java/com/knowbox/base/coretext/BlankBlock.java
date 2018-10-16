@@ -35,6 +35,7 @@ public class BlankBlock extends CYEditBlock {
 
     private String mClass = CLASS_CHOICE;
     private String size;
+    private String mPinyinSize;
     private int mWidth, mHeight;
 
     private double mOffsetX, mOffsetY;

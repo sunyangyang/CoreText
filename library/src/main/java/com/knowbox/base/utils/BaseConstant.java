@@ -25,7 +25,5 @@ public class BaseConstant {
 
     public static final int IMAGE_BORDER_COLOR = 600;
 
-    public static final int TEXT_TYPE = 700;
-    public static final int TEXT_PIN_YIN_TYPE_PADDING = 701;
-    public static final String TEXT_PIN_YIN_TYPE = "text_pin_yin_type";
+    public static final int TEXT_PIN_YIN_TYPE_PADDING = 700;
 }
