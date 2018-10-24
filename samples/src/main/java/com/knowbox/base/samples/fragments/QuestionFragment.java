@@ -237,25 +237,22 @@ public class QuestionFragment extends Fragment {
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#数一数。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_picture\"}##{\"type\":\"img\",\"src\":\"https:\\/\\/imgqiniu.knowbox.cn\\/tiku-img\\/FuykxLorykE2VPGAV90DmFMHi7o0\",\"size\":\"big_image\",\"id\":1,\"width\":\"680px\",\"height\":\"408px\"}# #{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#小朋友有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}#人。#{\"type\":\"P\"}#小鸟有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":2}#只。#{\"type\":\"P\"}#小树有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":3}#棵。#{\"type\":\"P\"}#蝴蝶有#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":4}#只。#{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，按听到的内容连线。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_audio\"}##{\"type\":\"audio\",\"src\":\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU1L1-12.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_matching\"}##{\"left\": [{\"id\": 1, \"content\": \"Amy\"}, {\"id\": 2, \"content\": \"Lingling\"}, {\"id\": 3, \"content\": \"Ms Smart\"}, {\"id\": 4, \"content\": \"Daming\"}, {\"id\": 5, \"content\": \"Sam\"}], \"type\": \"match\", \"right\": [{\"id\": 1, \"content\": \"swim\"}, {\"id\": 2, \"content\": \"play football\"}, {\"id\": 3, \"content\": \"ride a bike\"}, {\"id\": 4, \"content\": \"fly a kite\"}, {\"id\": 5, \"content\": \"make a model plane\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/FtmPq81WqCwhhyiI3e4vbNkbcCor\",\"width\":\"680px\",\"height\":\"270px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"10.4\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":2,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"38.1\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":3,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"77.1\",\"y_pos\":\"51.5\"}]}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#下列各数中，最大的是(    )。#{\"type\":\"P\"}#0.42#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.4#{\"type\":\"latex\",\"content\":\"\\\\dot{2}\"}##{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.#{\"type\":\"latex\",\"content\":\"\\\\dot{4}\"}#2#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.429#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read_pure_pinyin_center\"}#请(!qǐng!)你(!nǐ!)帮(!bāng!)助(!zhù!)布(!bù!)克(!kè!)给(!gěi!)下(!xià!)列(!liè!)句(!jù!)子(!zǐ!)的(!de!)“着”字(!zì!)注(!zhù!)音(!yīn!)。#{\"type\":\"P\"}#他(!tā!)看(!kàn!)着书(!shū!)，不(!bù!)一(!yī!)会(!huì!)儿(!ér!)就(!jiù!)睡(!shuì!)着(!zhao!)了(!le!)，直(!zhí!)到(!dào!)外(!wài!)面(!miàn!)着(!zhao!)火(!huǒ!)他(!tā!)才(!cái!)醒(!xǐng!)过(!guò!)来(!lái!)。#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditableValue(1, "A");
 //        builder.setEditableValue(2, "B");
 //        builder.setEditableValue(3, "C");
-//        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
-//        builder.setEditableValue(BaseConstant.BLANK_PIN_YIN_PADDING, 20 + "");
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject();
-            jsonObject.put("corner", 18);
-            jsonObject.put("color", 0xffffffff);
-            jsonObject.put("width", 6);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        builder.setEditableValue(BaseConstant.IMAGE_BORDER_COLOR, jsonObject.toString());
+//        builder.setEditableValue(BaseConstant.IMAGE_BORDER_COLOR, "{" +
+//                "\"corner\": 10," +
+//                "\"color\": 0xff111111," +
+//                "\"width\": 10" +
+//                "}");
+//        builder.setEditableValue(MATCH_VALUE_ID, "");
+        builder.setEditable(false);
         builder.build();
 //        builder.setEditable(false);
-        builder.build();
 
         List<ICYEditable> editableList = mQtvQuestion.findEditableList();
         for (int i = 0; i < editableList.size(); i++) {

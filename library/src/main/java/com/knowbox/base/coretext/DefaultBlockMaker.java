@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class DefaultBlockMaker implements IBlockMaker {
     @Override
     public CYTextBlock buildTextBlock(TextEnv textEnv, String s) {
-        return new CYTextBlock(textEnv, s);
+        return new TextBlock(textEnv, s);
     }
 
     @Override
