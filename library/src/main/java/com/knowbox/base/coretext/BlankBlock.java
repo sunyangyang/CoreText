@@ -45,6 +45,7 @@ public class BlankBlock extends CYEditBlock {
     private int mTextLength = 16;
     private int mPaddingHorizontal = 0;
     private int mLines = 0;
+    private String mPreSize;
 
     private float mFlashX;
     private float mFlashY;
@@ -65,6 +66,7 @@ public class BlankBlock extends CYEditBlock {
             setTabId(json.optInt("id"));
             mDefaultText = json.optString("default");
             this.size = json.optString("size", "line");
+            mPreSize = this.size;
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
 
             if (getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE) != null &&
@@ -280,6 +282,16 @@ public class BlankBlock extends CYEditBlock {
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("pinyin".equals(size)) {
                 List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                if (words != null) {
+                    for (int i = 0; i < words.size(); i++) {
+                        if ((TextUtils.isEmpty(words.get(i).word) || TextUtils.isEmpty(words.get(i).pinyin)) && !TextUtils.equals(mPreSize, size)) {
+                            this.size = mPreSize;
+                            ((EditFace)getEditFace()).setSize(size);
+                            updateSize(text);
+                            return;
+                        }
+                    }
+                }
                 int width = 0;
                 String content = "";
                 if (words != null) {
@@ -349,6 +361,16 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = Const.DP_1 * 45;
             } else if ("pinyin".equals(size)) {
                 List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                if (words != null) {
+                    for (int i = 0; i < words.size(); i++) {
+                        if ((TextUtils.isEmpty(words.get(i).word) || TextUtils.isEmpty(words.get(i).pinyin)) && !TextUtils.equals(mPreSize, size)) {
+                            this.size = mPreSize;
+                            ((EditFace)getEditFace()).setSize(size);
+                            updateSize(text);
+                            return;
+                        }
+                    }
+                }
                 int width = 0;
                 String content = "";
                 if (words != null) {
