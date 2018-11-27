@@ -1,1 +1,1 @@
-include ':samples', ':library', ':ijkplayer-java', ':coretext'
+include ':samples', ':library'

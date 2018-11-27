@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: '../fat-aar.gradle'
 apply plugin: 'maven'
 
 android {
@@ -8,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        versionCode 146
+        versionName "1.1.46-SNAPSHOT"
         manifestPlaceholders = [
                 GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
                 GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",
@@ -40,32 +39,96 @@ dependencies {
     compile 'com.github.yangzc:AndroidSupport:1.5.4'
     provided files('extlibs/easemobchat_2.2.3.jar')
     compile 'com.getui:sdk:2.+'
+    compile 'cn.knowbox:coretext:1.0.0'
 }
 
-ext {
-    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('uploadArchives')}
-//    IS_RELEASE = project.getGradle().startParameter.taskNames.any{it.contains('library:assembleRelease')}
+
+def isReleaseBuild() {
+    return android.defaultConfig.versionName.contains("SNAPSHOT") == false
 }
 
-if (IS_RELEASE) {
-    dependencies.add("embedded", project(':coretext'));
+def sonatypeRepositoryUrl
+if (isReleaseBuild()) {
+    sonatypeRepositoryUrl = RELEASE_REPOSITORY_URL
 } else {
-    dependencies.add("compile", project(':coretext'))
+    sonatypeRepositoryUrl = SNAPSHOT_REPOSITORY_URL
 }
-println("IS_RELEASE: " + IS_RELEASE)
 
-uploadArchives {
-    repositories.mavenDeployer {
-//        repository(url: LOCAL_REPO_URL)
-        repository(url: MAVEN_URL) {
-            authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
-        }
-        pom.groupId = PROJ_GROUP
-        pom.artifactId = PROJ_ARTIFACTID
-        pom.version = PROJ_VERSION
-        pom.whenConfigured {pom ->
-            def coretext = pom.dependencies.find {dep -> dep.groupId == 'AndroidKnowboxBase' && dep.artifactId == 'coretext' }
-            pom.dependencies.remove(coretext)
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                pom.artifactId = PROJ_ARTIFACTID
+
+                Properties properties = new Properties()
+                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+                repository(url: sonatypeRepositoryUrl) {
+                    authentication(userName: properties.getProperty("USERNAME"), password: properties.getProperty("PASSWORD"))
+                }
+
+                pom.project {
+                    name PROJ_NAME
+                    groupId PROJ_GROUP
+                    version android.defaultConfig.versionName
+
+//                    scm {
+//                        url POM_SCM_URL
+//                        connection POM_SCM_CONNECTION
+//                        developerConnection POM_SCM_DEV_CONNECTION
+//                    }
+
+                    licenses {
+                        license {
+                            name PROJ_LICENCE_NAME
+                            url PROJ_LICENCE_URL
+                            distribution PROJ_LICENCE_DEST
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id DEVELOPER_ID
+                            name DEVELOPER_NAME
+                        }
+                    }
+                }
+            }
         }
     }
+
+//    signing {
+//        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+//        sign configurations.archives
+//    }
+
+    task androidJavadocs(type: Javadoc) {
+        failOnError false
+        source = android.sourceSets.main.java.source
+        options {
+            links "http://docs.oracle.com/javase/7/docs/api/"
+            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+        }
+        classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        //basename = artifact_id
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    artifacts {
+        //archives packageReleaseJar
+        archives androidSourcesJar
+        archives androidJavadocsJar
+    }
 }
+
