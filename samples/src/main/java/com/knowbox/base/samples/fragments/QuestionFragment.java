@@ -259,7 +259,7 @@ public class QuestionFragment extends Fragment {
             ICYEditable editable = editableList.get(i);
             editable.setFocus(true);
         }
-        editableList.get(0).setText("找(!zhao!)");
+        editableList.get(0).setText("a找(!zhao!)");
         return view;
     }
 

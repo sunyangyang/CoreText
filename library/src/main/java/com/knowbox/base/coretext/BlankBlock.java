@@ -282,15 +282,23 @@ public class BlankBlock extends CYEditBlock {
                 setBlankWidthAndHeight(width, maxWidth, text, textHeight, getTextEnv().isEditable());
             } else if ("pinyin".equals(size)) {
                 List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                boolean hasPinYin = false;
                 if (words != null) {
                     for (int i = 0; i < words.size(); i++) {
-                        if ((TextUtils.isEmpty(words.get(i).word) || TextUtils.isEmpty(words.get(i).pinyin)) && !TextUtils.equals(mPreSize, size)) {
-                            this.size = mPreSize;
-                            ((EditFace)getEditFace()).setSize(size);
-                            updateSize(text);
-                            return;
+                        if (TextUtils.equals(mPreSize, size) || (!TextUtils.isEmpty(words.get(i).word) && !TextUtils.isEmpty(words.get(i).pinyin))) {
+                            hasPinYin = true;
+                            break;
                         }
                     }
+                }
+                else{
+                    hasPinYin = true;
+                }
+                if(!hasPinYin){
+                    this.size = mPreSize;
+                    ((EditFace)getEditFace()).setSize(size);
+                    updateSize(text);
+                    return;
                 }
                 int width = 0;
                 String content = "";
@@ -361,15 +369,23 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = Const.DP_1 * 45;
             } else if ("pinyin".equals(size)) {
                 List<CYTextBlock.Word> words = ((EditFace)getEditFace()).parseWords(text);
+                boolean hasPinYin = false;
                 if (words != null) {
                     for (int i = 0; i < words.size(); i++) {
-                        if ((TextUtils.isEmpty(words.get(i).word) || TextUtils.isEmpty(words.get(i).pinyin)) && !TextUtils.equals(mPreSize, size)) {
-                            this.size = mPreSize;
-                            ((EditFace)getEditFace()).setSize(size);
-                            updateSize(text);
-                            return;
+                        if (TextUtils.equals(mPreSize, size) || (!TextUtils.isEmpty(words.get(i).word) && !TextUtils.isEmpty(words.get(i).pinyin))) {
+                            hasPinYin = true;
+                            break;
                         }
                     }
+                }
+                else{
+                    hasPinYin = true;
+                }
+                if(!hasPinYin){
+                    this.size = mPreSize;
+                    ((EditFace)getEditFace()).setSize(size);
+                    updateSize(text);
+                    return;
                 }
                 int width = 0;
                 String content = "";

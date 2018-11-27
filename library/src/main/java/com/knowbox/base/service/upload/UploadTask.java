@@ -22,11 +22,13 @@ public class UploadTask {
     public byte[] buf;
 
     public UploadTask(int type, String filePath) {
+        this.type = type;
         this.filePath = filePath;
         taskId = UUID.randomUUID().toString();
     }
 
     public UploadTask(int type, byte[] buf) {
+        this.type = type;
         this.buf = buf;
         taskId = UUID.randomUUID().toString();
     }
