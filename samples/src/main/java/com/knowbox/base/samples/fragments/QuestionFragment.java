@@ -306,7 +306,11 @@ public class QuestionFragment extends Fragment {
 
                         if ("删除".equals(text)) {
                             editable.setText("a找(!zhao!)");
-                        } else {
+                        }
+                        else if("#".equals(text)){
+                            editable.setText("shù shù");
+                        }
+                        else {
                             editable.setText(text);
                         }
 

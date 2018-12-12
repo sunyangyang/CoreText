@@ -182,7 +182,7 @@ public class EditFace extends CYEditFace {
                     String pinyin = "";
                     if (words != null && words.size() > 0) {
                         for (int i = 0; i < words.size(); i++) {
-                            pinyin += words.get(i).pinyin;
+                            pinyin += TextUtils.isEmpty(words.get(i).pinyin) ? words.get(i).word : words.get(i).pinyin;
                         }
                         textWidth = PaintManager.getInstance().getWidth(mPinYinPaint, pinyin) + PLACE_HOLDER_WORD * words.size();
                     }
@@ -191,7 +191,7 @@ public class EditFace extends CYEditFace {
                     } else {
                         if (words != null && words.size() > 0) {
                             for (int i = 0; i < words.size(); i++) {
-                                pinyin += words.get(i).pinyin;
+                                pinyin += TextUtils.isEmpty(words.get(i).pinyin) ? words.get(i).word : words.get(i).pinyin;
                             }
                             left = (float)contentRect.left + ((float)contentRect.width() + textWidth) / 2.0F;
                         } else {
@@ -430,7 +430,7 @@ public class EditFace extends CYEditFace {
                 for (int i = 0; i < words.size(); i++) {
                     CYTextBlock.Word word = words.get(i);
                     if (i > 0) {
-                        canvas.translate(PaintManager.getInstance().getWidth(mPinYinPaint, words.get(i - 1).pinyin) + PLACE_HOLDER_WORD, 0);
+                        canvas.translate(PaintManager.getInstance().getWidth(mPinYinPaint, TextUtils.isEmpty(words.get(i - 1).pinyin) ? words.get(i - 1).word : words.get(i - 1).pinyin) + PLACE_HOLDER_WORD, 0);
                     }
                     canvas.drawText(word.pinyin, PLACE_HOLDER_WORD / 2, y - textHeight, mPinYinPaint);
                     canvas.drawText(word.word, (PLACE_HOLDER_WORD + PaintManager.getInstance().getWidth(mPinYinPaint, TextUtils.isEmpty(word.pinyin) ? word.word : word.pinyin) - PaintManager.getInstance().getWidth(mTextPaint, word.word)) / 2, y, mTextPaint);
@@ -438,7 +438,7 @@ public class EditFace extends CYEditFace {
                         mBottomLinePaint.set(mTextPaint);
                         mBottomLinePaint.setStrokeWidth(Const.DP_1);
                         float lineY = y + this.mTextPaintMetrics.descent;
-                        canvas.drawLine(0, lineY, PaintManager.getInstance().getWidth(mPinYinPaint, word.pinyin) + PLACE_HOLDER_WORD, lineY, this.mBottomLinePaint);
+                        canvas.drawLine(0, lineY, PaintManager.getInstance().getWidth(mPinYinPaint, TextUtils.isEmpty(word.pinyin) ? word.word : word.pinyin) + PLACE_HOLDER_WORD, lineY, this.mBottomLinePaint);
                     }
                 }
                 canvas.restore();
