@@ -100,7 +100,7 @@ public class BlankBlock extends CYEditBlock {
             } else if ("pinyin".equals(getSize())) {
                 mTextLength = 100;
             } else {
-                mTextLength = 20;
+                mTextLength = 30;
             }
 
             if (getTextEnv().isEditable()) {
