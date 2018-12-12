@@ -296,12 +296,18 @@ public class QuestionFragment extends Fragment {
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
+//                        if ("删除".equals(text)) {
+//                            if (!TextUtils.isEmpty(currentText)) {
+//                                editable.setText(currentText.substring(0, currentText.length() - 1));
+//                            }
+//                        } else {
+//                            editable.setText(currentText + text);
+//                        }
+
                         if ("删除".equals(text)) {
-                            if (!TextUtils.isEmpty(currentText)) {
-                                editable.setText(currentText.substring(0, currentText.length() - 1));
-                            }
+                            editable.setText("a找(!zhao!)");
                         } else {
-                            editable.setText(currentText + text);
+                            editable.setText(text);
                         }
 
 

@@ -433,7 +433,7 @@ public class EditFace extends CYEditFace {
                         canvas.translate(PaintManager.getInstance().getWidth(mPinYinPaint, words.get(i - 1).pinyin) + PLACE_HOLDER_WORD, 0);
                     }
                     canvas.drawText(word.pinyin, PLACE_HOLDER_WORD / 2, y - textHeight, mPinYinPaint);
-                    canvas.drawText(word.word, (PLACE_HOLDER_WORD + PaintManager.getInstance().getWidth(mPinYinPaint, word.pinyin) - PaintManager.getInstance().getWidth(mTextPaint, word.word)) / 2, y, mTextPaint);
+                    canvas.drawText(word.word, (PLACE_HOLDER_WORD + PaintManager.getInstance().getWidth(mPinYinPaint, TextUtils.isEmpty(word.pinyin) ? word.word : word.pinyin) - PaintManager.getInstance().getWidth(mTextPaint, word.word)) / 2, y, mTextPaint);
                     if (!mTextEnv.isEditable() && hasBottomLine) {
                         mBottomLinePaint.set(mTextPaint);
                         mBottomLinePaint.setStrokeWidth(Const.DP_1);
