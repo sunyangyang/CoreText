@@ -13,6 +13,7 @@ import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,40 +28,54 @@ public class NumberCell {
     private Rect mRect;
     private Rect mValueRect;
     private Rect mFlagRect;
+    private Rect mPointRect;
     private int mSideWidth;
     private int mFlagSideWidth;
+    private int mPointSideWidth;
     private float mValueLeftOffset;
     private float mFlagLeftOffset;
+    private float mPointLeftOffset;
     private float mValueTopOffset;
     private float mFlagTopOffset;
+    private float mPointTopOffset;
     private Paint mValuePaint;
     private Paint mFlagPaint;
+    private Paint mPointPaint;
     List<ICYEditable> mList = new ArrayList<ICYEditable>();
     private BlankBlock mValueBlock;
     private BlankBlock mFlagBlock;
+    private BlankBlock mPointBlock;
     private String mValueContent;
     private String mFlagContent;
+    private String mPointContent;
     private String mValue;
     private String mFlag;
+    private String mPoint;
     private float mDelOffset;
     private int mNumberId;
     private int mFlagId;
+    private int mPointId;
     private int mOffsetX;
     private int mStyleType;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
-                      String value, String flag, Paint valuePaint,
-                      Paint flagPaint, int valueTopMargin, int valueLeftMargin,
-                      int sideWidth, int flagSideWidth, int styleType) {
+                      String value, String flag, String point,Paint valuePaint,
+                      Paint flagPaint, Paint pointPaint,int valueTopMargin, int valueLeftMargin,
+                      int sideWidth, int flagSideWidth,int pointSideWidth, int styleType) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
+        mPoint = point;
         mSideWidth = sideWidth;
         mFlagSideWidth = flagSideWidth;
+        mPointSideWidth = pointSideWidth;
         mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mValuePaint.set(valuePaint);
         mFlagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mFlagPaint.set(flagPaint);
+        mPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPointPaint.set(pointPaint);
+        mPointPaint.setTextSize(mValuePaint.getTextSize());
         mStyleType = styleType;
         int flagLeftMargin = 0;
         int flagTopMargin = 0;
@@ -73,7 +88,7 @@ public class NumberCell {
         }
 
         mDelOffset = (PaintManager.getInstance().getWidth(mValuePaint, "0") - PaintManager.getInstance().getWidth(mValuePaint, "\\")) / 2.f;
-
+        //计算进位和借位的坐标
         if (!TextUtils.isEmpty(mFlag)) {
             Rect textRect = new Rect();
             mFlagPaint.getTextBounds(mFlag, 0, 1, textRect);
@@ -134,7 +149,52 @@ public class NumberCell {
                 }
             }
         }
+        //计算小数点的坐标
+        if (!TextUtils.isEmpty(mPoint)) {
+            Rect textRect = new Rect();
+            mPointPaint.getTextBounds(mPoint, 0, 1, textRect);
+            if (mPoint.contains("blank")) {
+                String[] ids = mPoint.split("k");
+                int id = -1;
+                try {
+                    id = Integer.valueOf(ids[1]);
+                } catch (Exception e) {
 
+                }
+                if (id > 0 && textEnv.getEditableValue(id) != null) {
+                    mPointId = id;
+                    EditableValue ev = textEnv.getEditableValue(id);
+                    mPointPaint.setColor(ev.getColor());
+                    mPoint = ev.getValue();//有可能为null
+                }
+            }
+
+            if (!TextUtils.isEmpty(mPoint)) {
+                mPointRect = new Rect(rect.left + valueLeftMargin + mSideWidth + mPointSideWidth/2,
+                        rect.bottom - (mSideWidth - mPointSideWidth)/2 + mPointSideWidth,
+                        (int) (rect.left + valueLeftMargin + (mSideWidth + mPointSideWidth)),
+                        rect.bottom - (mSideWidth - mPointSideWidth)/2 );
+                mPointLeftOffset = mPointRect.width() / 2 ;
+                mPointTopOffset = mPointRect.width() * 2;
+                if (mPoint.contains("blank")) {
+                    String[] ids = mPoint.split("k");
+                    try {
+                        mPointId = Integer.valueOf(ids[1]);
+                    } catch (Exception e) {
+
+                    }
+                    mPointContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
+                    mPointBlock = new BlankBlock(textEnv, mPointContent);
+                    mPointBlock.setTabId(Integer.valueOf(ids[1]));
+                    mPointBlock.setFocusable(true);
+                    mPointBlock.setFocus(false);
+                    mPointBlock.setEditable(true);
+                    mPointBlock.setX(mPointRect.left);
+                    mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
+                }
+            }
+        }
+        //计算值的坐标
         if (!TextUtils.isEmpty(mValue)) {
             Rect textRect = new Rect();
             mValuePaint.getTextBounds(mValue, 0, 1, textRect);
@@ -188,6 +248,9 @@ public class NumberCell {
         if (mFlagBlock != null) {
             mList.add(mFlagBlock);
         }
+        if (mPointBlock != null) {
+            mList.add(mPointBlock);
+        }
     }
 
     public void draw(Canvas canvas, int offsetX) {
@@ -228,6 +291,20 @@ public class NumberCell {
                         mFlagPaint);
             }
         }
+
+        if (mPointRect != null) {
+            if (mPointBlock != null) {
+                mPointBlock.draw(canvas);
+            } else {
+                if (TextUtils.equals(mPoint,"point")) {
+                    mPoint = ".";
+                }
+                canvas.drawText(mPoint,
+                        mPointRect.right + mPointLeftOffset ,
+                        mValueRect.bottom - mPointTopOffset ,
+                        mPointPaint);
+            }
+        }
     }
 
     public Rect getRect() {
@@ -239,6 +316,8 @@ public class NumberCell {
             return mFlagBlock;
         } else if (mValueBlock != null && mValueBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
             return mValueBlock;
+        } else if (mPointBlock != null && mPointBlock.getBlockRect().contains((int) (x - mOffsetX), (int) (y))) {
+            return mPointBlock;
         }
         return null;
     }
@@ -249,13 +328,17 @@ public class NumberCell {
 
     public boolean getValue(int id, EditableValue ev) {
         return (id == mNumberId && (mValuePaint.getColor() != ev.getColor() || mValue != ev.getValue())) ||
-                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != ev.getValue()));
+                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != ev.getValue()))||
+                (id == mPointId && (mPointPaint.getColor() != ev.getColor() || mPoint != ev.getValue()));
     }
 
     public void setValue(int id, String value, int color) {
         if (id == mNumberId) {
             mValue = value;
             mValuePaint.setColor(color);
+        } else if (id == mPointId) {
+            mPoint = value;
+            mPointPaint.setColor(color);
         } else {
             mFlag = value;
             mFlagPaint.setColor(color);

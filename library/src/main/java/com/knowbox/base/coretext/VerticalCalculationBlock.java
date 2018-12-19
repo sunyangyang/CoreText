@@ -39,6 +39,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;//
     public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;//20
     public static final int FLAG_RECT_SIZE = Const.DP_1 * 16;
+    public static final int POINT_RECT_SIZE = Const.DP_1 * 8;
     public static final int RECT_PADDING_SIZE = Const.DP_1 * 10;
     private float mScale = 1.0f;
     private float mFlagScale = 1.37f;
@@ -52,8 +53,10 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mCellRectWidth;
     private int mCellRectHeight;
     private CalculationStyle[] mStyle;
-    private String[][] mValues;
-    private String[][] mFlag;
+    private String[][] mValues;//值
+    private String[][] mFlag;//进位、借位
+    private String[][] mPoint;//小数点
+    private String[][] mStroke;//划去空
     private NumberCell[][] mLeftCells;
     private int[] mHorizontalLines;
     private int[] mHorizontalLinesHeight;
@@ -68,6 +71,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private float mFlagPaintSize = FLAG_PAINT_SIZE;//
     private int mNumberRectSize = NUMBER_RECT_SIZE;//20
     private int mFlagRectSize = FLAG_RECT_SIZE;
+    private int mPointRectSize = POINT_RECT_SIZE;
     private int mRectPaddingSize = RECT_PADDING_SIZE;
     private TextEnv.EditableValueChangeListener mListener;
     private CYHorizontalAlign mAlign;
@@ -116,6 +120,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mFlagPaintSize = FLAG_PAINT_SIZE * mScale * mFlagScale;
         mNumberRectSize = (int) (NUMBER_RECT_SIZE * mScale);
         mFlagRectSize = (int) (FLAG_RECT_SIZE * mScale * mFlagScale);
+        mPointRectSize = (int) (POINT_RECT_SIZE * mScale * mFlagScale);
 
         mNormalTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mNormalTextPaint.setStrokeWidth(Const.DP_1);
@@ -144,7 +149,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mDividerPaint.setStyle(Paint.Style.STROKE);
         mDividerPaint.setColor(0xff333333);
 
-        mCellRectWidth = mNumberRectSize + Const.DP_1 * 10;
+        mCellRectWidth = mNumberRectSize + Const.DP_1 * 25;
         mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
         JSONObject object = null;
         try {
@@ -201,6 +206,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         mValues = new String[mRows][mLeftColumns];
         mFlag = new String[mRows][mLeftColumns];
+        mPoint = new String[mRows][mLeftColumns];
 
         //单独设置除法
         mLineStartX = PaintManager.getInstance().getHeight(mSmallTextPaint);
@@ -298,6 +304,14 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             mValues[row + topLines][mLeftColumns - valueLength + k] = valueArray.optString(k);
                         }
                     }
+
+                    JSONArray pointArray = memberObject.optJSONArray("point");
+                    if (pointArray != null) {
+                        int pointLength = pointArray.length();
+                        for (int k = pointLength - 1; k >= 0; k--) {
+                            mPoint[row + topLines][mLeftColumns - pointLength + k] = pointArray.optString(k);
+                        }
+                    }
                 }
 
 //                JSONArray explainArray = memberObject.optJSONArray("explain");
@@ -387,7 +401,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j], mNormalTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mStyleType);
+                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
