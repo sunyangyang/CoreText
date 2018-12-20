@@ -171,6 +171,7 @@ public class ShareSDKService implements ShareService {
         params.setSiteUrl(content.mSiteUrl);
         params.setWxUserName(content.mWxUserName);
         params.setWxPath(content.mWxPath);
+        params.setWxMiniProgramType(content.miniprogramType);
         return params.toMap();
     }
 
