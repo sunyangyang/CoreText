@@ -18,6 +18,8 @@ import com.hyena.framework.clientlog.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
+import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.TYPE_DEFAULT;
 
 /**
@@ -41,6 +43,7 @@ public class NumberCell {
     private Paint mValuePaint;
     private Paint mFlagPaint;
     private Paint mPointPaint;
+    private Paint mStrokePaint;
     List<ICYEditable> mList = new ArrayList<ICYEditable>();
     private BlankBlock mValueBlock;
     private BlankBlock mFlagBlock;
@@ -51,6 +54,7 @@ public class NumberCell {
     private String mValue;
     private String mFlag;
     private String mPoint;
+    private String mStroke;
     private float mDelOffset;
     private int mNumberId;
     private int mFlagId;
@@ -59,13 +63,14 @@ public class NumberCell {
     private int mStyleType;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
-                      String value, String flag, String point,Paint valuePaint,
+                      String value, String flag, String point,String stroke,Paint valuePaint,
                       Paint flagPaint, Paint pointPaint,int valueTopMargin, int valueLeftMargin,
                       int sideWidth, int flagSideWidth,int pointSideWidth, int styleType) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
         mPoint = point;
+        mStroke = stroke;
         mSideWidth = sideWidth;
         mFlagSideWidth = flagSideWidth;
         mPointSideWidth = pointSideWidth;
@@ -76,6 +81,8 @@ public class NumberCell {
         mPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPointPaint.set(pointPaint);
         mPointPaint.setTextSize(mValuePaint.getTextSize());
+
+        mStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mStyleType = styleType;
         int flagLeftMargin = 0;
         int flagTopMargin = 0;
@@ -183,7 +190,7 @@ public class NumberCell {
                     } catch (Exception e) {
 
                     }
-                    mPointContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"flag\",\"id\": " + ids[1] + "}";
+                    mPointContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"point\",\"id\": " + ids[1] + "}";
                     mPointBlock = new BlankBlock(textEnv, mPointContent);
                     mPointBlock.setTabId(Integer.valueOf(ids[1]));
                     mPointBlock.setFocusable(true);
@@ -191,6 +198,7 @@ public class NumberCell {
                     mPointBlock.setEditable(true);
                     mPointBlock.setX(mPointRect.left);
                     mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
+                    mPointBlock.setStrokeble(!TextUtils.isEmpty(mStroke));
                 }
             }
         }
@@ -230,13 +238,14 @@ public class NumberCell {
                     }
                     mValueContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"" + size + "\",\"id\": " + ids[1] + "}";
                     mValueBlock = new BlankBlock(textEnv, mValueContent);
-
                     mValueBlock.setTabId(Integer.valueOf(ids[1]));
                     mValueBlock.setFocusable(true);
                     mValueBlock.setFocus(false);
                     mValueBlock.setEditable(true);
                     mValueBlock.setX(mValueRect.left);
                     mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
+                    mValueBlock.setStrokeble(!TextUtils.isEmpty(mStroke));
+
                 }
             }
         }
@@ -258,6 +267,28 @@ public class NumberCell {
         if (mValueRect != null) {
             if (mValueBlock != null) {
                 mValueBlock.draw(canvas);
+                if (mValueBlock.getStrokeble()) {
+                    if (mValueBlock.isStroke()) {
+                        mStrokePaint.setColor(Color.TRANSPARENT);
+                        canvas.drawText(
+                                "",
+                                mValueRect.left + mValueLeftOffset + mDelOffset,
+                                mValueRect.bottom - mValueTopOffset,
+                                mStrokePaint);
+                    } else {
+                        mStrokePaint.setStrokeWidth(Const.DP_1);
+                        mStrokePaint.setStyle(Paint.Style.FILL);
+                        mStrokePaint.setTextSize(NUMBER_PAINT_SIZE);
+                        mStrokePaint.setColor(0xff333333);
+                        canvas.drawText(
+                                "\\",
+                                mValueRect.left + mValueLeftOffset + mDelOffset,
+                                mValueRect.bottom - mValueTopOffset,
+                                mStrokePaint);
+                    }
+
+                }
+
             } else {
                 if ("del0".equals(mValue)) {
                     canvas.drawText(
@@ -284,6 +315,27 @@ public class NumberCell {
         if (mFlagRect != null) {
             if (mFlagBlock != null) {
                 mFlagBlock.draw(canvas);
+                if (mFlagBlock.getStrokeble()) {
+                    if (mFlagBlock.isStroke()) {
+                        mStrokePaint.setColor(Color.TRANSPARENT);
+                        canvas.drawText(
+                                "",
+                                mValueRect.left + mValueLeftOffset + mDelOffset,
+                                mValueRect.bottom - mValueTopOffset,
+                                mStrokePaint);
+                    } else {
+                        mStrokePaint.setStrokeWidth(Const.DP_1);
+                        mStrokePaint.setStyle(Paint.Style.FILL);
+                        mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
+                        mStrokePaint.setColor(0xff333333);
+                        canvas.drawText(
+                                "\\",
+                                mValueRect.left + mValueLeftOffset + mDelOffset,
+                                mValueRect.bottom - mValueTopOffset,
+                                mStrokePaint);
+                    }
+
+                }
             } else {
                 canvas.drawText(mFlag,
                         mFlagRect.left + mFlagLeftOffset,

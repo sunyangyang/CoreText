@@ -207,6 +207,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mValues = new String[mRows][mLeftColumns];
         mFlag = new String[mRows][mLeftColumns];
         mPoint = new String[mRows][mLeftColumns];
+        mStroke = new String[mRows][mLeftColumns];
 
         //单独设置除法
         mLineStartX = PaintManager.getInstance().getHeight(mSmallTextPaint);
@@ -312,6 +313,14 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             mPoint[row + topLines][mLeftColumns - pointLength + k] = pointArray.optString(k);
                         }
                     }
+
+                    JSONArray strokeArray = memberObject.optJSONArray("stroke");
+                    if (strokeArray != null) {
+                        int strokeLength = strokeArray.length();
+                        for (int k = strokeLength - 1; k >= 0; k--) {
+                            mStroke[row + topLines][mLeftColumns - strokeLength + k] = strokeArray.optString(k);
+                        }
+                    }
                 }
 
 //                JSONArray explainArray = memberObject.optJSONArray("explain");
@@ -401,7 +410,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
+                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {

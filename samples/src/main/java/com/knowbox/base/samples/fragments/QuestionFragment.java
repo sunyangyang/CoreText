@@ -240,7 +240,7 @@ public class QuestionFragment extends Fragment {
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#下列各数中，最大的是(    )。#{\"type\":\"P\"}#0.42#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.4#{\"type\":\"latex\",\"content\":\"\\\\dot{2}\"}##{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.#{\"type\":\"latex\",\"content\":\"\\\\dot{4}\"}#2#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.429#{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read_pure_pinyin_center\"}#请(!qǐng!)你(!nǐ!)帮(!bāng!)助(!zhù!)布(!bù!)克(!kè!)给(!gěi!)下(!xià!)列(!liè!)句(!jù!)子(!zǐ!)的(!de!)“着”字(!zì!)注(!zhù!)音(!yīn!)。#{\"type\":\"P\"}#他(!tā!)看(!kàn!)着书(!shū!)，不(!bù!)一(!yī!)会(!huì!)儿(!ér!)就(!jiù!)睡(!shuì!)着(!zhao!)了(!le!)，直(!zhí!)到(!dào!)外(!wài!)面(!miàn!)着(!zhao!)火(!huǒ!)他(!tā!)才(!cái!)醒(!xǐng!)过(!guò!)来(!lái!)。#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#1.5+7.8=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 4}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"1\", \"left_column\": 3, \"right_column\": 0, \"content\": [{\"method\": \"plus\", \"members\": [{\"value\": [\"1\", \"5\"],\"point\": [\"\", \"point\",\"\"], \"explain\": []}, {\"value\": [\"+\", \"7\", \"8\"],\"point\": [\"\", \"point\",\"\"], \"explain\": []}], \"carry_flag\": [\"#{blank2}#\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank1}#\"],\"point\": [\"\", \"#{blank5}#\",\"\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#1.5+7.8=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 4}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"1\", \"left_column\": 3, \"right_column\": 0, \"content\": [{\"method\": \"plus\", \"members\": [{\"value\": [\"1\", \"5\"],\"point\": [\"\", \"point\",\"\"], \"explain\": []}, {\"value\": [\"+\", \"7\", \"8\"],\"point\": [\"\", \"point\",\"\"], \"explain\": []}], \"carry_flag\": [\"#{blank2}#\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank1}#\"],\"point\": [\"\", \"#{blank5}#\",\"\"],\"stroke\": [\"\",\"\", \"#{blank7}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
 
         builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditableValue(1, "A");
@@ -302,7 +302,13 @@ public class QuestionFragment extends Fragment {
                             if (!TextUtils.isEmpty(currentText)) {
                                 editable.setText(currentText.substring(0, currentText.length() - 1));
                             }
-                        } else {
+                        } else if ("stroke".equals(text)) {
+                            if (((BlankBlock)editable).getStrokeble() && ((BlankBlock)editable).isStroke()) {
+                                ((BlankBlock)editable).setStroke(false);
+                            } else {
+                                ((BlankBlock)editable).setStroke(true);
+                            }
+                        }else {
                             editable.setText(currentText + text);
                         }
 
