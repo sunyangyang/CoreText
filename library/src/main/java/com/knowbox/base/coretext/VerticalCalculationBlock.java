@@ -149,7 +149,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mDividerPaint.setStyle(Paint.Style.STROKE);
         mDividerPaint.setColor(0xff333333);
 
-        mCellRectWidth = mNumberRectSize + Const.DP_1 * 25;
+        mCellRectWidth = mNumberRectSize + Const.DP_1 * 15;
         mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
         JSONObject object = null;
         try {
@@ -162,6 +162,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             }
         } catch (JSONException e) {
 
+        }
+        if (content.contains("point")) {
+            mCellRectWidth = mNumberRectSize + Const.DP_1 * 25;//有小数加大宽度
         }
         if (object == null) {
             return;
