@@ -55,6 +55,8 @@ public class NumberCell {
     private String mFlag;
     private String mPoint;
     private String mStroke;
+    private String mDefValue;
+    private String mDefPoint;
     private float mDelOffset;
     private int mNumberId;
     private int mFlagId;
@@ -63,7 +65,7 @@ public class NumberCell {
     private int mStyleType;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
-                      String value, String flag, String point,String stroke,Paint valuePaint,
+                      String value, String flag, String point,String stroke,String defValue,String defPoint,Paint valuePaint,
                       Paint flagPaint, Paint pointPaint,int valueTopMargin, int valueLeftMargin,
                       int sideWidth, int flagSideWidth,int pointSideWidth, int styleType) {
         mRect = rect;
@@ -71,6 +73,8 @@ public class NumberCell {
         mFlag = flag;
         mPoint = point;
         mStroke = stroke;
+        mDefValue = defValue;
+        mDefPoint = defPoint;
         mSideWidth = sideWidth;
         mFlagSideWidth = flagSideWidth;
         mPointSideWidth = pointSideWidth;
@@ -199,6 +203,10 @@ public class NumberCell {
                     mPointBlock.setX(mPointRect.left);
                     mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
                     mPointBlock.setStrokeble(!TextUtils.isEmpty(mStroke));
+                    if (TextUtils.isEmpty(mDefPoint) && mValueBlock != null) {
+                        mValueBlock.setText(".");
+                        mValueBlock.setEditable(false);
+                    }
                 }
             }
         }
@@ -245,6 +253,10 @@ public class NumberCell {
                     mValueBlock.setX(mValueRect.left);
                     mValueBlock.setLineY(mValueRect.top + mValueRect.height() / 2);
                     mValueBlock.setStrokeble(!TextUtils.isEmpty(mStroke));
+                    if (TextUtils.isEmpty(mDefValue) && mValueBlock != null) {
+                        mValueBlock.setText(mDefValue);
+                        mValueBlock.setEditable(false);
+                    }
 
                 }
             }

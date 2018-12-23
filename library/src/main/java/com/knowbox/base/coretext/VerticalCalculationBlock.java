@@ -57,6 +57,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private String[][] mFlag;//进位、借位
     private String[][] mPoint;//小数点
     private String[][] mStroke;//划去空
+    private String[][] mDefValues;//默认大空值
+    private String[][] mDefPoints;//默认小数点值
     private NumberCell[][] mLeftCells;
     private int[] mHorizontalLines;
     private int[] mHorizontalLinesHeight;
@@ -149,7 +151,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mDividerPaint.setStyle(Paint.Style.STROKE);
         mDividerPaint.setColor(0xff333333);
 
-        mCellRectWidth = mNumberRectSize + Const.DP_1 * 15;
+        mCellRectWidth = mNumberRectSize + Const.DP_1 * 10;
         mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
         JSONObject object = null;
         try {
@@ -202,6 +204,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         //除法多了被除数、除数和商两行
         JSONArray quotientArray = object.optJSONArray("quotient");
+        JSONArray quotientPointArray = object.optJSONArray("quotient_point");
         if (quotientArray != null) {
             topLines = 2;
             mRows += topLines;
@@ -211,6 +214,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mFlag = new String[mRows][mLeftColumns];
         mPoint = new String[mRows][mLeftColumns];
         mStroke = new String[mRows][mLeftColumns];
+        //针对除法有默认0情况
+        mDefValues = new String[mRows][mLeftColumns];
+        mDefPoints = new String[mRows][mLeftColumns];
 
         //单独设置除法
         mLineStartX = PaintManager.getInstance().getHeight(mSmallTextPaint);
@@ -218,6 +224,13 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             int quotientLength = quotientArray.length();
             for (int i = quotientLength - 1; i >= 0; i--) {
                 mValues[0][mLeftColumns - (quotientLength - i)] = quotientArray.optString(i);
+            }
+        }
+
+        if (quotientPointArray != null) {
+            int quotientPointLength = quotientPointArray.length();
+            for (int i = quotientPointLength - 1; i >= 0; i--) {
+                mPoint[0][mLeftColumns - (quotientPointLength - i)] = quotientPointArray.optString(i);
             }
         }
 
@@ -238,7 +251,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             if (array1 != null) {
                 arrayLength1 = array1.length();
                 int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
-                mDividerEndX = arrayLength1 * mCellRectWidth + offset / 2;
+                mDividerEndX = arrayLength1* mCellRectWidth + offset / 2;
                 mLineStartX = mDividerEndX;
                 mDividerY = mCellRectWidth + mOffsetTop + offset / 2;
                 mPath.moveTo(mDividerEndX, mCellRectWidth + mOffsetTop + offset / 2);
@@ -248,8 +261,114 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 }
             }
         }
-        mLeftCells = new NumberCell[mRows][mLeftColumns];
 
+        JSONArray divideNewPairArray = object.optJSONArray("divide_new_pair");
+        if (divideNewPairArray != null) {
+            JSONArray array0 = divideNewPairArray.optJSONArray(0);//被除数
+            JSONArray array1 = divideNewPairArray.optJSONArray(1);//除数
+
+            JSONArray valueArray0 = new JSONArray();//被除数值
+            JSONArray pointArray0 = new JSONArray();//被除数小数点
+
+            JSONArray valueArray1 = new JSONArray();//除数值
+            JSONArray pointArray1 = new JSONArray();//除数小数点
+
+            int arrayLength0 = 0;
+            int arrayLength1 = 0;
+
+            if (array0 != null && array1 != null) {
+                arrayLength0 = array0.length();
+                arrayLength1 = array1.length();
+                //计算被除数中小数点个数
+                for (int i = 0; i < arrayLength0; i++) {
+                    JSONObject valueObject = array0.optJSONObject(i);
+                    if (valueObject != null) {
+                        if (valueObject.has("num")) {
+                            valueArray0.put(valueObject);
+                        } else {
+                            pointArray0.put(valueObject);
+                        }
+                    }
+                }
+                //计算除数中小数点个数
+                for (int i = 0; i < arrayLength1; i++) {
+                    JSONObject valueObject = array1.optJSONObject(i);
+                    if (valueObject != null) {
+                        if (valueObject.has("num")) {
+                            valueArray1.put(valueObject);
+                        } else {
+                            pointArray1.put(valueObject);
+                        }
+                    }
+                }
+
+                //给被除数的值赋值
+                for (int i = valueArray0.length() - 1; i >= 0; i--) {
+                    JSONObject valueObject = valueArray0.optJSONObject(i);
+                    if (valueObject != null) {
+                            if (valueObject.has("stroke")) {
+                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
+                                mDefValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
+                            } else {
+                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
+                            }
+                        }
+                    }
+                //给被除数的小数点赋值
+                for (int i = pointArray0.length() - 1; i >= 0; i--) {
+                    JSONObject valueObject = pointArray0.optJSONObject(i);
+                    if (valueObject != null) {
+                        if (!valueObject.has("num")) {
+                            if (valueObject.has("stroke")) {
+                                mPoint[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
+                                mDefPoints[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("value");
+                            } else {
+                                mPoint[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("add_point");
+                            }
+                        }
+                    }
+                }
+
+                //给除数的值赋值
+                for (int i = valueArray1.length() - 1; i >= 0; i--) {
+                    JSONObject valueObject = valueArray1.optJSONObject(i);
+                    if (valueObject != null) {
+                        if (valueObject.has("stroke")) {
+                            mValues[1][i] = valueObject.optString("stroke");
+                            mDefValues[1][i] = valueObject.optString("num");
+                        } else {
+                            mValues[1][i] = valueObject.optString("num");
+                        }
+                    }
+                }
+                //给除数的小数点赋值
+                for (int i = pointArray1.length() - 1; i >= 0; i--) {
+                    JSONObject valueObject = pointArray1.optJSONObject(i);
+                    if (valueObject != null) {
+                        if (!valueObject.has("num")) {
+                            if (valueObject.has("stroke")) {
+                                mPoint[1][i] = valueObject.optString("stroke");
+                                mDefPoints[1][i] = valueObject.optString("value");
+                            } else {
+                                mPoint[1][i] = valueObject.optString("add_point");
+                            }
+                        }
+                    }
+                }
+
+                }
+            mStyle[0] = CalculationStyle.Divide;
+            //画除号
+            int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
+            mDividerEndX = (arrayLength1 - 1) * mCellRectWidth - 10 *  Const.DP_1;
+            mLineStartX = mDividerEndX;
+            mDividerY = mCellRectWidth - 10 *  Const.DP_1;
+            mPath.moveTo(mDividerEndX, mCellRectWidth  - 10 *  Const.DP_1);
+            mPath.quadTo(mDividerEndX, mCellRectWidth * (1 + 3.0f / 4)  + offset / 2, mDividerEndX - offset / 2, 2 * mCellRectWidth   + offset / 2);
+
+        }
+
+        mLeftCells = new NumberCell[mRows][mLeftColumns];
 
         int leftMargin = Const.DP_1 * 10;
         //加法和乘法中有进位的时候，设置宽度
@@ -325,15 +444,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                         }
                     }
                 }
-
-//                JSONArray explainArray = memberObject.optJSONArray("explain");
-//                if (explainArray != null) {
-//                    int explainLength = explainArray.length();
-//                    for (int k = 0; k < explainLength; k++) {
-//                        mExplain[row + topLines][k] = explainArray.optString(k);
-//                    }
-//                }
-
                 row++;
             }
             JSONArray flagArray = jsonObject.optJSONArray("carry_flag");
@@ -413,7 +523,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
+                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mDefValues[k][j],mDefPoints[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
