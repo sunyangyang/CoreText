@@ -35,11 +35,12 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     public static final int TYPE_DEFAULT = 0;
     public static final int TYPE_HU = 1;//沪教版
 
-    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;//16
-    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;//
-    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;//20
+    public static final float BORROW_POINT_PAINT_SIZE = Const.DP_1 * 50;
+    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;
+    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;
+    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;
     public static final int FLAG_RECT_SIZE = Const.DP_1 * 16;
-    public static final int POINT_RECT_SIZE = Const.DP_1 * 8;
+    public static final int POINT_RECT_SIZE = Const.DP_1 * 16;
     public static final int RECT_PADDING_SIZE = Const.DP_1 * 10;
     private float mScale = 1.0f;
     private float mFlagScale = 1.37f;
@@ -166,7 +167,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         }
         if (content.contains("point")) {
-            mCellRectWidth = mNumberRectSize + Const.DP_1 * 25;//有小数加大宽度
+            mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;//有小数加大宽度
         }
         if (object == null) {
             return;

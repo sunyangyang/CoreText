@@ -130,6 +130,10 @@ public class BlankBlock extends CYEditBlock {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
+                }  else if ("borrow_flag".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
                 }
                 ((EditFace)getEditFace()).updateEnv();
             } else {
