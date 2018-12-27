@@ -301,17 +301,10 @@ public class BlankBlock extends CYEditBlock {
 //                    return;
 //                }
                 int width = 0;
-                String content = "";
                 if (words != null) {
                     for (int i = 0; i < words.size(); i++) {
-                        if(TextUtils.isEmpty(words.get(i).pinyin)){
-                            content += words.get(i).word;
-                        }
-                        else {
-                            content += words.get(i).pinyin;
-                        }
+                        width += ((EditFace)getEditFace()).getPinyinWordWidth(words.get(i));
                     }
-                    width = (int) (PaintManager.getInstance().getWidth(((EditFace)getEditFace()).getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
                 } else {
                     width = Const.DP_1 * 32;
                 }
@@ -393,18 +386,10 @@ public class BlankBlock extends CYEditBlock {
 //                    return;
 //                }
                 int width = 0;
-                String content = "";
                 if (words != null) {
                     for (int i = 0; i < words.size(); i++) {
-                        if(TextUtils.isEmpty(words.get(i).pinyin)){
-                            content += words.get(i).word;
-                        }
-                        else {
-                            content += words.get(i).pinyin;
-                        }
+                        width += ((EditFace)getEditFace()).getPinyinWordWidth(words.get(i));
                     }
-                    width = (int) Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(((EditFace)getEditFace())
-                            .getPinYinPaint(), content) + words.size() * PLACE_HOLDER_WORD);
                 } else {
                     width = Const.DP_1 * 32;
                 }
