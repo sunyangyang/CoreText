@@ -79,6 +79,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private TextEnv.EditableValueChangeListener mListener;
     private CYHorizontalAlign mAlign;
     private int mStyleType = TYPE_DEFAULT;
+    private boolean mPointStyle = false;
 
     public enum CalculationStyle {
         Plus,
@@ -167,6 +168,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         }
         if (content.contains("point")) {
+            mPointStyle = true;
             mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;//有小数加大宽度
         }
         if (object == null) {
@@ -501,8 +503,13 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                 } else {
                     if (mStyleType == TYPE_DEFAULT) {
-                        topMargin = Const.DP_1 * 10;
-                        mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                        if (mPointStyle) {
+                            topMargin = Const.DP_1 * 10;
+                            mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
+                        } else {
+                            topMargin = Const.DP_1 * 10;
+                            mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                        }
                     } else {
                         if (k == mHorizontalLines[linesPosition - 1] - topLines - 1 &&
                                 mStyleType == TYPE_HU &&
@@ -510,8 +517,13 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             topMargin = Const.DP_1 * 10;
                             mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
                         } else {
-                            topMargin = Const.DP_1 * 10;
-                            mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                            if (mPointStyle) {
+                                topMargin = Const.DP_1 * 10;
+                                mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
+                            } else {
+                                topMargin = Const.DP_1 * 10;
+                                mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
+                            }
                         }
                     }
                 }
@@ -524,7 +536,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mDefValues[k][j],mDefPoints[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType);
+                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mDefValues[k][j],mDefPoints[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType,mPointStyle);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {

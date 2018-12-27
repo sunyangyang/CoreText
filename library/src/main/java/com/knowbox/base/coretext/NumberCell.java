@@ -65,11 +65,12 @@ public class NumberCell {
     private int mPointId;
     private int mOffsetX;
     private int mStyleType;
+    private boolean mPointStyle = false;
 
     public NumberCell(TextEnv textEnv, Rect rect, VerticalCalculationBlock.CalculationStyle style,
                       String value, String flag, String point, String stroke, String defValue, String defPoint, Paint valuePaint,
                       Paint flagPaint, Paint pointPaint, int valueTopMargin, int valueLeftMargin,
-                      int sideWidth, int flagSideWidth, int pointSideWidth, int styleType) {
+                      int sideWidth, int flagSideWidth, int pointSideWidth, int styleType, boolean pointStyle) {
         mRect = rect;
         mValue = value;
         mFlag = flag;
@@ -80,6 +81,7 @@ public class NumberCell {
         mSideWidth = sideWidth;
         mFlagSideWidth = flagSideWidth;
         mPointSideWidth = pointSideWidth;
+        mPointStyle = pointStyle;
         mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mValuePaint.set(valuePaint);
         mFlagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -128,10 +130,17 @@ public class NumberCell {
                 if (style == VerticalCalculationBlock.CalculationStyle.Plus ||
                         style == VerticalCalculationBlock.CalculationStyle.Multiplication) {
                     if (mStyleType == TYPE_DEFAULT) {
-                        mFlagRect = new Rect(rect.left + flagLeftMargin,
-                                rect.bottom - mFlagSideWidth - Const.DP_1,
-                                rect.left + flagLeftMargin + mFlagSideWidth,
-                                rect.bottom - Const.DP_1);
+                        if (mPointStyle) {//有小数情况
+                            mFlagRect = new Rect(rect.left + valueLeftMargin + mSideWidth/2,
+                                    rect.bottom - mFlagSideWidth - Const.DP_1,
+                                    (int) (rect.left + valueLeftMargin + mSideWidth/2 + mFlagSideWidth),
+                                    rect.bottom - Const.DP_1);
+                        } else {
+                            mFlagRect = new Rect(rect.left + flagLeftMargin,
+                                    rect.bottom - mFlagSideWidth - Const.DP_1,
+                                    rect.left + flagLeftMargin + mFlagSideWidth,
+                                    rect.bottom - Const.DP_1);
+                        }
                     } else {
                         mFlagRect = new Rect(rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2,
                                 rect.bottom - mFlagSideWidth - Const.DP_1,
@@ -358,7 +367,7 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
-                if (TextUtils.equals(mPoint, "point")) {
+                if (TextUtils.equals(mPoint, "point")) {//绘制真正小数点
                     mPoint = ".";
                 }
                 canvas.drawText(mPoint,

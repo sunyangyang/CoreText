@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
 import static com.knowbox.base.coretext.BlankBlock.PLACE_HOLDER_WORD;
+import static com.knowbox.base.coretext.VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
 
@@ -420,6 +421,21 @@ public class EditFace extends CYEditFace {
                     canvas.clipRect(contentRect);
                     float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
                     this.mTextPaint.setTextSize(NUMBER_PAINT_SIZE);
+                    canvas.drawText(text, x, y, this.mTextPaint);
+                    canvas.restore();
+                } else {
+                    this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
+                    super.drawText(canvas, text, blockRect, contentRect, false);
+                }
+            }
+        } else if ("borrow_flag".equals(mSize)) {
+            if(!TextUtils.isEmpty(text)) {
+                if (text.equals(".")) {
+                    float x = contentRect.left - this.mTextPaintMetrics.bottom / 3;
+                    canvas.save();
+                    canvas.clipRect(contentRect);
+                    float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                    this.mTextPaint.setTextSize(BORROW_POINT_PAINT_SIZE);
                     canvas.drawText(text, x, y, this.mTextPaint);
                     canvas.restore();
                 } else {

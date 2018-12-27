@@ -94,7 +94,9 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
-            } else if ("point".equals(getSize())) {
+            } else if ("borrow_flag".equals(getSize())) {
+                mTextLength = 1;
+            }else if ("point".equals(getSize())) {
                 mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
                 mTextLength = 400;
@@ -133,7 +135,7 @@ public class BlankBlock extends CYEditBlock {
                 }  else if ("borrow_flag".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
-                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
+                    setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
                 }
                 ((EditFace)getEditFace()).updateEnv();
             } else {
@@ -386,6 +388,9 @@ public class BlankBlock extends CYEditBlock {
             } else if ("flag".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+            } else if ("borrow_flag".equals(size)) {
+                this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+                this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else if ("point".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
@@ -534,13 +539,7 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public String getText() {
-        if ("flag".equals(getSize())) {
-            return "p";
-        } else if ("borrow_flag".equals(getSize())) {
-            return ".";
-        } else {
-            return super.getText();
-        }
+        return super.getText();
     }
 
     @Override
@@ -602,6 +601,10 @@ public class BlankBlock extends CYEditBlock {
             return true;
         }
         return false;
+    }
+
+    public boolean isBorrowFlagBlank() {
+        return "borrow_flag".equals(size);
     }
 
     public void notifyLayoutChange() {
