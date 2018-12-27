@@ -277,18 +277,19 @@ public class NumberCell {
             if (mValueBlock != null) {
                 mValueBlock.draw(canvas);
                 if (mValueBlock.isStroke()) {
+                    mStrokePaint.setStrokeWidth(Const.DP_1);
+                    mStrokePaint.setStyle(Paint.Style.FILL);
+                    mStrokePaint.setTextSize(NUMBER_PAINT_SIZE);
+                    mStrokePaint.setColor(0xff333333);
+                    canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1,
+                            mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
+                } else {
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText(
                             "",
                             mValueRect.left + mValueLeftOffset + mDelOffset,
                             mValueRect.bottom - mValueTopOffset,
                             mStrokePaint);
-                } else {
-                    mStrokePaint.setStrokeWidth(Const.DP_1);
-                    mStrokePaint.setStyle(Paint.Style.FILL);
-                    mStrokePaint.setTextSize(NUMBER_PAINT_SIZE);
-                    mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1, mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
                 }
             } else {
                 if ("del0".equals(mValue)) {
@@ -317,18 +318,19 @@ public class NumberCell {
             if (mFlagBlock != null) {
                 mFlagBlock.draw(canvas);
                 if (mFlagBlock.isStroke()) {
+                    mStrokePaint.setStrokeWidth(Const.DP_1);
+                    mStrokePaint.setStyle(Paint.Style.FILL);
+                    mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
+                    mStrokePaint.setColor(0xff333333);
+                    canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1,
+                            mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                } else {
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText(
                             "",
                             mValueRect.left + mValueLeftOffset + mDelOffset,
                             mValueRect.bottom - mValueTopOffset,
                             mStrokePaint);
-                } else {
-                    mStrokePaint.setStrokeWidth(Const.DP_1);
-                    mStrokePaint.setStyle(Paint.Style.FILL);
-                    mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
-                    mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1, mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 }
             } else {
                 canvas.drawText(mFlag,
@@ -342,17 +344,18 @@ public class NumberCell {
             if (mPointBlock != null) {
                 mPointBlock.draw(canvas);
                 if (mPointBlock.isStroke()) {
-                    mStrokePaint.setColor(Color.TRANSPARENT);
-                    canvas.drawText("",
-                            mPointRect.centerX(),
-                            mPointRect.centerY(),
-                            mStrokePaint);
-                } else {
                     mStrokePaint.setStrokeWidth(Const.DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
                     mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
                     mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1, mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                    canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
+                            mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                } else {
+                    mStrokePaint.setColor(Color.TRANSPARENT);
+                    canvas.drawText("",
+                            mPointRect.left,
+                            mPointRect.top,
+                            mStrokePaint);
                 }
             } else {
                 if (TextUtils.equals(mPoint, "point")) {

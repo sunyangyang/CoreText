@@ -39,7 +39,7 @@ public class BlankBlock extends CYEditBlock {
     private String mPinyinSize;
     private int mWidth, mHeight;
     private boolean mStrokeble;
-    private boolean mStroke = true;
+    private boolean mStroke = false;
 
     private double mOffsetX, mOffsetY;
     private final int mMargin = Const.DP_1 * 3;
@@ -131,9 +131,9 @@ public class BlankBlock extends CYEditBlock {
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
                 }  else if ("borrow_flag".equals(size)) {
-                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE);
-                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE);
-                    setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
                 }
                 ((EditFace)getEditFace()).updateEnv();
             } else {
@@ -167,7 +167,7 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
-            if ("point".equals(text)) {
+            if ("p".equals(text)) {
                 text = ".";
             }
             getTextEnv().setEditableValue(getTabId(), text);
@@ -535,7 +535,7 @@ public class BlankBlock extends CYEditBlock {
     @Override
     public String getText() {
         if ("flag".equals(getSize())) {
-            return "point";
+            return "p";
         } else if ("borrow_flag".equals(getSize())) {
             return ".";
         } else {
