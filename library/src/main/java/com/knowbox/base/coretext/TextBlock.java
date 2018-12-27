@@ -5,9 +5,11 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.utils.BaseConstant;
 
 import java.util.List;
@@ -79,6 +81,10 @@ public class TextBlock extends CYTextBlock {
         }
     }
 
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
+        this.fontMetrics = this.paint.getFontMetrics();
+    }
 
     @Override
     public int getContentHeight() {
@@ -104,6 +110,12 @@ public class TextBlock extends CYTextBlock {
 
         this.width = (int)textWidth;
         this.height = (int)textHeight;
+    }
+
+    @Override
+    public void setTextHeightInLine(int textHeight) {
+        super.setTextHeightInLine(textHeight);
+        this.height = textHeight - this.getPaddingBottom() - this.getPaddingTop();
     }
 
     public static String getPunc(String content) {
