@@ -167,6 +167,9 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
+            if ("point".equals(text)) {
+                text = ".";
+            }
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() ||
                     "express".equals(size) ||
@@ -531,7 +534,13 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public String getText() {
-        return super.getText();
+        if ("flag".equals(getSize())) {
+            return "point";
+        } else if ("borrow_flag".equals(getSize())) {
+            return ".";
+        } else {
+            return super.getText();
+        }
     }
 
     @Override

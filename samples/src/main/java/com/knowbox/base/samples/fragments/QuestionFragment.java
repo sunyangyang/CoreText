@@ -314,8 +314,6 @@ public class QuestionFragment extends Fragment {
                             } else {
                                 ((BlankBlock)editable).setStroke(true);
                             }
-                        } else if ("point".equals(text)) {
-                            editable.setText(currentText + ".");
                         } else {
                             editable.setText(currentText + text);
                         }
