@@ -337,8 +337,8 @@ public class NumberCell {
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText(
                             "",
-                            mValueRect.left + mValueLeftOffset + mDelOffset,
-                            mValueRect.bottom - mValueTopOffset,
+                            mFlagRect.left + mValueLeftOffset + mDelOffset,
+                            mFlagRect.bottom - mValueTopOffset,
                             mStrokePaint);
                 }
             } else {
