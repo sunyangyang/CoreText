@@ -350,8 +350,13 @@ public class NumberCell {
         }
 
         if (mPointRect != null) {
+            //装换小数点
+            if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
+                this.mPoint = ".";
+            }
             if (mPointBlock != null) {
                 mPointBlock.draw(canvas);
+                //绘制划去
                 if (mPointBlock.isStroke()) {
                     mStrokePaint.setStrokeWidth(Const.DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
@@ -360,6 +365,7 @@ public class NumberCell {
                     canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
                             mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 } else {
+                    //取消划去
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText("",
                             mPointRect.left,
@@ -367,14 +373,10 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
-                if (TextUtils.equals(mPoint, "point")) {//绘制真正小数点
-                    mPoint = ".";
-                }
                 canvas.drawText(mPoint,
                         mPointRect.left + mPointRect.width() / 2 - Const.DP_1 * 3,
                         mPointRect.bottom - mPointRect.height() / 2,
                         mPointPaint);
-
             }
         }
     }
