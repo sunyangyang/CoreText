@@ -11,6 +11,7 @@ import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.builder.CYBlockProvider;
 import com.hyena.coretext.event.CYLayoutEventListener;
 import com.hyena.coretext.layout.CYHorizontalLayout;
 import com.hyena.coretext.utils.Const;
@@ -37,7 +38,6 @@ public class DeliveryManualAnswerCell {
     private List<CYBlock> mCellBlocks = new ArrayList<>();
     private CYPageBlock mCellPageBlock;
     private int mColor = -1;
-    protected Paint mPaint;
     private int lineY;
 
     public DeliveryManualAnswerCell( TextEnv textEnv,final DeliveryNewBlock deliveryNewBlock,
@@ -45,15 +45,24 @@ public class DeliveryManualAnswerCell {
 
        // this.mListener = mListerer;
         mDeliveryNewBlock = deliveryNewBlock;
+        try {
+            if (!TextUtils.isEmpty(color)) {
+                mColor = Color.parseColor(color);
+            } else {
+                mColor = -1;
+            }
+        } catch (Exception e) {
+
+        }
 
         answerTextEnv = new TextEnv(textEnv.getContext());
         answerTextEnv.setTextAlign(TextEnv.Align.CENTER);
         answerTextEnv.setEditable(false);
+        answerTextEnv.setTextColor(mColor);
         answerTextEnv.setFontSize(textEnv.getFontSize());
         answerTextEnv.setVerticalSpacing(textEnv.getVerticalSpacing());
         answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth() -mPaddingLeft*2));
         answerTextEnv.setSuggestedPageHeight(textEnv.getSuggestedPageHeight());
-
 
 
         try {
@@ -66,26 +75,23 @@ public class DeliveryManualAnswerCell {
 
         }
 
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.set(textEnv.getPaint());
-        if (mColor != -1) {
-            mPaint.setColor(mColor);
-        }
 
         blockRange(answer);
     }
 
     private void blockRange(String answer){
-        if (mCellBlocks != null && !mCellBlocks.isEmpty()) {
+
+            mCellBlocks = CYBlockProvider.getBlockProvider().build(answerTextEnv, answer);
+
             CYHorizontalLayout mCellLayout  = new CYHorizontalLayout(answerTextEnv, mCellBlocks);
+
             List<CYPageBlock> pages = mCellLayout.parse();
             if (pages != null && pages.size() > 0) {
                 mCellPageBlock = (CYPageBlock)pages.get(0);
                 mCellPageBlock.setPadding(mPaddingLeft, 0, 0, 0);
 
             }
-            mCellBlocks.get(mCellBlocks.size()-1).setFocus(true);
-        }
+
     }
 
 
@@ -105,7 +111,8 @@ public class DeliveryManualAnswerCell {
 
     public void setLineY(int lineY) {
         this.lineY = lineY;
-        mCellPageBlock.setPadding(mPaddingLeft, lineY, 0, 0);
+        if(mCellPageBlock!=null)
+            mCellPageBlock.setPadding(mPaddingLeft, lineY, 0, 0);
     }
 
 
