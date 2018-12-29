@@ -28,6 +28,7 @@ import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.coretext.BlankBlock;
+import com.knowbox.base.coretext.DeliveryQuestionTextView;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.samples.R;
 import com.knowbox.base.utils.BaseConstant;
@@ -48,14 +49,18 @@ import static com.knowbox.base.utils.BaseConstant.MATCH_VALUE_ID;
  */
 public class QuestionFragment extends Fragment {
 
-    private QuestionTextView mQtvQuestion;
-    private int mFocusTabId;
+    private DeliveryQuestionTextView mQtvQuestion ;
+    private QuestionTextView mAnswerQtvQuestion;
+   // private int mFocusTabId;
     private CYSinglePageView.Builder builder;
+    private RelativeLayout equalLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.layout_question, null);
-        mQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_question);
+        mAnswerQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_paraquestion);
+        mQtvQuestion = (DeliveryQuestionTextView) view.findViewById(R.id.qtv_question);
+        equalLayout = (RelativeLayout) view.findViewById(R.id.equalLayout);
         view.findViewById(R.id.latex_keyboard_1).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_2).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_3).setOnClickListener(mClickListener);
@@ -68,12 +73,15 @@ public class QuestionFragment extends Fragment {
         view.findViewById(R.id.latex_keyboard_star).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_del).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_w).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_add).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_min).setOnClickListener(mClickListener);
+        view.findViewById(R.id.latex_keyboard_multiply).setOnClickListener(mClickListener);
         mQtvQuestion.setFocusEventListener(new CYFocusEventListener() {
             @Override
             public void onFocusChange(boolean focus, final int tabId) {
                 if (focus) {
                     LogUtil.v("yangzc", "tabId: " + tabId);
-                    mFocusTabId = tabId;
+                    mQtvQuestion.currentFocusId = tabId;
                     ICYEditable editable = mQtvQuestion.findEditableByTabId(tabId);
                 }
             }
@@ -240,7 +248,16 @@ public class QuestionFragment extends Fragment {
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#下列各数中，最大的是(    )。#{\"type\":\"P\"}#0.42#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.4#{\"type\":\"latex\",\"content\":\"\\\\dot{2}\"}##{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.#{\"type\":\"latex\",\"content\":\"\\\\dot{4}\"}#2#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.429#{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read_pure_pinyin_center\"}#请(!qǐng!)你(!nǐ!)帮(!bāng!)助(!zhù!)布(!bù!)克(!kè!)给(!gěi!)下(!xià!)列(!liè!)句(!jù!)子(!zǐ!)的(!de!)“着”字(!zì!)注(!zhù!)音(!yīn!)。#{\"type\":\"P\"}#他(!tā!)看(!kàn!)着书(!shū!)，不(!bù!)一(!yī!)会(!huì!)儿(!ér!)就(!jiù!)睡(!shuì!)着(!zhao!)了(!le!)，直(!zhí!)到(!dào!)外(!wài!)面(!miàn!)着(!zhao!)火(!huǒ!)他(!tā!)才(!cái!)醒(!xǐng!)过(!guò!)来(!lái!)。#{\"type\":\"para_end\"}#";
-        builder = mQtvQuestion.getBuilder(question);
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#脱式计算。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"delivery_equation\",\"content\":\"#{\"type\":\"latex\",\"content\":\"\\\\frac{2}{3}\"}#×2\",\"blank_list\":[{\"type\":\"blank\",\"size\":\"delivery_blank\",\"id\":\"1\",\"class\":\"fillin\"}]}##{\"type\":\"para_end\"}#";
+
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\frac{5}{6}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{15}\"}#=(#{\"type\":\"latex\",\"content\":\"\\\\frac{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":1}\\\\#}{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":2}\\\\#}\"}#)#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#27×#{\"type\":\"latex\",\"content\":\"\\\\frac{10}{27}\"}#x#{\"type\":\"latex\",\"content\":\"\\\\frac{10}{27}\"}#=#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}##{\"type\":\"para_end\"}#";
+     //   question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\frac{5}{6}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{15}\"}#=(#{\"type\":\"latex\",\"content\":\"\\\\frac{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":1}\\\\#}{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":2}\\\\#}\"}#)#{\"type\":\"para_end\"}#";
+     //   question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
+        question= "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"30+58+0+10+58+0+58+0+1010+30+50+0+50+\\\\#{\\\"type\\\":\\\"latex\\\",\\\"content\\\":\\\"\\\\\\\\frac{10}{27}\\\"}\\\\#+\\\\#{\\\"type\\\":\\\"latex\\\",\\\"content\\\":\\\"\\\\\\\\frac{1}{27}\\\"}\\\\#\"}##{\"type\":\"para_end\"}#";
+        builder = mAnswerQtvQuestion.getBuilder(question);
 //        builder.setEditableValue(1, "A");
 //        builder.setEditableValue(2, "B");
 //        builder.setEditableValue(3, "C");
@@ -250,16 +267,18 @@ public class QuestionFragment extends Fragment {
 //                "\"width\": 10" +
 //                "}");
 //        builder.setEditableValue(MATCH_VALUE_ID, "");
-        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
+       // builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
         builder.build();
+
+        mQtvQuestion.initDeliveryQtv(equalLayout);
 //        builder.setEditable(false);
 
-        List<ICYEditable> editableList = mQtvQuestion.findEditableList();
-        for (int i = 0; i < editableList.size(); i++) {
-            ICYEditable editable = editableList.get(i);
-            editable.setFocus(true);
-        }
-        editableList.get(0).setText("a找(!zhao!)");
+//        List<ICYEditable> editableList = mQtvQuestion.findEditableList();
+//        for (int i = 0; i < editableList.size(); i++) {
+//            ICYEditable editable = editableList.get(i);
+//            editable.setFocus(true);
+//        }
+   //     editableList.get(0).setText("a找(!zhao!)");
         return view;
     }
 
@@ -280,6 +299,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        mAnswerQtvQuestion.pause();
         mQtvQuestion.pause();
     }
 
@@ -288,31 +308,40 @@ public class QuestionFragment extends Fragment {
         public void onClick(View v) {
             if (v != null && v instanceof TextView) {
                 TextView textView = (TextView) v;
-                EditableValue editableValue = mQtvQuestion.getPageBlock().getTextEnv().getEditableValue(mFocusTabId);
-                if (mFocusTabId >= 0) {
-                    ICYEditable editable = mQtvQuestion.findEditableByTabId(mFocusTabId);
+                EditableValue editableValue = mQtvQuestion.getPageBlock().getTextEnv().getEditableValue(mQtvQuestion.currentFocusId);
+                if (mQtvQuestion.currentFocusId >= 0) {
+                    ICYEditable editable = mQtvQuestion.findEditableByTabId(mQtvQuestion.currentFocusId);
                     if (editable != null) {
-                        String currentText = mQtvQuestion.getText(mFocusTabId);
+                        String currentText = mQtvQuestion.getText(mQtvQuestion.currentFocusId);
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
-//                        if ("删除".equals(text)) {
-//                            if (!TextUtils.isEmpty(currentText)) {
-//                                editable.setText(currentText.substring(0, currentText.length() - 1));
-//                            }
-//                        } else {
-//                            editable.setText(currentText + text);
-//                        }
-
                         if ("删除".equals(text)) {
-                            editable.setText("a找(!zhao!)");
+                            if (!TextUtils.isEmpty(currentText)) {
+                                mQtvQuestion.removeText(mQtvQuestion.currentFocusId,currentText);
+                                   // editable.setText(currentText.substring(0, currentText.length() - 1));
+                            }else{
+                                //删除控件
+                                mQtvQuestion.removeBlock(mQtvQuestion.currentFocusId);
+                            }
+                        }else if("#".equals(text)){
+                            mQtvQuestion.insertLatexBlock(mQtvQuestion.currentFocusId);
+                        }else if("回车".equals(text)){
+                            mQtvQuestion.breakLine();
+                        }else {
+                            mQtvQuestion.insertText(mQtvQuestion.currentFocusId,text,currentText);
+                           // editable.setText(currentText + text);
                         }
-                        else if("#".equals(text)){
-                            editable.setText("shù shù");
-                        }
-                        else {
-                            editable.setText(text);
-                        }
+
+//                        if ("删除".equals(text)) {
+//                            editable.setText("");
+//                        }
+//                        else if("#".equals(text)){
+//                            editable.setText("");
+//                        }
+//                        else {
+//                            editable.setText(text);
+//                        }
 
 
 //                        if ("#".equals(text)) {
@@ -339,9 +368,9 @@ public class QuestionFragment extends Fragment {
 
                 }
                 if (findFocusEditable(mQtvQuestion.findEditableList()) != null) {
-                    mFocusTabId = findFocusEditable(mQtvQuestion.findEditableList()).getTabId();
+                    mQtvQuestion.currentFocusId = findFocusEditable(mQtvQuestion.findEditableList()).getTabId();
                 }
-                mQtvQuestion.setFocus(mFocusTabId);
+                mQtvQuestion.setFocus(mQtvQuestion.currentFocusId);
             }
         }
     };
@@ -358,6 +387,9 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(mAnswerQtvQuestion.getPageBlock()!=null){
+            mAnswerQtvQuestion.getPageBlock().resume();
+        }
         if (mQtvQuestion.getPageBlock() != null) {
             mQtvQuestion.getPageBlock().resume();
         }
