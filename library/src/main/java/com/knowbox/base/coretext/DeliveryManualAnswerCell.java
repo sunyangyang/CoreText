@@ -32,31 +32,28 @@ public class DeliveryManualAnswerCell {
     private int mId =0;
   //  private DeliveryNewBlock.TextChangeListener mListener;
     private DeliveryNewBlock mDeliveryNewBlock;
-    private TextEnv mCellTextEnv;
+    private TextEnv answerTextEnv;
     private TextEnv parentTextEnv;
     private List<CYBlock> mCellBlocks = new ArrayList<>();
-    public CYHorizontalLayout mCellLayout; //题干的layout
-    private SparseArray<EditableValue> mCellEditableValues;
     private CYPageBlock mCellPageBlock;
     private int mColor = -1;
     protected Paint mPaint;
-    private float mEqualWidth = 0;
     private int lineY;
 
     public DeliveryManualAnswerCell( TextEnv textEnv,final DeliveryNewBlock deliveryNewBlock,
-                                    String color , int width
-    //DeliveryNewBlock.TextChangeListener mListere
-    ){
+                                    String color ,String answer){
 
        // this.mListener = mListerer;
         mDeliveryNewBlock = deliveryNewBlock;
-        mCellTextEnv = textEnv;
-        if (mCellEditableValues != null) {
-            for (int i = 0; i < mCellEditableValues.size(); i++) {
-                int key = mCellEditableValues.keyAt(i);
-                mCellTextEnv.setEditableValue(key, mCellEditableValues.get(key));
-            }
-        }
+
+        answerTextEnv = new TextEnv(textEnv.getContext());
+        answerTextEnv.setTextAlign(TextEnv.Align.CENTER);
+        answerTextEnv.setEditable(false);
+        answerTextEnv.setFontSize(textEnv.getFontSize());
+        answerTextEnv.setVerticalSpacing(textEnv.getVerticalSpacing());
+        answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth() -mPaddingLeft*2));
+        answerTextEnv.setSuggestedPageHeight(textEnv.getSuggestedPageHeight());
+
 
 
         try {
@@ -75,36 +72,22 @@ public class DeliveryManualAnswerCell {
             mPaint.setColor(mColor);
         }
 
-        mEqualWidth = PaintManager.getInstance().getWidth(mPaint, SIGN_EQUAL);
-
-        BlankBlock mBlock = new BlankBlock(mCellTextEnv, "{\"type\": \"blank\", \"class\": \"delivery\", \"size\": \"delivery\", \"id\":" + ++mId + "}");
-
-        mBlock.setFocusable(true);
-        mBlock.setText("=");
-        mCellBlocks.add(mBlock);
-        blockRange();
+        blockRange(answer);
     }
 
-    private void blockRange(){
+    private void blockRange(String answer){
         if (mCellBlocks != null && !mCellBlocks.isEmpty()) {
-            updateBlock();
-            mCellLayout  = new CYHorizontalLayout(mCellTextEnv, mCellBlocks);
+            CYHorizontalLayout mCellLayout  = new CYHorizontalLayout(answerTextEnv, mCellBlocks);
             List<CYPageBlock> pages = mCellLayout.parse();
             if (pages != null && pages.size() > 0) {
                 mCellPageBlock = (CYPageBlock)pages.get(0);
                 mCellPageBlock.setPadding(mPaddingLeft, 0, 0, 0);
 
             }
-            clearFocus();
             mCellBlocks.get(mCellBlocks.size()-1).setFocus(true);
         }
     }
 
-    public void clearFocus(){
-        for(int i=0;i<mCellBlocks.size();i++){
-            mCellBlocks.get(i).setFocus(false);
-        }
-    }
 
     public void draw(Canvas canvas) {
         mCellPageBlock.draw(canvas);
@@ -119,54 +102,13 @@ public class DeliveryManualAnswerCell {
     }
 
 
-    private void updateBlock() {
-        if (this.mCellBlocks.size() != 1) {
-            for(int i = 0; i < this.mCellBlocks.size(); ++i) {
-                CYBlock curBlock = (CYBlock)this.mCellBlocks.get(i);
-                CYBlock prevBlock;
-                if (i == 0) {
-                    prevBlock = (CYBlock)this.mCellBlocks.get(i + 1);
-                    curBlock.setNextBlock(prevBlock);
-                } else if (i == this.mCellBlocks.size() - 1) {
-                    prevBlock = (CYBlock)this.mCellBlocks.get(i - 1);
-                    curBlock.setPrevBlock(prevBlock);
-                } else {
-                    prevBlock = (CYBlock)this.mCellBlocks.get(i + 1);
-                    curBlock.setNextBlock(prevBlock);
-                    prevBlock = (CYBlock)this.mCellBlocks.get(i - 1);
-                    curBlock.setPrevBlock(prevBlock);
-                }
-            }
 
-        }
-    }
     public void setLineY(int lineY) {
-       //CYPageBlock 的位置由setPadding 决定，lineY 无用
         this.lineY = lineY;
         mCellPageBlock.setPadding(mPaddingLeft, lineY, 0, 0);
     }
 
-    public List<ICYEditable> getEditableList() {
-        List<ICYEditable> editableList = new ArrayList<ICYEditable>();
-        if (mCellPageBlock != null) {
-            mCellPageBlock.findAllEditable(editableList);
-        }
-        return editableList;
-    }
 
-    public void addLatexBlock(){
-        String str = "{\"type\":\"latex\",\"content\":\"\\\\frac{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":"+ (++mId) +"}\\\\#}{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":"+(++mId)+"}\\\\#}\"}";
-        LatexBlock latexBlock = new LatexBlock(mCellTextEnv,str);
-        mCellBlocks.add(latexBlock);
-        blockRange();
-//        if(mListener!=null){
-//            mListener.reLayout();
-//        }
-    }
-
-    public List<CYBlock> getBlocks() {
-        return mCellBlocks;
-    }
 
     public CYPageBlock getCellPageBlock() {
         return mCellPageBlock;

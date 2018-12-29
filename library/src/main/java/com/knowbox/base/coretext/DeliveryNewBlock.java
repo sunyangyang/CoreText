@@ -30,6 +30,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_COLOR_ID;
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_CONTENT_ID;
+
 
 /**
  * Created by sunyangyang on 2018/3/24.
@@ -45,45 +48,104 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
     private int mPaddingVertical = Const.DP_1 * 11;
     private int mPaddingHorizontal = Const.DP_1 * 21;
     private int mCorner = Const.DP_1 * 5;
-    private Paint mPaint;
     private String mContent;
     private CYPageBlock mPageBlock;
     private List<CYBlock> mBlocks;
     public String para="" ;
     public TextEnv paraTextEnv;//题干的TextEnv
     public CYHorizontalLayout paraLayout; //题干的layout
-    private SparseArray<EditableValue> mEditableValues;
     private List<DeliveryManualAnswerCell> cellManualAnswerList = new ArrayList<DeliveryManualAnswerCell>();
+    private boolean mIsEditable = true;
+    private int mMaxCount = 0;
+    private String[] mColors;
+    private String[] mAnswers;
+
     public DeliveryNewBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         setIsInMonopolyRow(true);
         mTextEnv = textEnv;
+        mIsEditable = textEnv.isEditable();
+        mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);
+
+
         paraTextEnv = new TextEnv(getTextEnv().getContext());
         paraTextEnv.setTextColor(getTextEnv().getTextColor());
         paraTextEnv.setTextAlign(TextEnv.Align.CENTER);
         paraTextEnv.setEditable(getTextEnv().isEditable());
         paraTextEnv.setFontSize(getTextEnv().getFontSize());
         paraTextEnv.setVerticalSpacing(getTextEnv().getVerticalSpacing());
-
-        if (mEditableValues != null) {
-            for (int i = 0; i < mEditableValues.size(); i++) {
-                int key = mEditableValues.keyAt(i);
-                paraTextEnv.setEditableValue(key, mEditableValues.get(key));
-            }
+        if(mIsEditable){
+            paraTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth()-Const.DP_1 * 21*2);
+        }else{
+            paraTextEnv.setSuggestedPageWidth((int)(getTextEnv().getSuggestedPageWidth() - mEqualWidth-mPaddingLeft));
         }
-
-        paraTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth()-Const.DP_1 * 21*2);
         paraTextEnv.setSuggestedPageHeight(getTextEnv().getSuggestedPageHeight());
-        mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);
-
         parseParaContent(content);  // 解析题干
 
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(Const.DP_1 * 2);
-        mPaint.setColor(0xff5eb9ff);
+        initAnswers();
         postInvalidateThis();
 
+    }
+
+    private void initAnswers(){
+        if(!mIsEditable){
+            String answers = "";
+            String colors = "";
+            if (mTextEnv.getEditableValue(DELIVERY_CONTENT_ID) != null) {
+                answers = mTextEnv.getEditableValue(DELIVERY_CONTENT_ID).getValue();
+            }
+            if (mTextEnv.getEditableValue(DELIVERY_COLOR_ID) != null) {
+                colors = mTextEnv.getEditableValue(DELIVERY_COLOR_ID).getValue();
+            }
+            if (!TextUtils.isEmpty(answers)) {
+                mAnswers = answers.split("=", -1);
+            }
+
+            if (!TextUtils.isEmpty(colors)) {
+                mColors = colors.split("=", -1);
+            }
+
+            if ((mAnswers != null && mAnswers.length > 0) || (mColors != null && mColors.length > 0)) {
+                int count = 0;
+                //mAnswers和mColors第一位为空,所以答案的位数-1
+                if (mAnswers != null && mColors != null) {
+                    count = Math.max(mAnswers.length - 1, mColors.length - 1);
+                } else if (mAnswers != null) {
+                    count = Math.min(mAnswers.length - 1, mMaxCount);
+                } else if (mColors != null) {
+                    count = Math.min(mColors.length - 1, mMaxCount);
+                }
+                count = Math.min(count, mMaxCount);
+                for (int i = 0; i < count; i++) {
+                    String text = "";
+                    if (mAnswers != null && mAnswers.length > 0 && i + 1 < mAnswers.length) {
+                        text = mAnswers[i + 1];
+                    }
+                    String color = "";
+                    if (mColors != null && mColors.length > 0 && i + 1 < mColors.length) {
+                        try {
+                            color = mColors[i + 1];
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    DeliveryManualAnswerCell cell = new DeliveryManualAnswerCell(mTextEnv,this,color,text);
+
+                    if(i == 0){
+                        cell.setLineY(getContentHeight());
+                    }else{
+                        int liney = 0;
+                        for(int j=0;j<cellManualAnswerList.size();j++){
+                            liney += cellManualAnswerList.get(j).getCellHeight();
+                        }
+                        cell.setLineY(getContentHeight()+liney);
+                    }
+                    cellManualAnswerList.add(cell);
+                }
+
+            }
+
+        }
     }
 
     /**
@@ -127,7 +189,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         }
         mBlocks = CYBlockProvider.getBlockProvider().build(paraTextEnv, para);
         if (mBlocks != null && !mBlocks.isEmpty()) {
-            this.updateBlock();
+        //    this.updateBlock();
             paraLayout  = new CYHorizontalLayout(paraTextEnv, this.mBlocks);
             List<CYPageBlock> pages = paraLayout.parse();
             if (pages != null && pages.size() > 0) {
@@ -140,37 +202,49 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
     }
 
 
-    private void updateBlock() {
-        if (this.mBlocks.size() != 1) {
-            for(int i = 0; i < this.mBlocks.size(); ++i) {
-                CYBlock curBlock = (CYBlock)this.mBlocks.get(i);
-                CYBlock prevBlock;
-                if (i == 0) {
-                    prevBlock = (CYBlock)this.mBlocks.get(i + 1);
-                    curBlock.setNextBlock(prevBlock);
-                } else if (i == this.mBlocks.size() - 1) {
-                    prevBlock = (CYBlock)this.mBlocks.get(i - 1);
-                    curBlock.setPrevBlock(prevBlock);
-                } else {
-                    prevBlock = (CYBlock)this.mBlocks.get(i + 1);
-                    curBlock.setNextBlock(prevBlock);
-                    prevBlock = (CYBlock)this.mBlocks.get(i - 1);
-                    curBlock.setPrevBlock(prevBlock);
-                }
-            }
-
-        }
-    }
+//    private void updateBlock() {
+//        if (this.mBlocks.size() != 1) {
+//            for(int i = 0; i < this.mBlocks.size(); ++i) {
+//                CYBlock curBlock = (CYBlock)this.mBlocks.get(i);
+//                CYBlock prevBlock;
+//                if (i == 0) {
+//                    prevBlock = (CYBlock)this.mBlocks.get(i + 1);
+//                    curBlock.setNextBlock(prevBlock);
+//                } else if (i == this.mBlocks.size() - 1) {
+//                    prevBlock = (CYBlock)this.mBlocks.get(i - 1);
+//                    curBlock.setPrevBlock(prevBlock);
+//                } else {
+//                    prevBlock = (CYBlock)this.mBlocks.get(i + 1);
+//                    curBlock.setNextBlock(prevBlock);
+//                    prevBlock = (CYBlock)this.mBlocks.get(i - 1);
+//                    curBlock.setPrevBlock(prevBlock);
+//                }
+//            }
+//
+//        }
+//    }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
         Rect rect = getContentRect();
         canvas.save();
-        canvas.translate(0, rect.top);
-        if (mPageBlock != null) {
-            mPageBlock.draw(canvas);
+        if(mIsEditable){
+            canvas.translate(0, rect.top);
+            if (mPageBlock != null) {
+                mPageBlock.draw(canvas);
+            }
+        }else{
+            canvas.translate(rect.left, rect.top);
+            if (mPageBlock != null) {
+                mPageBlock.draw(canvas);
+            }
+            for(int i=0;i<cellManualAnswerList.size();i++){
+                cellManualAnswerList.get(i).draw(canvas);
+            }
+
         }
+
 
         canvas.restore();
 
@@ -179,68 +253,24 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
 
     @Override
     public ICYEditable findEditable(float v, float v1) {
-        if(cellManualAnswerList!=null && cellManualAnswerList.size()>0){
-            for(int i= 0;i<cellManualAnswerList.size();i++){
-                if(cellManualAnswerList.get(i).getBlocks()!=null && cellManualAnswerList.get(i).getBlocks().size()>0){
-                    for(int j =0 ; j <cellManualAnswerList.get(i).getBlocks().size();j++){
-                        CYBlock mCYBlock = cellManualAnswerList.get(i).getBlocks().get(j);
-                        if(mCYBlock instanceof BlankBlock ){
-                            if(mCYBlock.getContentRect().contains((int)v,(int)v1 - cellManualAnswerList.get(i).getCellPageBlock().getPaddingTop() )){
-                                mCYBlock.setFocus(true);
-                                return  mCYBlock.findEditableInBlockByTabId(((BlankBlock) mCYBlock).getTabId());
-                            }
-                        }
-                        else if(mCYBlock instanceof LatexBlock){
-                            ICYEditable editable = ((LatexBlock) mCYBlock).findEditable(v,(int)v1);
-                            if(editable!=null){
-                                editable.setFocus(true);
-                                return editable;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         return null;
     }
 
     @Override
     public ICYEditable getFocusEditable() {
-        List<ICYEditable> list = findAllEditable();
-        if(list!=null && list.size()>0){
-            for(int i =0;i<list.size();i++){
-                if(list.get(i).hasFocus()){
-                    return  list.get(i);
-                }
-            }
-        }
-
         return null;
     }
 
     @Override
     public ICYEditable findEditableByTabId(int id) {
-        List<ICYEditable> list = findAllEditable();
-        if(list!=null && list.size()>0){
-            for(int i =0;i<list.size();i++){
-                if(list.get(i).getTabId() == id){
-                    return  list.get(i);
-                }
-            }
-        }
+
         return null;
     }
 
     @Override
     public List<ICYEditable> findAllEditable() {
-        List<ICYEditable> list = new ArrayList<ICYEditable>();
-        if(cellManualAnswerList!=null && cellManualAnswerList.size()>0){
-            for (int i = 0; i < cellManualAnswerList.size(); i++) {
-               list.addAll(cellManualAnswerList.get(i).getEditableList());
-            }
-        }
-        return list;
+        return null;
     }
 
     @Override
