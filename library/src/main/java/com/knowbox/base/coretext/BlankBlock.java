@@ -169,7 +169,7 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
-            if ("p".equals(text)) {
+            if ("p".equals(text) || "point".equals(text)) {
                 text = ".";
             }
             getTextEnv().setEditableValue(getTabId(), text);
