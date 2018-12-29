@@ -56,7 +56,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
     public CYHorizontalLayout paraLayout; //题干的layout
     private List<DeliveryManualAnswerCell> cellManualAnswerList = new ArrayList<DeliveryManualAnswerCell>();
     private boolean mIsEditable = true;
-    private int mMaxCount = 0;
+    private int mMaxCount = 5;
     private String[] mColors;
     private String[] mAnswers;
 
@@ -65,6 +65,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         setIsInMonopolyRow(true);
         mTextEnv = textEnv;
         mIsEditable = textEnv.isEditable();
+        mIsEditable =false;
         mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);
 
 
@@ -77,7 +78,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         if(mIsEditable){
             paraTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth()-Const.DP_1 * 21*2);
         }else{
-            paraTextEnv.setSuggestedPageWidth((int)(getTextEnv().getSuggestedPageWidth() - mEqualWidth-mPaddingLeft));
+            paraTextEnv.setSuggestedPageWidth((int)(getTextEnv().getSuggestedPageWidth() - (mEqualWidth+mPaddingLeft)*2));
         }
         paraTextEnv.setSuggestedPageHeight(getTextEnv().getSuggestedPageHeight());
         parseParaContent(content);  // 解析题干
@@ -91,6 +92,8 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         if(!mIsEditable){
             String answers = "";
             String colors = "";
+//            String answers = "=220-130=90";
+//            String colors = "=#5ebaff=#5ebaff";
             if (mTextEnv.getEditableValue(DELIVERY_CONTENT_ID) != null) {
                 answers = mTextEnv.getEditableValue(DELIVERY_CONTENT_ID).getValue();
             }
@@ -119,7 +122,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
                 for (int i = 0; i < count; i++) {
                     String text = "";
                     if (mAnswers != null && mAnswers.length > 0 && i + 1 < mAnswers.length) {
-                        text = mAnswers[i + 1];
+                        text = "="+ mAnswers[i + 1];
                     }
                     String color = "";
                     if (mColors != null && mColors.length > 0 && i + 1 < mColors.length) {
@@ -131,15 +134,15 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
                     }
                     DeliveryManualAnswerCell cell = new DeliveryManualAnswerCell(mTextEnv,this,color,text);
 
-                    if(i == 0){
-                        cell.setLineY(getContentHeight());
-                    }else{
-                        int liney = 0;
-                        for(int j=0;j<cellManualAnswerList.size();j++){
-                            liney += cellManualAnswerList.get(j).getCellHeight();
-                        }
-                        cell.setLineY(getContentHeight()+liney);
-                    }
+//                    if(i == 0){
+//                        cell.setLineY(getContentHeight());
+//                    }else{
+//                        int liney = 0;
+//                        for(int j=0;j<cellManualAnswerList.size();j++){
+//                            liney += cellManualAnswerList.get(j).getCellHeight();
+//                        }
+//                        cell.setLineY(getContentHeight()+liney);
+//                    }
                     cellManualAnswerList.add(cell);
                 }
 
@@ -194,7 +197,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
             List<CYPageBlock> pages = paraLayout.parse();
             if (pages != null && pages.size() > 0) {
                 this.mPageBlock = (CYPageBlock)pages.get(0);
-                this.mPageBlock.setPadding(0, 0, 0, 0);
+                this.mPageBlock.setPadding((int)(mEqualWidth+mPaddingLeft), 0, 0, 0);
 
             }
         }
@@ -239,7 +242,13 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
             if (mPageBlock != null) {
                 mPageBlock.draw(canvas);
             }
+            int lineY = mPageBlock.getContentHeight() + mMarginTop;;
             for(int i=0;i<cellManualAnswerList.size();i++){
+                if(i> 0){
+                    cellManualAnswerList.get(i-1).setLineY(0);
+                    lineY += cellManualAnswerList.get(i-1).getCellHeight();
+                }
+                cellManualAnswerList.get(i).setLineY( lineY );
                 cellManualAnswerList.get(i).draw(canvas);
             }
 
@@ -275,6 +284,14 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
 
     @Override
     public int getContentHeight() {
-            return mPageBlock.getContentHeight() + mMarginTop ;
+            return mPageBlock.getContentHeight() + mMarginTop  + (int)getInputHeight();
+    }
+
+    private float getInputHeight() {
+        float height = mPageBlock.getContentHeight() + mMarginTop ;
+        for (int i = 0; i < cellManualAnswerList.size(); i++) {
+            height += cellManualAnswerList.get(i).getCellHeight();
+        }
+        return height;
     }
 }
