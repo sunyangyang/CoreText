@@ -363,7 +363,6 @@ public class QuestionFragment extends Fragment {
 //
 //                            }
 //                        }
-                        editable.setTextColor(0xff5d758b);
                     }
 
                 }
