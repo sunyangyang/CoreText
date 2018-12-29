@@ -232,11 +232,8 @@ public class NumberCell {
 
         //计算小数点的坐标
         if (!TextUtils.isEmpty(mPoint)) {
-            mPointRect = new Rect(mValueRect.right + mPointSideWidth / 8,
-                    mValueRect.bottom - mPointSideWidth,
-                    mValueRect.right + mPointSideWidth,
-                    mValueRect.bottom);
-
+            Rect textRect = new Rect();
+            mPointPaint.getTextBounds(mPoint, 0, 1, textRect);
             if (mPoint.contains("blank")) {
                 String[] ids = mPoint.split("k");
                 int id = -1;
@@ -251,21 +248,43 @@ public class NumberCell {
                     mPointPaint.setColor(ev.getColor());
                     mPoint = ev.getValue();//有可能为null
                 }
-
-                mPointContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"point\",\"id\": " + ids[1] + "}";
-                mPointBlock = new BlankBlock(textEnv, mPointContent);
-                mPointBlock.setTabId(Integer.valueOf(ids[1]));
-                mPointBlock.setFocusable(true);
-                mPointBlock.setFocus(false);
-                mPointBlock.setEditable(true);
-                mPointBlock.setX(mPointRect.left);
-                mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
-                if (!TextUtils.isEmpty(mDefPoint) && mPointBlock != null) {
-                    mPointBlock.setText(".");
-                    mPointBlock.setEditable(false);
-                }
             }
 
+            if (!TextUtils.isEmpty(mPoint)) {
+                mPointRect = new Rect(mValueRect.right + mPointSideWidth / 8,
+                        mValueRect.bottom - mPointSideWidth,
+                        mValueRect.right + mPointSideWidth,
+                        mValueRect.bottom);
+
+                if (mPoint.contains("blank")) {
+                    String[] ids = mPoint.split("k");
+                    int id = -1;
+                    try {
+                        id = Integer.valueOf(ids[1]);
+                    } catch (Exception e) {
+
+                    }
+                    if (id > 0 && textEnv.getEditableValue(id) != null) {
+                        mPointId = id;
+                        EditableValue ev = textEnv.getEditableValue(id);
+                        mPointPaint.setColor(ev.getColor());
+                        mPoint = ev.getValue();//有可能为null
+                    }
+
+                    mPointContent = "{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"point\",\"id\": " + ids[1] + "}";
+                    mPointBlock = new BlankBlock(textEnv, mPointContent);
+                    mPointBlock.setTabId(Integer.valueOf(ids[1]));
+                    mPointBlock.setFocusable(true);
+                    mPointBlock.setFocus(false);
+                    mPointBlock.setEditable(true);
+                    mPointBlock.setX(mPointRect.left);
+                    mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
+                    if (!TextUtils.isEmpty(mDefPoint) && mPointBlock != null) {
+                        mPointBlock.setText(".");
+                        mPointBlock.setEditable(false);
+                    }
+                }
+            }
         }
 
         mList.clear();
@@ -313,6 +332,19 @@ public class NumberCell {
                             mValueRect.bottom - mValueTopOffset,
                             mValuePaint);
                 } else {
+                    //装换小数点
+                    if (TextUtils.equals(this.mValue, "point")) {//绘制真正小数点
+                        this.mValue = ".";
+                    }
+                    if (this.mValue.contains("stroke")) {
+                        String [] values = this.mValue.split("_");
+                        this.mValue = values[1];
+                        if (TextUtils.equals(this.mValue, "point")) {//绘制真正小数点
+                            this.mValue = ".";
+                        }
+                        canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1,
+                                mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
+                    }
                     canvas.drawText(
                             mValue,
                             mValueRect.left + mValueLeftOffset,
@@ -342,6 +374,19 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
+                //装换小数点
+                if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
+                    this.mFlag = ".";
+                }
+                if (this.mFlag.contains("stroke")) {
+                    String [] values = this.mFlag.split("_");
+                    this.mFlag = values[1];
+                    if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
+                        this.mFlag = ".";
+                    }
+                    canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1,
+                            mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                }
                 canvas.drawText(mFlag,
                         mFlagRect.left + mFlagLeftOffset,
                         mFlagRect.bottom - mFlagTopOffset,
@@ -352,6 +397,7 @@ public class NumberCell {
         if (mPointRect != null) {
             if (mPointBlock != null) {
                 mPointBlock.draw(canvas);
+                //绘制划去
                 if (mPointBlock.isStroke()) {
                     mStrokePaint.setStrokeWidth(Const.DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
@@ -360,6 +406,7 @@ public class NumberCell {
                     canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
                             mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 } else {
+                    //取消划去
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText("",
                             mPointRect.left,
@@ -367,14 +414,23 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
-                if (TextUtils.equals(mPoint, "point")) {//绘制真正小数点
-                    mPoint = ".";
+                //装换小数点
+                if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
+                    this.mPoint = ".";
+                }
+                if (this.mPoint.contains("stroke")) {
+                    String [] values = this.mPoint.split("_");
+                    this.mPoint = values[1];
+                    if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
+                        this.mPoint = ".";
+                    }
+                    canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
+                            mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 }
                 canvas.drawText(mPoint,
                         mPointRect.left + mPointRect.width() / 2 - Const.DP_1 * 3,
                         mPointRect.bottom - mPointRect.height() / 2,
                         mPointPaint);
-
             }
         }
     }
@@ -399,9 +455,10 @@ public class NumberCell {
     }
 
     public boolean getValue(int id, EditableValue ev) {
-        return (id == mNumberId && (mValuePaint.getColor() != ev.getColor() || mValue != ev.getValue())) ||
-                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != ev.getValue())) ||
-                (id == mPointId && (mPointPaint.getColor() != ev.getColor() || mPoint != ev.getValue()));
+        String value = ev.getValue();
+        return (id == mNumberId && (mValuePaint.getColor() != ev.getColor() || mValue != value)) ||
+                (id == mFlagId && (mFlagPaint.getColor() != ev.getColor() || mFlag != value)) ||
+                (id == mPointId && (mPointPaint.getColor() != ev.getColor() || mPoint != value));
     }
 
     public void setValue(int id, String value, int color) {
@@ -411,6 +468,7 @@ public class NumberCell {
         } else if (id == mPointId) {
             mPoint = value;
             mPointPaint.setColor(color);
+            mPointPaint.setTextSize(mFlagPaint.getTextSize());
         } else {
             mFlag = value;
             mFlagPaint.setColor(color);
