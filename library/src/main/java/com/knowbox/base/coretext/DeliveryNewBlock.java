@@ -65,10 +65,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         setIsInMonopolyRow(true);
         mTextEnv = textEnv;
         mIsEditable = textEnv.isEditable();
-        mIsEditable =false;
         mEqualWidth = PaintManager.getInstance().getWidth(textEnv.getPaint(), SIGN_EQUAL);
-
-
         paraTextEnv = new TextEnv(getTextEnv().getContext());
         paraTextEnv.setTextColor(getTextEnv().getTextColor());
         paraTextEnv.setTextAlign(TextEnv.Align.CENTER);
