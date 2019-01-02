@@ -468,7 +468,6 @@ public class NumberCell {
         } else if (id == mPointId) {
             mPoint = value;
             mPointPaint.setColor(color);
-            mPointPaint.setTextSize(mFlagPaint.getTextSize());
         } else {
             mFlag = value;
             mFlagPaint.setColor(color);
