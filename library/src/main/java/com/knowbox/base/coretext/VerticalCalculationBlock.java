@@ -428,6 +428,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
             for (int j = 0; j < arrayLength; j++) {
                 JSONObject memberObject = jsonArray.optJSONObject(j);
+                if (memberObject == null) continue;
                 JSONArray valueArray = memberObject.optJSONArray("value");
                 if (valueArray != null) {
                     int valueLength = valueArray.length();
