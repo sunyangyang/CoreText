@@ -268,7 +268,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         JSONArray divideNewPairArray = object.optJSONArray("divide_new_pair");
         if (divideNewPairArray != null) {
-            mContentWidth = mLeftColumns * mCellRectWidth;
             JSONArray array0 = divideNewPairArray.optJSONArray(0);//被除数
             JSONArray array1 = divideNewPairArray.optJSONArray(1);//除数
 
@@ -559,16 +558,12 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         mContentHeight -= Const.DP_1 * 2;
 //        postInvalidate();
+        mContentWidth = mLeftColumns * mCellRectWidth;
     }
 
     @Override
     public int getContentWidth() {
-        if (mContentWidth != 0) {
-            return mContentWidth;
-        } else {
-            return getTextEnv().getSuggestedPageWidth();
-        }
-
+        return mContentWidth;
     }
 
     @Override
