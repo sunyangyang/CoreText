@@ -70,6 +70,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mDividerY;
     private Paint mDividerPaint;
     private int mContentHeight;
+    private int mContentWidth;
     private float mNumberPaintSize = NUMBER_PAINT_SIZE;//16
     private float mFlagPaintSize = FLAG_PAINT_SIZE;//
     private int mNumberRectSize = NUMBER_RECT_SIZE;//20
@@ -239,6 +240,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         JSONArray dividePairArray = object.optJSONArray("divide_pair");
         if (dividePairArray != null) {
+            mContentWidth = mLeftColumns * mCellRectWidth;
             JSONArray array0 = dividePairArray.optJSONArray(0);
             int arrayLength0 = 0;
             if (array0 != null) {
@@ -561,7 +563,12 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
     @Override
     public int getContentWidth() {
-        return getTextEnv().getSuggestedPageWidth();
+        if (mContentWidth != 0) {
+            return mContentWidth;
+        } else {
+            return getTextEnv().getSuggestedPageWidth();
+        }
+
     }
 
     @Override
