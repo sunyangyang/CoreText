@@ -102,7 +102,7 @@ public class DeliveryManualAnswerCell {
 
     public int getCellHeight(){
         if(mCellPageBlock!=null){
-            return mCellPageBlock.getHeight();
+            return mCellPageBlock.getHeight() + Const.DP_1*5;
         }
         return  0;
     }
