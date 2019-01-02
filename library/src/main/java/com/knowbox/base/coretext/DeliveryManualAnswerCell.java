@@ -88,7 +88,7 @@ public class DeliveryManualAnswerCell {
             List<CYPageBlock> pages = mCellLayout.parse();
             if (pages != null && pages.size() > 0) {
                 mCellPageBlock = (CYPageBlock)pages.get(0);
-                mCellPageBlock.setPadding(mPaddingLeft, 0, 0, 0);
+                mCellPageBlock.setPadding(0, 0, 0, 0);
 
             }
 
