@@ -279,6 +279,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             int arrayLength0 = 0;
             int arrayLength1 = 0;
 
+            int prePointCount = 0;//被除数 小数 前面的位数
+            int nextPointCount = 0;//除数的小数点位数
+
             if (array0 != null && array1 != null) {
                 arrayLength0 = array0.length();
                 arrayLength1 = array1.length();
@@ -286,6 +289,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 for (int i = 0; i < arrayLength0; i++) {
                     JSONObject valueObject = array0.optJSONObject(i);
                     if (valueObject != null) {
+                        if (TextUtils.equals(valueObject.optString("value"), "point")) {
+                            prePointCount = i ;
+                        }
                         if (valueObject.has("num")) {
                             valueArray0.put(valueObject);
                         } else {
@@ -297,6 +303,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 for (int i = 0; i < arrayLength1; i++) {
                     JSONObject valueObject = array1.optJSONObject(i);
                     if (valueObject != null) {
+                        if (TextUtils.equals(valueObject.optString("value"), "point")) {
+                            nextPointCount = arrayLength1 - (i + 1);
+                        }
                         if (valueObject.has("num")) {
                             valueArray1.put(valueObject);
                         } else {
@@ -323,10 +332,10 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     if (valueObject != null) {
                         if (!valueObject.has("num")) {
                             if (valueObject.has("stroke")) {
-                                mPoint[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
+                                mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1] = valueObject.optString("stroke");
                                 mDefPoints[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("value");
                             } else {
-                                mPoint[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("add_point");
+                                mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("add_point");
                             }
                         }
                     }
