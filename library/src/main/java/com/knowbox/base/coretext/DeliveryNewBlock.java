@@ -194,7 +194,12 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
             List<CYPageBlock> pages = paraLayout.parse();
             if (pages != null && pages.size() > 0) {
                 this.mPageBlock = (CYPageBlock)pages.get(0);
-                this.mPageBlock.setPadding((int)(mEqualWidth+mPaddingLeft), 0, 0, 0);
+                if(mIsEditable){
+                    this.mPageBlock.setPadding((int)(mEqualWidth), 0, 0, 0);
+                }else{
+                    this.mPageBlock.setPadding((int)(mEqualWidth+mPaddingLeft), 0, 0, 0);
+                }
+
 
             }
         }
