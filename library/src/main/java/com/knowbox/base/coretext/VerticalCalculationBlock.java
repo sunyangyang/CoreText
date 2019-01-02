@@ -240,7 +240,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         JSONArray dividePairArray = object.optJSONArray("divide_pair");
         if (dividePairArray != null) {
-            mContentWidth = mLeftColumns * mCellRectWidth;
             JSONArray array0 = dividePairArray.optJSONArray(0);
             int arrayLength0 = 0;
             if (array0 != null) {
@@ -269,6 +268,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         JSONArray divideNewPairArray = object.optJSONArray("divide_new_pair");
         if (divideNewPairArray != null) {
+            mContentWidth = mLeftColumns * mCellRectWidth;
             JSONArray array0 = divideNewPairArray.optJSONArray(0);//被除数
             JSONArray array1 = divideNewPairArray.optJSONArray(1);//除数
 
