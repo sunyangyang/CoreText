@@ -14,6 +14,7 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.utils.BaseConstant;
 
 import org.json.JSONException;
@@ -41,6 +42,8 @@ public class BlankBlock extends CYEditBlock {
     private String size;
     private String mPinyinSize;
     private int mWidth, mHeight;
+    private boolean mStrokeble;
+    private boolean mStroke = false;
 
     private double mOffsetX, mOffsetY;
     private final int mMargin = Const.DP_1 * 3;
@@ -97,6 +100,10 @@ public class BlankBlock extends CYEditBlock {
                 mTextLength = 1;
             } else if ("flag".equals(getSize())) {
                 mTextLength = 1;
+            } else if ("borrow_flag".equals(getSize())) {
+                mTextLength = 1;
+            }else if ("point".equals(getSize())) {
+                mTextLength = 1;
             } else if ("delivery".equals(getSize())) {
                 mTextLength = 400;
             } else if ("sudoku_blank".equals(getSize())) {
@@ -114,18 +121,29 @@ public class BlankBlock extends CYEditBlock {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 20);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 20);
                     setAlignStyle(AlignStyle.Style_MONOPOLY);
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
                 } else if ("express".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
                 } else if ("number".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.NUMBER_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.NUMBER_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
                 } else if ("flag".equals(size)) {
                     ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
                     ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
+                } else if ("point".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
+                }  else if ("borrow_flag".equals(size)) {
+                    ((EditFace)getEditFace()).getTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    ((EditFace)getEditFace()).getDefaultTextPaint().setTextSize(VerticalCalculationBlock.FLAG_PAINT_SIZE);
+                    setPadding(Const.DP_1 * 3, Const.DP_1 * 2, Const.DP_1 * 3, Const.DP_1 * 2);
                 }
                 ((EditFace)getEditFace()).updateEnv();
-                setPadding(Const.DP_1 * 3, Const.DP_1, Const.DP_1 * 3, Const.DP_1);
             } else {
                 if (!TextUtils.equals(this.mClass, CLASS_DELIVERY)) {
                     this.mClass = CLASS_FILL_IN;
@@ -155,11 +173,12 @@ public class BlankBlock extends CYEditBlock {
     public void setText(String text) {
         if (TextUtils.equals(text, getText()))
             return;
-
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
-
+            if ("p".equals(text) || "point".equals(text)) {
+                text = ".";
+            }
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() ||
                     "express".equals(size) ||
@@ -254,6 +273,22 @@ public class BlankBlock extends CYEditBlock {
 
     public String getSize() {
         return size;
+    }
+
+    public boolean getStrokeble(){
+        return this.mStrokeble;
+    }
+
+    public void setStrokeble(boolean strokeble){
+        this.mStrokeble = strokeble;
+    }
+
+    public boolean isStroke(){
+        return this.mStroke;
+    }
+
+    public void setStroke(boolean stroke){
+        this.mStroke = stroke;
     }
 
     protected void updateSize(String text) {
@@ -365,6 +400,12 @@ public class BlankBlock extends CYEditBlock {
                 this.mWidth = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;//init中设置了margin，加上margin的宽度
                 this.mHeight = VerticalCalculationBlock.NUMBER_RECT_SIZE - mMargin * 2;
             } else if ("flag".equals(size)) {
+                this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+                this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+            } else if ("borrow_flag".equals(size)) {
+                this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+                this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
+            } else if ("point".equals(size)) {
                 this.mWidth = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else if ("delivery".equals(size)) {
@@ -590,6 +631,10 @@ public class BlankBlock extends CYEditBlock {
             return true;
         }
         return false;
+    }
+
+    public boolean isBorrowFlagBlank() {
+        return "borrow_flag".equals(size);
     }
 
     public void notifyLayoutChange() {

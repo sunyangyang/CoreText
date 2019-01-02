@@ -18,6 +18,7 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,9 @@ import java.util.regex.Pattern;
 
 import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
 import static com.knowbox.base.coretext.BlankBlock.PLACE_HOLDER_WORD;
+import static com.knowbox.base.coretext.VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE;
+import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
+import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
 
 /**
  * Created by yangzc on 17/2/14.
@@ -408,6 +412,36 @@ public class EditFace extends CYEditFace {
 
                 canvas.drawText(text, x, y, this.mTextPaint);
                 canvas.restore();
+            }
+        } else if ("point".equals(mSize)) {
+            if(!TextUtils.isEmpty(text)) {
+                if (text.equals(".")) {
+                    float x = contentRect.left + this.mTextPaintMetrics.bottom/2;
+                    canvas.save();
+                    canvas.clipRect(contentRect);
+                    float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                    this.mTextPaint.setTextSize(NUMBER_PAINT_SIZE);
+                    canvas.drawText(text, x, y, this.mTextPaint);
+                    canvas.restore();
+                } else {
+                    this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
+                    super.drawText(canvas, text, blockRect, contentRect, false);
+                }
+            }
+        } else if ("borrow_flag".equals(mSize)) {
+            if(!TextUtils.isEmpty(text)) {
+                if (text.equals(".")) {
+                    float x = contentRect.left - this.mTextPaintMetrics.bottom / 3;
+                    canvas.save();
+                    canvas.clipRect(contentRect);
+                    float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                    this.mTextPaint.setTextSize(BORROW_POINT_PAINT_SIZE);
+                    canvas.drawText(text, x, y, this.mTextPaint);
+                    canvas.restore();
+                } else {
+                    this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
+                    super.drawText(canvas, text, blockRect, contentRect, false);
+                }
             }
         } else if ("pinyin".equals(mSize)) {
             List<CYTextBlock.Word> words = parseWords(text);

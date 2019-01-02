@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <LinearLayout
@@ -109,7 +110,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="9" />
+                android:text="p" />
         </LinearLayout>
 
         <LinearLayout
@@ -124,7 +125,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="*" />
+                android:text="." />
 
             <TextView
                 android:id="@+id/latex_keyboard_del"
@@ -142,7 +143,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="#" />
+                android:text="stroke" />
         </LinearLayout>
 
         <LinearLayout
