@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
@@ -18,7 +17,6 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,19 +123,19 @@ public class EditFace extends CYEditFace {
             mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
-        }else if("latex".equals(mSize)){
+        }/*else if("latex".equals(mSize)){
             mRectF.set(blockRect.left, blockRect.top, blockRect.right, blockRect.bottom - getBorderPaint().getStrokeWidth() / 2);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
-        }
+        }*/
     }
 
     @Override
     protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) ||
-                "sudoku_blank".equals(mSize) || "24point_blank".equals(mSize) || "latex".equals(mSize))
+                "sudoku_blank".equals(mSize) || "24point_blank".equals(mSize)/* || "latex".equals(mSize)*/)
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
