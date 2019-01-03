@@ -333,20 +333,21 @@ public class NumberCell {
                             mValuePaint);
                 } else {
                     //装换小数点
-                    if (TextUtils.equals(this.mValue, "point")) {//绘制真正小数点
-                        this.mValue = ".";
+                    String value = mValue;
+                    if (TextUtils.equals(value, "point")) {//绘制真正小数点
+                        value = ".";
                     }
                     if (this.mValue.contains("stroke")) {
                         String [] values = this.mValue.split("_");
-                        this.mValue = values[1];
-                        if (TextUtils.equals(this.mValue, "point")) {//绘制真正小数点
-                            this.mValue = ".";
+                        value = values[1];
+                        if (TextUtils.equals(value, "point")) {//绘制真正小数点
+                            value = ".";
                         }
                         canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1,
                                 mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
                     }
                     canvas.drawText(
-                            mValue,
+                            value,
                             mValueRect.left + mValueLeftOffset,
                             mValueRect.bottom - mValueTopOffset,
                             mValuePaint);
@@ -374,20 +375,21 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
+                String flag = mFlag;
                 //装换小数点
                 if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
-                    this.mFlag = ".";
+                    flag = ".";
                 }
-                if (this.mFlag.contains("stroke")) {
+                if (flag.contains("stroke")) {
                     String [] values = this.mFlag.split("_");
-                    this.mFlag = values[1];
-                    if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
-                        this.mFlag = ".";
+                    flag = values[1];
+                    if (TextUtils.equals(flag, "point")) {//绘制真正小数点
+                        flag = ".";
                     }
                     canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1,
                             mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 }
-                canvas.drawText(mFlag,
+                canvas.drawText(flag,
                         mFlagRect.left + mFlagLeftOffset,
                         mFlagRect.bottom - mFlagTopOffset,
                         mFlagPaint);
@@ -414,20 +416,21 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
+                String point = mPoint;
                 //装换小数点
                 if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
-                    this.mPoint = ".";
+                    point = ".";
                 }
                 if (this.mPoint.contains("stroke")) {
                     String [] values = this.mPoint.split("_");
-                    this.mPoint = values[1];
-                    if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
-                        this.mPoint = ".";
+                    point = values[1];
+                    if (TextUtils.equals(point, "point")) {//绘制真正小数点
+                        point = ".";
                     }
                     canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
                             mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
                 }
-                canvas.drawText(mPoint,
+                canvas.drawText(point,
                         mPointRect.left + mPointRect.width() / 2 - Const.DP_1 * 3,
                         mPointRect.bottom - mPointRect.height() / 2,
                         mPointPaint);
