@@ -15,6 +15,7 @@ import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYLineBlock;
 import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.event.CYFocusEventListener;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
@@ -226,7 +227,13 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         PaintManager.getInstance().getWidth(builder.getPaint(), str) > builder.getSuggestedPageWidth()-Const.DP_1 * 10- Const.DP_1*6) {
                     return;
                 }
-                findEditableByTabId(position).setText(oldText + text);
+
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(BlockPosition);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
+                String newValue = oldText.substring(0,flashPosition)+text+ oldText.substring(flashPosition,oldText.length());
+                findEditableByTabId(position).setText(newValue);
+                latexBlock.fracFlashPostion = flashPosition + text.length();
             }
         }
 
@@ -249,7 +256,17 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 }
 
             }else  if (mDeliveryBlocks.get(BlockPosition) instanceof LatexBlock) {
-                findEditableByTabId(position).setText(oldText.substring(0, oldText.length() - 1));
+
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(BlockPosition);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
+                if(flashPosition>0){
+                    String newValue = oldText.substring(0,flashPosition - 1) + oldText.substring(flashPosition,oldText.length());
+                    findEditableByTabId(position).setText(newValue);
+                    latexBlock.fracFlashPostion = flashPosition - 1;
+
+                }
+
             }
         }
 
@@ -476,16 +493,16 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 ((EditFace) blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
                 ((EditFace) blankBlock.getEditFace()).setFlashPosition(-1);
             }
-//        }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
-//            LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
-//            FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
-//            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
-//            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
-//            if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
-//                ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - latexBlock.getContentRect().left);
-//                ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
-//                ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
-//            }
+        }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
+            LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
+            FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
+            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
+            if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
+                ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - fillInBox.getBlockRect().left);
+                ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
+                ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
+            }
         }
         return true;
     }

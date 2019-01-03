@@ -29,6 +29,7 @@ import maximsblog.blogspot.com.jlatexmath.core.Text;
  */
 public class LatexBlock extends CYLatexBlock {
     public static String latextype ="";
+    public int fracFlashPostion = -1; // 用来保存editface的光标位置，每次插入或指责删除字符，都会重新创建EditFace，所以需要保留这个值
 
     public LatexBlock(TextEnv textEnv, String content) {
         super(textEnv, convert2Latex(content));
@@ -67,6 +68,7 @@ public class LatexBlock extends CYLatexBlock {
                 if(mLatexBlock instanceof LatexBlock){
                     if(((LatexBlock) mLatexBlock).latextype.contains("frac")){
                         ((EditFace) getEditFace()).setSize("frac");
+                        ((EditFace) getEditFace()).setFlashPosition(((LatexBlock) mLatexBlock).fracFlashPostion);
                     }
                 }
             }
