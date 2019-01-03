@@ -66,8 +66,8 @@ public class LatexBlock extends CYLatexBlock {
             }
             int width = (int) PaintManager.getInstance().getWidth(((EditFace) getEditFace())
                     .getTextPaint(), getText() == null? "" : getText());
-            if (textEnv.isEditable() && width < 32 * Const.DP_1) {
-                width = 32 * Const.DP_1;
+            if (textEnv.isEditable() && width < 28 * Const.DP_1) {
+                width = 28 * Const.DP_1;
             }
             setWidthWithScale(width + Const.DP_1 * 10);
             if (textEnv.isEditable()) {
@@ -83,6 +83,7 @@ public class LatexBlock extends CYLatexBlock {
         public IEditFace createEditFace() {
             EditFace editFace = new EditFace(getTextEnv(), this);
             editFace.setClass("fillin");
+            editFace.setSize("latex");
             return editFace;
         }
 

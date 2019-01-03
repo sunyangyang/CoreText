@@ -73,9 +73,9 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         paraTextEnv.setFontSize(getTextEnv().getFontSize());
         paraTextEnv.setVerticalSpacing(getTextEnv().getVerticalSpacing());
         if(mIsEditable){
-            paraTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth()-Const.DP_1 * 21*2);
+            paraTextEnv.setSuggestedPageWidth(getTextEnv().getSuggestedPageWidth()-Const.DP_1 * 21*2 - (int)(mEqualWidth*2));
         }else{
-            paraTextEnv.setSuggestedPageWidth((int)(getTextEnv().getSuggestedPageWidth() - (mEqualWidth+mPaddingLeft)*2));
+            paraTextEnv.setSuggestedPageWidth((int)(getTextEnv().getSuggestedPageWidth() - (mEqualWidth)*2));
         }
         paraTextEnv.setSuggestedPageHeight(getTextEnv().getSuggestedPageHeight());
         parseParaContent(content);  // 解析题干
@@ -197,7 +197,7 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
                 if(mIsEditable){
                     this.mPageBlock.setPadding((int)(mEqualWidth), 0, 0, 0);
                 }else{
-                    this.mPageBlock.setPadding((int)(mEqualWidth+mPaddingLeft), 0, 0, 0);
+                    this.mPageBlock.setPadding((int)(mEqualWidth), 0, 0, 0);
                 }
 
 
@@ -286,7 +286,12 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
 
     @Override
     public int getContentHeight() {
+        if(!mIsEditable){
             return mPageBlock.getContentHeight() + mMarginTop  + (int)getInputHeight();
+        }else{
+            return mPageBlock.getContentHeight() + mMarginTop ;
+        }
+
     }
 
     private float getInputHeight() {
