@@ -28,6 +28,7 @@ import maximsblog.blogspot.com.jlatexmath.core.Text;
  * Created by yangzc on 17/7/18.
  */
 public class LatexBlock extends CYLatexBlock {
+    public static String latextype ="";
 
     public LatexBlock(TextEnv textEnv, String content) {
         super(textEnv, convert2Latex(content));
@@ -63,6 +64,11 @@ public class LatexBlock extends CYLatexBlock {
             if (textEnv.isEditable()) {
                 ((EditFace) getEditFace()).getTextPaint().setTextSize(Const.DP_1 * 19);
                 ((EditFace) getEditFace()).getDefaultTextPaint().setTextSize(Const.DP_1 * 19);
+                if(mLatexBlock instanceof LatexBlock){
+                    if(((LatexBlock) mLatexBlock).latextype.contains("frac")){
+                        ((EditFace) getEditFace()).setSize("frac");
+                    }
+                }
             }
             int width = (int) PaintManager.getInstance().getWidth(((EditFace) getEditFace())
                     .getTextPaint(), getText() == null? "" : getText());
@@ -83,7 +89,6 @@ public class LatexBlock extends CYLatexBlock {
         public IEditFace createEditFace() {
             EditFace editFace = new EditFace(getTextEnv(), this);
             editFace.setClass("fillin");
-            editFace.setSize("latex");
             return editFace;
         }
 
@@ -136,6 +141,7 @@ public class LatexBlock extends CYLatexBlock {
                 e.printStackTrace();
             }
         }
+        latextype = latex;
         return latex;
     }
 }
