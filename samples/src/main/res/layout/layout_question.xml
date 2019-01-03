@@ -109,7 +109,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="p" />
+                android:text="#" />
         </LinearLayout>
 
         <LinearLayout
@@ -225,7 +225,7 @@
                     android:layout_width="33dp"
                     android:layout_height="match_parent">
                 </RelativeLayout>
-                <com.knowbox.base.coretext.DeliveryQuestionTextView
+                <com.knowbox.base.coretext.QuestionTextView
                     android:id="@+id/qtv_question"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"

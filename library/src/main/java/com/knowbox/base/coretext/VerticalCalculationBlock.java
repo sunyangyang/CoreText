@@ -567,11 +567,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     }
 
     @Override
-    public CYPlaceHolderBlock setWidth(int width) {
-        return super.setWidth(mContentWidth);
-    }
-
-    @Override
     public int getContentHeight() {
         return mContentHeight;
     }
