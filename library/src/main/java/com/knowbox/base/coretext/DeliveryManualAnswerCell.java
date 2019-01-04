@@ -112,7 +112,7 @@ public class DeliveryManualAnswerCell {
     public void setLineY(int lineY) {
         this.lineY = lineY;
         if(mCellPageBlock!=null)
-            mCellPageBlock.setPadding(mPaddingLeft, lineY, 0, 0);
+            mCellPageBlock.setPadding(0, lineY, 0, 0);
     }
 
 
