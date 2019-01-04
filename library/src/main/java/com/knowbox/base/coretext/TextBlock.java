@@ -106,6 +106,9 @@ public class TextBlock extends CYTextBlock {
             }
 
             textHeight += pinyinHeight;
+            if (getMarginLeft() == 0 && getMarginRight() == 0) {
+                setMargin(Const.DP_1 * 2, Const.DP_1 * 2);
+            }
         }
 
         this.width = (int)textWidth;
