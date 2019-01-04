@@ -295,10 +295,15 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
     }
 
     private float getInputHeight() {
-        float height = mPageBlock.getContentHeight() + mMarginTop ;
+        float height = 0 ;
         for (int i = 0; i < cellManualAnswerList.size(); i++) {
             height += cellManualAnswerList.get(i).getCellHeight();
         }
         return height;
+    }
+
+    @Override
+    public int getLineHeight() {
+        return getContentHeight();
     }
 }
