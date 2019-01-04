@@ -17,6 +17,7 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -382,8 +383,15 @@ public class EditFace extends CYEditFace {
                                         //只有一个字符的时候特殊处理
                                         left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
                                     }else{
-                                        left = contentRect.left +
-                                                PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos));
+                                        if(mFlashPosition<= mFracTextInfo.mText.length()){
+                                            left = contentRect.left +
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos));
+
+                                        }else{
+                                            left = contentRect.left +
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFracTextInfo.mText.length() - mFracTextInfo.mStartPos));
+
+                                        }
                                     }
                                 }
                             } else {
@@ -412,7 +420,13 @@ public class EditFace extends CYEditFace {
                                     left = contentRect.left + textX;
                                 } else if ((!TextUtils.isEmpty(mFracTextInfo.mText) && mFlashX >= flashRight)) {
                                     mFlashPosition = mFracTextInfo.mText.length();
-                                    left = contentRect.left + textWidth;
+                                    if(mFracTextInfo.mText.length() == 1){
+                                        //只有一个字符的时候特殊处理
+                                        left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
+                                    }else{
+                                        left = contentRect.left + textWidth;
+                                    }
+
                                 } else {
                                     if (!TextUtils.isEmpty(mFracTextInfo.mText)) {
                                         for (int i = 1; i < mFracTextInfo.mText.length(); i++) {
@@ -437,6 +451,13 @@ public class EditFace extends CYEditFace {
                             mFlashPosition = 0;
                             top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
                             left = (float)(contentRect.left + contentRect.width() / 2);
+                        }
+
+                        //预防光标在分数框 外边，没有在框里 ，待验证
+                        if(mFlashPosition == -1){
+                            LogUtil.v("chenyan", "EdifFace  mFlashPosition: " + mFlashPosition);
+                            mFlashPosition = 0;
+                            left  = Const.DP_1*5;
                         }
 
                         left += Const.DP_1;

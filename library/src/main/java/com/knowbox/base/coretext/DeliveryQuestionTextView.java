@@ -3,6 +3,7 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Process;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,9 +20,14 @@ import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.event.CYFocusEventListener;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
+import com.hyena.framework.clientlog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.knowbox.base.utils.BaseConstant.DELIVERY_ANSWER_ID;
 
 public class DeliveryQuestionTextView extends QuestionTextView {
     public static final String SIGN_EQUAL = "=";
@@ -231,8 +237,18 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(BlockPosition);
                 FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
                 int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
-                String newValue = oldText.substring(0,flashPosition)+text+ oldText.substring(flashPosition,oldText.length());
-                findEditableByTabId(position).setText(newValue);
+                if(flashPosition == -1){
+                    return;
+                }
+                if(!TextUtils.isEmpty(oldText) && oldText.length()>flashPosition && flashPosition!=-1){
+                    LogUtil.v("chenyan", "oldText.length(): " + oldText.length());
+                    LogUtil.v("chenyan", "flashPosition: " + flashPosition);
+                    String newValue = oldText.substring(0,flashPosition)+text+ oldText.substring(flashPosition,oldText.length());
+                    findEditableByTabId(position).setText(newValue);
+                }else{
+                    findEditableByTabId(position).setText(oldText+text);
+                }
+
                 latexBlock.fracFlashPostion = flashPosition + text.length();
             }
         }
@@ -261,10 +277,16 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
                 int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
                 if(flashPosition>0){
-                    String newValue = oldText.substring(0,flashPosition - 1) + oldText.substring(flashPosition,oldText.length());
-                    findEditableByTabId(position).setText(newValue);
-                    latexBlock.fracFlashPostion = flashPosition - 1;
+                    if(!TextUtils.isEmpty(oldText)) {
+                        if(oldText.length()>flashPosition){
+                            String newValue = oldText.substring(0,flashPosition - 1) + oldText.substring(flashPosition,oldText.length());
+                            findEditableByTabId(position).setText(newValue);
+                            latexBlock.fracFlashPostion = flashPosition - 1;
+                        }else{
+                            findEditableByTabId(position).setText(oldText.substring(0,oldText.length()-1));
+                        }
 
+                    }
                 }
 
             }
@@ -606,5 +628,152 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         builder.reLayout(true);
     }
 
+
+    public String getAnswer() {
+        String answer = "=";
+        for(int i =0;i<mDeliveryBlocks.size();i++){
+            CYBlock  bk = mDeliveryBlocks.get(i);
+            if(bk instanceof BlankBlock){
+                if(!TextUtils.isEmpty(((BlankBlock) bk).getText())){
+                    answer += ((BlankBlock) bk).getText();
+                }
+
+            }else if(bk instanceof LatexBlock){
+                List<ICYEditable> editableList = ((LatexBlock) bk).findAllEditable();
+                boolean idFlag = false; // true  是 0 大，false 是1 大，谁大谁是分母
+                String fracStr = "";
+                if(editableList.size()==2){
+                    if(editableList.get(0).getTabId() > editableList.get(1).getTabId()){
+                        idFlag = true;
+                    }else{
+                        idFlag = false;
+                    }
+                }else{
+                    continue;
+                }
+                if(idFlag){
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        if(isRegex(editableList.get(1).getText())){
+                            fracStr += editableList.get(1).getText()+"÷" ;
+                        }else{
+                            fracStr += "(" +editableList.get(1).getText() +")"+"÷";
+                        }
+                    }
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+
+                        if(isRegex(editableList.get(0).getText())){
+                            fracStr += editableList.get(0).getText();
+                        }else{
+                            fracStr +=  "(" +editableList.get(0).getText() +")" ;
+                        }
+                    }
+
+                }else{
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())) {
+                        if (isRegex(editableList.get(0).getText())) {
+                            fracStr += editableList.get(0).getText() + "÷";
+                        } else {
+                            fracStr += "(" + editableList.get(0).getText() + ")" + "÷";
+                        }
+                    }
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                        if(isRegex(editableList.get(1).getText())){
+                            fracStr += editableList.get(1).getText();
+                        }else{
+                            fracStr +=  "(" +editableList.get(1).getText() +")" ;
+                        }
+                    }
+                }
+
+                if(bk.getPrevBlock() instanceof BlankBlock){
+                    char ch = answer.charAt(answer.length()-1);
+                    if(ch >= '0' && ch<= '9'){
+                        answer += "+" +fracStr;
+                    }else{
+                        answer += fracStr;
+                    }
+                }else{
+                    answer += fracStr;
+                }
+            }else if(bk instanceof CYBreakLineBlock){
+                answer += "=";
+            }
+        }
+        return answer;
+
+       // builder.setEditableValue(DELIVERY_ANSWER_ID, answer);
+    }
+
+
+
+   //判断分子是否是完整的整数或小数
+    private boolean isRegex(String number) {
+        String phonePattern = "([1-9]\\d*\\.?\\d*)|(0\\.\\d*[1-9])";
+//    Pattern p = Pattern.compile(phonePattern);
+//    Matcher m = p.matcher(number);
+//    return m.matches();
+        return Pattern.matches(phonePattern, number);
+    }
+
+    public String getProcessingAnswer(){
+        String answer = "=";
+        for(int i =0;i<mDeliveryBlocks.size();i++){
+            CYBlock  bk = mDeliveryBlocks.get(i);
+            if(bk instanceof BlankBlock){
+                if(!TextUtils.isEmpty(((BlankBlock) bk).getText())){
+                    answer += ((BlankBlock) bk).getText();
+                }
+            }else if(bk instanceof LatexBlock){
+                List<ICYEditable> editableList = ((LatexBlock) bk).findAllEditable();
+                boolean idFlag = false; // true  是 0 大，false 是1 大，谁大谁是分母
+                String fracStr = "";
+                if(editableList.size()==2){
+                    if(editableList.get(0).getTabId() > editableList.get(1).getTabId()){
+                        idFlag = true;
+                    }else{
+                        idFlag = false;
+                    }
+                }else{
+                    continue;
+                }
+
+                if(idFlag){
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(1).getText()+"}{";
+                    }else{
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{}{";
+                    }
+
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                        fracStr+= editableList.get(0).getText()+"}\"}#";
+                    }else{
+                        fracStr+= "}\"}#";
+                    }
+
+
+                   // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(1).getText()+"}{"+editableList.get(0).getText()+"}\"}#";
+                }else{
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{";
+                    }else{
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{}{";
+                    }
+
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        fracStr+= editableList.get(1).getText()+"}\"}#";
+                    }else{
+                        fracStr+= "}\"}#";
+                    }
+                   // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{"+editableList.get(1).getText()+"}\"}#";
+                }
+                answer+= fracStr;
+
+            }else if(bk instanceof CYBreakLineBlock){
+                answer += "=";
+            }
+        }
+
+        return answer;
+    }
 
 }

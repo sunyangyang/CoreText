@@ -61,7 +61,7 @@ public class DeliveryManualAnswerCell {
         answerTextEnv.setTextColor(mColor);
         answerTextEnv.setFontSize(textEnv.getFontSize());
         answerTextEnv.setVerticalSpacing(textEnv.getVerticalSpacing());
-        answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth() -mPaddingLeft*2));
+        answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth()));
         answerTextEnv.setSuggestedPageHeight(textEnv.getSuggestedPageHeight());
 
 
