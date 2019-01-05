@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ public class BlankBlock extends CYEditBlock {
     private boolean mStrokeble;
     private boolean mStroke = false;
     private boolean mBorrowPoint = false;
+    private boolean mPoint = false;
 
     private double mOffsetX, mOffsetY;
     private final int mMargin = Const.DP_1 * 3;
@@ -170,6 +172,7 @@ public class BlankBlock extends CYEditBlock {
         updateSize(getText());
     }
 
+    private Stack<String> mPointList = new Stack<>();
     @Override
     public void setText(String text) {
         if (TextUtils.equals(text, getText()))
@@ -177,15 +180,23 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
-            if (TextUtils.isEmpty(text)) {
-                mBorrowPoint = false;
-            }
-            if (text.contains(".") && !mBorrowPoint) {
-                mBorrowPoint = true;
-            }
             if (text.contains("#")) {
                 text =  text.replaceAll("#",".");
+                mPointList.push("#");
             }
+           char [] chars =  text.toCharArray();
+           int size =  0;
+           for (char c : chars) {
+               if (TextUtils.equals(".",c + "")) {
+                   size++;
+               }
+           }
+            if (text.contains(".") && size > mPointList.size() ) {
+                mPointList.push(".");
+            }
+           if (size < mPointList.size()) {
+               mPointList.pop();
+           }
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() ||
                     "express".equals(size) ||
@@ -645,7 +656,12 @@ public class BlankBlock extends CYEditBlock {
     }
 
     public boolean hasBorrowPoint() {
-        return mBorrowPoint;
+        for (String str  : mPointList) {
+            if(TextUtils.equals(".",str)){
+                return true;
+            }
+        }
+        return  false;
     }
     public void notifyLayoutChange() {
 
