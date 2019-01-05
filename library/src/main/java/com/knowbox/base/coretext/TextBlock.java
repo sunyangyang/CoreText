@@ -9,7 +9,6 @@ import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.utils.BaseConstant;
 
 import java.util.List;
@@ -113,6 +112,14 @@ public class TextBlock extends CYTextBlock {
 
         this.width = (int)textWidth;
         this.height = (int)textHeight;
+    }
+
+    @Override
+    protected void drawUnderLine(Canvas canvas, Rect rect) {
+        if (TextUtils.isEmpty(word.word) || TextUtils.isEmpty(word.word.trim())) {
+            return;
+        }
+        super.drawUnderLine(canvas, rect);
     }
 
     @Override
