@@ -241,8 +241,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     return;
                 }
                 if(!TextUtils.isEmpty(oldText) && oldText.length()>flashPosition && flashPosition!=-1){
-                    LogUtil.v("chenyan", "oldText.length(): " + oldText.length());
-                    LogUtil.v("chenyan", "flashPosition: " + flashPosition);
                     String newValue = oldText.substring(0,flashPosition)+text+ oldText.substring(flashPosition,oldText.length());
                     findEditableByTabId(position).setText(newValue);
                 }else{
@@ -654,9 +652,9 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 if(idFlag){
                     if(!TextUtils.isEmpty(editableList.get(1).getText())){
                         if(isRegex(editableList.get(1).getText())){
-                            fracStr += editableList.get(1).getText()+"÷" ;
+                            fracStr += editableList.get(1).getText()+"/" ;
                         }else{
-                            fracStr += "(" +editableList.get(1).getText() +")"+"÷";
+                            fracStr += "(" +editableList.get(1).getText() +")"+"/";
                         }
                     }
                     if(!TextUtils.isEmpty(editableList.get(0).getText())){
@@ -669,14 +667,14 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     }
 
                 }else{
-                    if(!TextUtils.isEmpty(editableList.get(1).getText())) {
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())) {
                         if (isRegex(editableList.get(0).getText())) {
-                            fracStr += editableList.get(0).getText() + "÷";
+                            fracStr += editableList.get(0).getText() + "/";
                         } else {
-                            fracStr += "(" + editableList.get(0).getText() + ")" + "÷";
+                            fracStr += "(" + editableList.get(0).getText() + ")" + "/";
                         }
                     }
-                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
                         if(isRegex(editableList.get(1).getText())){
                             fracStr += editableList.get(1).getText();
                         }else{
@@ -737,17 +735,18 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     continue;
                 }
 
+                //分数 分子没有填 默认是 0 分母没有填默认是1
                 if(idFlag){
                     if(!TextUtils.isEmpty(editableList.get(1).getText())){
                         fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(1).getText()+"}{";
                     }else{
-                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{}{";
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{0}{";
                     }
 
                     if(!TextUtils.isEmpty(editableList.get(0).getText())){
                         fracStr+= editableList.get(0).getText()+"}\"}#";
                     }else{
-                        fracStr+= "}\"}#";
+                        fracStr+= "1}\"}#";
                     }
 
 
@@ -756,16 +755,24 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     if(!TextUtils.isEmpty(editableList.get(0).getText())){
                         fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{";
                     }else{
-                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{}{";
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{0}{";
                     }
 
                     if(!TextUtils.isEmpty(editableList.get(1).getText())){
                         fracStr+= editableList.get(1).getText()+"}\"}#";
                     }else{
-                        fracStr+= "}\"}#";
+                        fracStr+= "1}\"}#";
                     }
                    // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{"+editableList.get(1).getText()+"}\"}#";
                 }
+
+                if(bk.getPrevBlock()!=null && bk.getPrevBlock() instanceof BlankBlock){
+                    char ch = answer.charAt(answer.length()-1);
+                    if(ch >= '0' && ch<= '9'){
+                        answer += "+" ;
+                    }
+                }
+
                 answer+= fracStr;
 
             }else if(bk instanceof CYBreakLineBlock){
