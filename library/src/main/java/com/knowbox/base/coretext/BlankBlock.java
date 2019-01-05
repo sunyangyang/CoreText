@@ -44,6 +44,7 @@ public class BlankBlock extends CYEditBlock {
     private int mWidth, mHeight;
     private boolean mStrokeble;
     private boolean mStroke = false;
+    private boolean mBorrowPoint = false;
 
     private double mOffsetX, mOffsetY;
     private final int mMargin = Const.DP_1 * 3;
@@ -176,6 +177,12 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
+            if (TextUtils.isEmpty(text)) {
+                mBorrowPoint = false;
+            }
+            if (text.contains(".") && !mBorrowPoint) {
+                mBorrowPoint = true;
+            }
             if (text.contains("#")) {
                 text =  text.replaceAll("#",".");
             }
@@ -637,6 +644,9 @@ public class BlankBlock extends CYEditBlock {
         return "borrow_flag".equals(size);
     }
 
+    public boolean hasBorrowPoint() {
+        return mBorrowPoint;
+    }
     public void notifyLayoutChange() {
 
     }
