@@ -205,7 +205,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
+ //       setBlankBlockWidthPerLine();
             int editabSize = builder.getEditableList().size();
             for(int i =0;i<editabSize;i++){
                 if( builder.getEditableList().get(i).getTabId() == nFocusId){
@@ -254,7 +254,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
+   //     setBlankBlockWidthPerLine();
     }
 
     public void removeText(int position,String oldText){
@@ -276,12 +276,13 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
                 if(flashPosition>0){
                     if(!TextUtils.isEmpty(oldText)) {
-                        if(oldText.length()>flashPosition){
+                        if(oldText.length()>=flashPosition){
                             String newValue = oldText.substring(0,flashPosition - 1) + oldText.substring(flashPosition,oldText.length());
                             findEditableByTabId(position).setText(newValue);
                             latexBlock.fracFlashPostion = flashPosition - 1;
                         }else{
                             findEditableByTabId(position).setText(oldText.substring(0,oldText.length()-1));
+                            latexBlock.fracFlashPostion = oldText.length()-1;
                         }
 
                     }
@@ -293,7 +294,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
+ //       setBlankBlockWidthPerLine();
     }
 
     public void removeBlock(int position){
@@ -401,7 +402,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
+     //   setBlankBlockWidthPerLine();
 
         int editabSize = builder.getEditableList().size();
         for(int i =0;i<editabSize;i++){
@@ -421,8 +422,8 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         String brStr = "{\"type\":\"P\"}";
         CYBreakLineBlock breakBlock = new CYBreakLineBlock(builder,brStr);
         mDeliveryBlocks.add(breakBlock);
-        int currentLineWidth = Const.DP_1*6;
-        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
+       // int currentLineWidth = Const.DP_1*6;
+        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + 0 + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
         mDeliveryBlocks.add(mBlock);
         builder.reLayout(true);
@@ -621,10 +622,33 @@ public class DeliveryQuestionTextView extends QuestionTextView {
             }
         }
         mDeliveryBlocks.get(mDeliveryBlocks.size()-1).setNextBlock(null);
-        int lastLineWidht = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth() - mDeliveryBlocks.get(mDeliveryBlocks.size()-1).getWidth();
-        ((BlankBlock) mDeliveryBlocks.get(mDeliveryBlocks.size()-1)).setDeliveryWidthType("lineWidth",lastLineWidht);
+        int lastLineWidth = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth() - mDeliveryBlocks.get(mDeliveryBlocks.size()-1).getWidth();
+        ((BlankBlock) mDeliveryBlocks.get(mDeliveryBlocks.size()-1)).setDeliveryWidthType("match",lastLineWidth);
         builder.reLayout(true);
     }
+
+    //设置每行的最后如果是BlankBlock，则设置宽度到有边框
+//    private void setBlankBlockWidthPerLine(){
+//        for(int i= 0;i<mDeliveryBlocks.size();i++){
+//            if(mDeliveryBlocks.get(i) instanceof BlankBlock){
+//                ((BlankBlock) mDeliveryBlocks.get(i)).setDeliveryWidthType("singleCharacter",0);
+//            }
+//        }
+//        mDeliveryBlocks.get(mDeliveryBlocks.size()-1).setNextBlock(null);
+//
+//        for(int j=0;j<mDeliveryPageBlock.getChildren().size();j++){
+//            //当前line 一行的宽度去掉最后一个blankblock 的宽度
+//            CYLineBlock  mCYLineBlock = (CYLineBlock)mDeliveryPageBlock.getChildren().get(j);
+//            int mLineSize = mCYLineBlock.getChildren().size();
+//            if(mCYLineBlock.getChildren().get(mLineSize-1) instanceof BlankBlock){
+//                int lineWidth = mCYLineBlock.getWidth() - mCYLineBlock.getChildren().get(mLineSize-1).getWidth();
+//                ((BlankBlock) mCYLineBlock.getChildren().get(mLineSize-1)).setDeliveryWidthType("match",lineWidth);
+//            }
+//
+//        }
+//
+//        builder.reLayout(true);
+//    }
 
 
     public String getAnswer() {
@@ -772,9 +796,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         answer += "+" ;
                     }
                 }
-
                 answer+= fracStr;
-
             }else if(bk instanceof CYBreakLineBlock){
                 answer += "=";
             }

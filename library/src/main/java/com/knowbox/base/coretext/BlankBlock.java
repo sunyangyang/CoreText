@@ -64,7 +64,7 @@ public class BlankBlock extends CYEditBlock {
     public static final int DEFAULT_FLASH_Y = -1000;
     public static final String TWPoint = "=24 ";
     public static int PLACE_HOLDER_WORD = 20;//字母大小为字的0.6倍，但是至少有两个字母，所以按照字母宽度来算，拼音之间应有间距
-    private String mDeliveryWidth="";
+    private String mDeliveryWidthType="";
     private int mDeliveryCurrentLineWidth = 0;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -79,7 +79,7 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             mPreSize = this.size;
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
-            mDeliveryWidth = json.optString("widthType","");
+            mDeliveryWidthType = json.optString("widthType","");
             mDeliveryCurrentLineWidth = json.optInt("lineWidth");
             if (getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE) != null &&
                     TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_PIN_YIN_SIZE)) {
@@ -428,10 +428,10 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else if ("delivery".equals(size)) {
                 float width;
-                if(mDeliveryWidth.equals(DELIVERY_WIDTH_TYPE_SINGLE)){
+                if(mDeliveryWidthType.equals(DELIVERY_WIDTH_TYPE_SINGLE)){
                     width = Math.max(mDeliveryBlankSingleWidth, PaintManager.getInstance().getWidth(getTextEnv()
                             .getPaint(), text));
-                }else if(mDeliveryWidth.equals(DELIVERY_WIDTH_TYPE_MATCH)){
+                }else if(mDeliveryWidthType.equals(DELIVERY_WIDTH_TYPE_MATCH)){
                     width = maxWidth - mDeliveryCurrentLineWidth;
                     if(width < mDeliveryBlankSingleWidth){
                         width = maxWidth;
@@ -686,7 +686,7 @@ public class BlankBlock extends CYEditBlock {
   }
 
   public void setDeliveryWidthType(String type,int currentLineWidth){
-        mDeliveryWidth = type;
+      mDeliveryWidthType = type;
         mDeliveryCurrentLineWidth = currentLineWidth;
   }
 
