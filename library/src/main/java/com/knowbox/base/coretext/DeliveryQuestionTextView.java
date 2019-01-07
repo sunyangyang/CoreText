@@ -489,10 +489,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
-        int x = (int)event.getX() - builder.getPage().getPaddingLeft();
-        int y = (int)event.getY() - builder.getPage().getPaddingTop();
-        CYBlock focusBlock = CYBlockUtils.findBlockByPosition(builder.getPage(), x, y);
-        if(focusBlock!=null){
             int currentBlockStation = findPositionByTabId(currentFocusId);
             if(mDeliveryBlocks.get(currentBlockStation) instanceof BlankBlock){
                 BlankBlock blankBlock = (BlankBlock)findEditableByTabId(currentFocusId);
@@ -514,7 +510,11 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
                 }
             }
-        }else{
+
+        int x = (int)event.getX() - builder.getPage().getPaddingLeft();
+        int y = (int)event.getY() - builder.getPage().getPaddingTop();
+        CYBlock focusBlock = CYBlockUtils.findBlockByPosition(builder.getPage(), x, y);
+        if(focusBlock==null){
             for(int i =0;i<builder.getPage().getChildren().size();i++){
                 CYLineBlock mCYLineBlock = builder.getPage().getChildren().get(i);
                 int count = mCYLineBlock.getChildren().size();
@@ -522,6 +522,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                     if(mCYLineBlock.getContentRect().top<=y && mCYLineBlock.getContentRect().bottom>=y){
                         if(x>mCYLineBlock.getContentRect().right){
                             if (focusChangeListener != null) {
+                                clearFocus();
                                 mCYLineBlock.getChildren().get(count-1).setFocus(true);
                                 focusChangeListener.onFocusChange(true,( (BlankBlock)mCYLineBlock.getChildren().get(count-1)).getTabId());
 
