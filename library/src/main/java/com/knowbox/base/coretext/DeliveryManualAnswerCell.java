@@ -107,8 +107,6 @@ public class DeliveryManualAnswerCell {
         return  0;
     }
 
-
-
     public void setLineY(int lineY) {
         this.lineY = lineY;
         if(mCellPageBlock!=null)

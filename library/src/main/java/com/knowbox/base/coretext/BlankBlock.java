@@ -36,8 +36,6 @@ public class BlankBlock extends CYEditBlock {
     public static String CLASS_DELIVERY = "delivery";
 
     public static String DELIVERY_WIDTH_TYPE_SINGLE = "singleCharacter";  // 创建delivery 类型时，宽只有一个字符的宽度
-    public static String DELIVERY_WIDTH_TYPE_MATCH = "match";  // 创建delivery 类型时，宽达到到右边边界
-    public static String DELIVERY_WIDTH_TYPE_INIT = "init";  // 创建delivery 类型时，宽达到到右边边界
     public static int mDeliveryBlankSingleWidth = Const.DP_1 * 6;
     private String mClass = CLASS_CHOICE;
     private String size;
@@ -431,11 +429,6 @@ public class BlankBlock extends CYEditBlock {
                 if(mDeliveryWidthType.equals(DELIVERY_WIDTH_TYPE_SINGLE)){
                     width = Math.max(mDeliveryBlankSingleWidth, PaintManager.getInstance().getWidth(getTextEnv()
                             .getPaint(), text));
-                }else if(mDeliveryWidthType.equals(DELIVERY_WIDTH_TYPE_MATCH)){
-                    width = maxWidth - mDeliveryCurrentLineWidth;
-                    if(width < mDeliveryBlankSingleWidth){
-                        width = maxWidth;
-                    }
                 }else{
                     width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                             .getPaint(), text));

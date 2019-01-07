@@ -3,7 +3,6 @@ package com.knowbox.base.coretext;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Process;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,16 +17,13 @@ import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.event.CYFocusEventListener;
+import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.clientlog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.knowbox.base.utils.BaseConstant.DELIVERY_ANSWER_ID;
 
 public class DeliveryQuestionTextView extends QuestionTextView {
     public static final String SIGN_EQUAL = "=";
@@ -35,7 +31,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
     private int mMarginTop = Const.DP_1 * 10;
     public int mId = 0;
     public List<CYBlock> mDeliveryBlocks;
-    public CYPageBlock mDeliveryPageBlock;
     Builder builder;
     public static  final int maxCount = 5;
     public int currentBreakLineNums = 0;
@@ -48,7 +43,17 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
     private List<Integer> childrenSizePerLine = new ArrayList<>(); // 每行有几个控件
 
+    public  CYFocusEventListener focusChangeListener = new CYFocusEventListener() {
+        @Override
+        public void onFocusChange(boolean b, int tabId) {
+            currentFocusId = tabId;
+        }
 
+        @Override
+        public void onClick(int i) {
+
+        }
+    };
     public DeliveryQuestionTextView(Context context) {
         super(context);
     }
@@ -74,24 +79,13 @@ public class DeliveryQuestionTextView extends QuestionTextView {
             mDeliveryBlocks.get(0).setFocus(true);
             mDeliveryBlocks.get(0).setMargin(0,0);
         }
-        mDeliveryPageBlock = builder.getPage();
         currentBreakLineNums ++;
         currentFocusId = mId;
         mPaint = builder.getPaint();
         equalWidth  = PaintManager.getInstance().getWidth(mPaint, SIGN_EQUAL);
         equalHeight  = (int)(PaintManager.getInstance().getHeight(mPaint) -mPaint.getFontMetrics().bottom);
         builder.reLayout(true);
-        setFocusEventListener(new CYFocusEventListener() {
-            @Override
-            public void onFocusChange(boolean b, int tabId) {
-                currentFocusId = tabId;
-            }
-
-            @Override
-            public void onClick(int i) {
-
-            }
-        });
+        setFocusEventListener(focusChangeListener);
         drawEqual();
         currentLineNums ++;
 
@@ -121,7 +115,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         builder.reLayout(true);
                         updateBlock();
                         int currentLineWidth = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth();
-                        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
+                        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                         mDeliveryBlocks.add(insertPosition + 2, mBlock);
 
@@ -138,8 +132,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                         mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                         nFocusId = mId;
-//                        builder.reLayout(true);
-//                        updateBlock();
                         String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                         mBlock.setText(nextText);
@@ -156,8 +148,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                             LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                             mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                             nFocusId = mId;
-//                            builder.reLayout(true);
-//                            updateBlock();
                             String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                             BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                             mDeliveryBlocks.add(insertPosition + 2, mBlock);
@@ -176,8 +166,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                             LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                             mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                             nFocusId = mId;
-//                            builder.reLayout(true);
-//                            updateBlock();
                             String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                             BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                             mBlock.setText(nextText);
@@ -205,7 +193,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
- //       setBlankBlockWidthPerLine();
             int editabSize = builder.getEditableList().size();
             for(int i =0;i<editabSize;i++){
                 if( builder.getEditableList().get(i).getTabId() == nFocusId){
@@ -254,7 +241,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-   //     setBlankBlockWidthPerLine();
     }
 
     public void removeText(int position,String oldText){
@@ -294,7 +280,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
- //       setBlankBlockWidthPerLine();
     }
 
     public void removeBlock(int position){
@@ -402,7 +387,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-     //   setBlankBlockWidthPerLine();
 
         int editabSize = builder.getEditableList().size();
         for(int i =0;i<editabSize;i++){
@@ -423,7 +407,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         CYBreakLineBlock breakBlock = new CYBreakLineBlock(builder,brStr);
         mDeliveryBlocks.add(breakBlock);
        // int currentLineWidth = Const.DP_1*6;
-        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + 0 + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
+        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"lineWidth\": " + 0 + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
         mDeliveryBlocks.add(mBlock);
         builder.reLayout(true);
@@ -504,27 +488,51 @@ public class DeliveryQuestionTextView extends QuestionTextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        int currentBlockStation = findPositionByTabId(currentFocusId);
-        if(mDeliveryBlocks.get(currentBlockStation) instanceof BlankBlock){
-            BlankBlock blankBlock = (BlankBlock)findEditableByTabId(currentFocusId);
-            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
-            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
-            if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
-                ((EditFace) blankBlock.getEditFace()).setFlashX(flashX - blankBlock.getContentRect().left);
-                ((EditFace) blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
-                ((EditFace) blankBlock.getEditFace()).setFlashPosition(-1);
+
+        int x = (int)event.getX() - builder.getPage().getPaddingLeft();
+        int y = (int)event.getY() - builder.getPage().getPaddingTop();
+        CYBlock focusBlock = CYBlockUtils.findBlockByPosition(builder.getPage(), x, y);
+        if(focusBlock!=null){
+            int currentBlockStation = findPositionByTabId(currentFocusId);
+            if(mDeliveryBlocks.get(currentBlockStation) instanceof BlankBlock){
+                BlankBlock blankBlock = (BlankBlock)findEditableByTabId(currentFocusId);
+                int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
+                int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
+                if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
+                    ((EditFace) blankBlock.getEditFace()).setFlashX(flashX - blankBlock.getContentRect().left);
+                    ((EditFace) blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
+                    ((EditFace) blankBlock.getEditFace()).setFlashPosition(-1);
+                }
+            }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
+                int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
+                if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
+                    ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - fillInBox.getBlockRect().left);
+                    ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
+                    ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
+                }
             }
-        }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
-            LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
-            FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
-            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
-            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
-            if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
-                ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - fillInBox.getBlockRect().left);
-                ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
-                ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
+        }else{
+            for(int i =0;i<builder.getPage().getChildren().size();i++){
+                CYLineBlock mCYLineBlock = builder.getPage().getChildren().get(i);
+                int count = mCYLineBlock.getChildren().size();
+                if(mCYLineBlock.getChildren().get(count-1) instanceof BlankBlock){
+                    if(mCYLineBlock.getContentRect().top<=y && mCYLineBlock.getContentRect().bottom>=y){
+                        if(x>mCYLineBlock.getContentRect().right){
+                            if (focusChangeListener != null) {
+                                mCYLineBlock.getChildren().get(count-1).setFocus(true);
+                                focusChangeListener.onFocusChange(true,( (BlankBlock)mCYLineBlock.getChildren().get(count-1)).getTabId());
+
+                            }
+                        }
+                    }
+                }
             }
         }
+
+
         return true;
     }
 
@@ -615,41 +623,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         }
     }
 
-    private void setLastBlockWidth(){
-        for(int i= 0;i<mDeliveryBlocks.size();i++){
-            if(mDeliveryBlocks.get(i) instanceof BlankBlock){
-              ((BlankBlock) mDeliveryBlocks.get(i)).setDeliveryWidthType("singleCharacter",0);
-            }
-        }
-        mDeliveryBlocks.get(mDeliveryBlocks.size()-1).setNextBlock(null);
-        int lastLineWidth = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth() - mDeliveryBlocks.get(mDeliveryBlocks.size()-1).getWidth();
-        ((BlankBlock) mDeliveryBlocks.get(mDeliveryBlocks.size()-1)).setDeliveryWidthType("match",lastLineWidth);
-        builder.reLayout(true);
-    }
-
-    //设置每行的最后如果是BlankBlock，则设置宽度到有边框
-//    private void setBlankBlockWidthPerLine(){
-//        for(int i= 0;i<mDeliveryBlocks.size();i++){
-//            if(mDeliveryBlocks.get(i) instanceof BlankBlock){
-//                ((BlankBlock) mDeliveryBlocks.get(i)).setDeliveryWidthType("singleCharacter",0);
-//            }
-//        }
-//        mDeliveryBlocks.get(mDeliveryBlocks.size()-1).setNextBlock(null);
-//
-//        for(int j=0;j<mDeliveryPageBlock.getChildren().size();j++){
-//            //当前line 一行的宽度去掉最后一个blankblock 的宽度
-//            CYLineBlock  mCYLineBlock = (CYLineBlock)mDeliveryPageBlock.getChildren().get(j);
-//            int mLineSize = mCYLineBlock.getChildren().size();
-//            if(mCYLineBlock.getChildren().get(mLineSize-1) instanceof BlankBlock){
-//                int lineWidth = mCYLineBlock.getWidth() - mCYLineBlock.getChildren().get(mLineSize-1).getWidth();
-//                ((BlankBlock) mCYLineBlock.getChildren().get(mLineSize-1)).setDeliveryWidthType("match",lineWidth);
-//            }
-//
-//        }
-//
-//        builder.reLayout(true);
-//    }
-
 
     public String getAnswer() {
         String answer = "=";
@@ -710,7 +683,22 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 if(bk.getPrevBlock() instanceof BlankBlock){
                     char ch = answer.charAt(answer.length()-1);
                     if(ch >= '0' && ch<= '9'){
-                        answer += "+" +fracStr;
+                        String integStr = "";
+                        for(int k = answer.length()-1;k>=0;k--){
+                            char mChar = answer.charAt(k);
+                            if((mChar >= '0' && mChar<= '9')){
+                                integStr+= mChar;
+                            }else{
+                                break;
+                            }
+                        }
+                        int integIndex = answer.lastIndexOf(integStr);
+                        if(integIndex>=0){
+                            answer = answer.substring(0,integIndex) + "(" + integStr + "+" + fracStr +")";
+                        }else{
+                            answer += "+" + fracStr;
+                        }
+
                     }else{
                         answer += fracStr;
                     }
