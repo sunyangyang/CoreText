@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 
 import com.hyena.coretext.TextEnv;
+import com.hyena.coretext.blocks.CYStyle;
 import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
 public class TextBlock extends CYTextBlock {
     private int mPadding = 0;
     private String mStyle = "";
+    private int width;
+    int height;
     public TextBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
     }
@@ -54,7 +57,7 @@ public class TextBlock extends CYTextBlock {
                 return width;
             }
         }
-        return super.getContentWidth();
+        return width;
     }
 
     @Override
@@ -75,6 +78,54 @@ public class TextBlock extends CYTextBlock {
         } else {
             super.draw(canvas);
         }
+    }
+
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
+        this.fontMetrics = this.paint.getFontMetrics();
+    }
+
+    @Override
+    public int getContentHeight() {
+        return height;
+    }
+
+    @Override
+    protected void updateSize() {
+        float textWidth = (float)this.getTextWidth(this.paint, this.word.word);
+        this.paint.setTextSize(this.fontSize);
+        this.pinYinPaint.setTextSize(this.fontSize);
+        float textHeight = (float)this.getTextHeight(this.paint);
+        if (!TextUtils.isEmpty(this.word.pinyin)) {
+            pinYinPaint.setTextSize(fontSize * 0.6f);
+            float pinyinWidth = (float)this.getTextWidth(this.pinYinPaint, this.word.pinyin);
+            float pinyinHeight = (float)this.getTextHeight(this.pinYinPaint);
+            if (pinyinWidth > textWidth) {
+                textWidth = pinyinWidth;
+            }
+
+            textHeight += pinyinHeight;
+            if (getMarginLeft() == 0 && getMarginRight() == 0) {
+                setMargin(Const.DP_1 * 2, Const.DP_1 * 2);
+            }
+        }
+
+        this.width = (int)textWidth;
+        this.height = (int)textHeight;
+    }
+
+    @Override
+    protected void drawUnderLine(Canvas canvas, Rect rect) {
+        if (TextUtils.isEmpty(word.word) || TextUtils.isEmpty(word.word.trim())) {
+            return;
+        }
+        super.drawUnderLine(canvas, rect);
+    }
+
+    @Override
+    public void setTextHeightInLine(int textHeight) {
+        super.setTextHeightInLine(textHeight);
+        this.height = textHeight - this.getPaddingBottom() - this.getPaddingTop();
     }
 
     public static String getPunc(String content) {

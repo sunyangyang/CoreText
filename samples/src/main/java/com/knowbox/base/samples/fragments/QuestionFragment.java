@@ -238,7 +238,8 @@ public class QuestionFragment extends Fragment {
         question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，按听到的内容连线。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_audio\"}##{\"type\":\"audio\",\"src\":\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU1L1-12.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_matching\"}##{\"left\": [{\"id\": 1, \"content\": \"Amy\"}, {\"id\": 2, \"content\": \"Lingling\"}, {\"id\": 3, \"content\": \"Ms Smart\"}, {\"id\": 4, \"content\": \"Daming\"}, {\"id\": 5, \"content\": \"Sam\"}], \"type\": \"match\", \"right\": [{\"id\": 1, \"content\": \"swim\"}, {\"id\": 2, \"content\": \"play football\"}, {\"id\": 3, \"content\": \"ride a bike\"}, {\"id\": 4, \"content\": \"fly a kite\"}, {\"id\": 5, \"content\": \"make a model plane\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/FtmPq81WqCwhhyiI3e4vbNkbcCor\",\"width\":\"680px\",\"height\":\"270px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"10.4\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":2,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"38.1\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":3,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"77.1\",\"y_pos\":\"51.5\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#下列各数中，最大的是(    )。#{\"type\":\"P\"}#0.42#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.4#{\"type\":\"latex\",\"content\":\"\\\\dot{2}\"}##{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.#{\"type\":\"latex\",\"content\":\"\\\\dot{4}\"}#2#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.429#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。tián#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_paratext\"}#风妈妈有个可爱的风娃娃。风娃娃长大了，他想像妈妈一样去帮助人。风妈妈说：“到田野里去吧，在那里，你可以帮人们做很多事情。”#{\"type\":\"P\"}#风娃娃来到田野，看见一架大风车正在慢慢转动，抽上来的水断断续续地流着。他深深地吸了一口气，鼓起腮使劲向风车吹去。风车一下子转得飞快！抽上来的水奔跑着，哗啦哗啦地向田里流去。秧苗喝足了水，笑着不住地点头，风娃娃也高兴极了。#{\"type\":\"P\"}#风娃娃又来到河边，看见许多船工正拉着一艘大船。他们弯着腰，流着汗，“嗨哟，嗨哟”喊着号子，可是船却走得很慢很慢。他急忙跑过去，对着船帆用力吹了口气，船飞快地跑了起来。船工们笑了，一边收起纤绳，一边向风娃娃表示感谢。#{\"type\":\"P\"}#风娃娃想：帮助人们做好事，真容易，只要有力气就行。#{\"type\":\"P\"}#他这么想着，来到一个广场上。那里有几个孩子正在放风筝。风娃娃看见了，赶紧过去用力吹。风筝在空中摇摇摆摆，有的还翻起了跟头。不一会儿，风筝被吹得无影无踪，孩子们伤心极了。#{\"type\":\"P\"}#风娃娃却一点儿也不知道，他仍然东吹吹，西吹吹。就这样，风娃娃吹跑了人们晾晒的衣服，折断了路边新栽的小树……人们都生气了，纷纷责怪他。#{\"type\":\"P\"}#风娃娃不敢再去帮忙了，他委屈地在天上转着、想着：我帮人们做事情，为什么他们还责怪我呢？风娃娃回家去问妈妈。妈妈说：“孩子，做事情光有好的愿望还不行，还要看是不是真的对别人有用。”#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read_pure_pinyin_center\"}#请(!qǐng!)你(!nǐ!)帮(!bāng!)助(!zhù!)布(!bù!)克(!kè!)给(!gěi!)下(!xià!)列(!liè!)句(!jù!)子(!zǐ!)的(!de!)“着”字(!zì!)注(!zhù!)音(!yīn!)。#{\"type\":\"P\"}#他(!tā!)看(!kàn!)着书(!shū!)，不(!bù!)一(!yī!)会(!huì!)儿(!ér!)就(!jiù!)睡(!shuì!)着(!zhao!)了(!le!)，直(!zhí!)到(!dào!)外(!wài!)面(!miàn!)着(!zhao!)火(!huǒ!)他(!tā!)才(!cái!)醒(!xǐng!)过(!guò!)来(!lái!)。#{\"type\":\"para_end\"}#";
         builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditableValue(1, "A");
@@ -259,7 +260,7 @@ public class QuestionFragment extends Fragment {
             ICYEditable editable = editableList.get(i);
             editable.setFocus(true);
         }
-        editableList.get(0).setText("a找(!zhao!)");
+        //editableList.get(0).setText("a找(!zhao!)");
         return view;
     }
 
@@ -296,23 +297,23 @@ public class QuestionFragment extends Fragment {
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
-//                        if ("删除".equals(text)) {
-//                            if (!TextUtils.isEmpty(currentText)) {
-//                                editable.setText(currentText.substring(0, currentText.length() - 1));
-//                            }
-//                        } else {
-//                            editable.setText(currentText + text);
-//                        }
-
                         if ("删除".equals(text)) {
-                            editable.setText("a找(!zhao!)");
+                            if (!TextUtils.isEmpty(currentText)) {
+                                editable.setText(currentText.substring(0, currentText.length() - 1));
+                            }
+                        } else {
+                            editable.setText(currentText + text);
                         }
-                        else if("#".equals(text)){
-                            editable.setText("shù shù");
-                        }
-                        else {
-                            editable.setText(text);
-                        }
+
+//                        if ("删除".equals(text)) {
+//                            editable.setText("a找(!zhao!)");
+//                        }
+//                        else if("#".equals(text)){
+//                            editable.setText("shù shù");
+//                        }
+//                        else {
+//                            editable.setText(text);
+//                        }
 
 
 //                        if ("#".equals(text)) {
