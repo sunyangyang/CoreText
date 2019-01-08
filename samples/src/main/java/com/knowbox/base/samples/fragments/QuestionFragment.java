@@ -333,11 +333,14 @@ public class QuestionFragment extends Fragment {
                                 //删除控件
                                 mQtvQuestion.removeBlock(mQtvQuestion.currentFocusId);
                             }
-                        }else if("#".equals(text)){
+                        }else if("stroke".equals(text)){
                             mQtvQuestion.insertLatexBlock(mQtvQuestion.currentFocusId);
                         }else if("回车".equals(text)){
                             mQtvQuestion.breakLine();
-                        }else {
+                        }else if("#".equals(text)){
+                            mQtvQuestion.getAnswer();
+                            mQtvQuestion.getProcessingAnswer();
+                        } else{
                             mQtvQuestion.insertText(mQtvQuestion.currentFocusId,text,currentText);
                            // editable.setText(currentText + text);
                         }

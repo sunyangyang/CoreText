@@ -225,7 +225,7 @@
                     android:layout_width="33dp"
                     android:layout_height="match_parent">
                 </RelativeLayout>
-                <com.knowbox.base.coretext.QuestionTextView
+                <com.knowbox.base.coretext.DeliveryQuestionTextView
                     android:id="@+id/qtv_question"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
