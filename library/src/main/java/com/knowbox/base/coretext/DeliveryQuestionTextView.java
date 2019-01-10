@@ -15,12 +15,15 @@ import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYLineBlock;
 import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.ICYEditable;
+import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.event.CYFocusEventListener;
+import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class DeliveryQuestionTextView extends QuestionTextView {
     public static final String SIGN_EQUAL = "=";
@@ -28,7 +31,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
     private int mMarginTop = Const.DP_1 * 10;
     public int mId = 0;
     public List<CYBlock> mDeliveryBlocks;
-    public CYPageBlock mDeliveryPageBlock;
     Builder builder;
     public static  final int maxCount = 5;
     public int currentBreakLineNums = 0;
@@ -41,7 +43,17 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
     private List<Integer> childrenSizePerLine = new ArrayList<>(); // 每行有几个控件
 
+    public  CYFocusEventListener focusChangeListener = new CYFocusEventListener() {
+        @Override
+        public void onFocusChange(boolean b, int tabId) {
+            currentFocusId = tabId;
+        }
 
+        @Override
+        public void onClick(int i) {
+
+        }
+    };
     public DeliveryQuestionTextView(Context context) {
         super(context);
     }
@@ -67,24 +79,13 @@ public class DeliveryQuestionTextView extends QuestionTextView {
             mDeliveryBlocks.get(0).setFocus(true);
             mDeliveryBlocks.get(0).setMargin(0,0);
         }
-        mDeliveryPageBlock = builder.getPage();
         currentBreakLineNums ++;
         currentFocusId = mId;
         mPaint = builder.getPaint();
         equalWidth  = PaintManager.getInstance().getWidth(mPaint, SIGN_EQUAL);
         equalHeight  = (int)(PaintManager.getInstance().getHeight(mPaint) -mPaint.getFontMetrics().bottom);
         builder.reLayout(true);
-        setFocusEventListener(new CYFocusEventListener() {
-            @Override
-            public void onFocusChange(boolean b, int tabId) {
-                currentFocusId = tabId;
-            }
-
-            @Override
-            public void onClick(int i) {
-
-            }
-        });
+        setFocusEventListener(focusChangeListener);
         drawEqual();
         currentLineNums ++;
 
@@ -114,7 +115,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         builder.reLayout(true);
                         updateBlock();
                         int currentLineWidth = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth();
-                        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
+                        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                         mDeliveryBlocks.add(insertPosition + 2, mBlock);
 
@@ -131,8 +132,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                         mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                         nFocusId = mId;
-//                        builder.reLayout(true);
-//                        updateBlock();
                         String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                         mBlock.setText(nextText);
@@ -149,8 +148,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                             LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                             mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                             nFocusId = mId;
-//                            builder.reLayout(true);
-//                            updateBlock();
                             String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                             BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                             mDeliveryBlocks.add(insertPosition + 2, mBlock);
@@ -169,8 +166,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                             LatexBlock latexBlock = new LatexBlock(builder, latexStr);
                             mDeliveryBlocks.add(insertPosition + 1, latexBlock);
                             nFocusId = mId;
-//                            builder.reLayout(true);
-//                            updateBlock();
                             String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"size\": \"delivery\", \"id\":" + ++mId + "}";
                             BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
                             mBlock.setText(nextText);
@@ -198,7 +193,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
             int editabSize = builder.getEditableList().size();
             for(int i =0;i<editabSize;i++){
                 if( builder.getEditableList().get(i).getTabId() == nFocusId){
@@ -226,14 +220,27 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         PaintManager.getInstance().getWidth(builder.getPaint(), str) > builder.getSuggestedPageWidth()-Const.DP_1 * 10- Const.DP_1*6) {
                     return;
                 }
-                findEditableByTabId(position).setText(oldText + text);
+
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(BlockPosition);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
+                if(flashPosition == -1){
+                    return;
+                }
+                if(!TextUtils.isEmpty(oldText) && oldText.length()>flashPosition && flashPosition!=-1){
+                    String newValue = oldText.substring(0,flashPosition)+text+ oldText.substring(flashPosition,oldText.length());
+                    findEditableByTabId(position).setText(newValue);
+                }else{
+                    findEditableByTabId(position).setText(oldText+text);
+                }
+
+                latexBlock.fracFlashPostion = flashPosition + text.length();
             }
         }
 
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
     }
 
     public void removeText(int position,String oldText){
@@ -249,14 +256,30 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 }
 
             }else  if (mDeliveryBlocks.get(BlockPosition) instanceof LatexBlock) {
-                findEditableByTabId(position).setText(oldText.substring(0, oldText.length() - 1));
+
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(BlockPosition);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashPosition = ((EditFace)fillInBox.getEditFace()).getFlashPosition();
+                if(flashPosition>0){
+                    if(!TextUtils.isEmpty(oldText)) {
+                        if(oldText.length()>=flashPosition){
+                            String newValue = oldText.substring(0,flashPosition - 1) + oldText.substring(flashPosition,oldText.length());
+                            findEditableByTabId(position).setText(newValue);
+                            latexBlock.fracFlashPostion = flashPosition - 1;
+                        }else{
+                            findEditableByTabId(position).setText(oldText.substring(0,oldText.length()-1));
+                            latexBlock.fracFlashPostion = oldText.length()-1;
+                        }
+
+                    }
+                }
+
             }
         }
 
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
     }
 
     public void removeBlock(int position){
@@ -364,7 +387,6 @@ public class DeliveryQuestionTextView extends QuestionTextView {
 
         builder.reLayout(true);
         updateBlock();
-        setLastBlockWidth();
 
         int editabSize = builder.getEditableList().size();
         for(int i =0;i<editabSize;i++){
@@ -384,8 +406,8 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         String brStr = "{\"type\":\"P\"}";
         CYBreakLineBlock breakBlock = new CYBreakLineBlock(builder,brStr);
         mDeliveryBlocks.add(breakBlock);
-        int currentLineWidth = Const.DP_1*6;
-        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"match\",\"lineWidth\": " + currentLineWidth + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
+       // int currentLineWidth = Const.DP_1*6;
+        String deliveryStr = "{\"type\": \"blank\", \"class\": \"delivery\",\"widthType\": \"singleCharacter\",\"lineWidth\": " + 0 + ",\"size\": \"delivery\", \"id\":" + ++mId + "}";
         BlankBlock mBlock = new BlankBlock(builder, deliveryStr);
         mDeliveryBlocks.add(mBlock);
         builder.reLayout(true);
@@ -466,27 +488,52 @@ public class DeliveryQuestionTextView extends QuestionTextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        int currentBlockStation = findPositionByTabId(currentFocusId);
-        if(mDeliveryBlocks.get(currentBlockStation) instanceof BlankBlock){
-            BlankBlock blankBlock = (BlankBlock)findEditableByTabId(currentFocusId);
-            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
-            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
-            if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
-                ((EditFace) blankBlock.getEditFace()).setFlashX(flashX - blankBlock.getContentRect().left);
-                ((EditFace) blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
-                ((EditFace) blankBlock.getEditFace()).setFlashPosition(-1);
+
+            int currentBlockStation = findPositionByTabId(currentFocusId);
+            if(mDeliveryBlocks.get(currentBlockStation) instanceof BlankBlock){
+                BlankBlock blankBlock = (BlankBlock)findEditableByTabId(currentFocusId);
+                int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
+                int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
+                if (blankBlock != null && blankBlock.isEditable() && blankBlock.getEditFace() != null) {
+                    ((EditFace) blankBlock.getEditFace()).setFlashX(flashX - blankBlock.getContentRect().left);
+                    ((EditFace) blankBlock.getEditFace()).setFlashY(flashY - blankBlock.getContentRect().top);
+                    ((EditFace) blankBlock.getEditFace()).setFlashPosition(-1);
+                }
+            }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
+                LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
+                FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
+                int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
+                int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
+                if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
+                    ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - fillInBox.getBlockRect().left);
+                    ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
+                    ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
+                }
             }
-//        }else if(mDeliveryBlocks.get(currentBlockStation) instanceof LatexBlock){
-//            LatexBlock latexBlock = (LatexBlock)mDeliveryBlocks.get(currentBlockStation);
-//            FillInBox fillInBox = (FillInBox)findEditableByTabId(currentFocusId);
-//            int flashX = (int)event.getX() - builder.getPage().getPaddingLeft();
-//            int flashY = (int)event.getY() - builder.getPage().getPaddingTop();
-//            if (fillInBox != null && fillInBox.isEditable() && fillInBox.getEditFace() != null) {
-//                ((EditFace) fillInBox.getEditFace()).setFlashX(flashX - latexBlock.getContentRect().left);
-//                ((EditFace) fillInBox.getEditFace()).setFlashY(flashY - latexBlock.getContentRect().top);
-//                ((EditFace) fillInBox.getEditFace()).setFlashPosition(-1);
-//            }
+
+        int x = (int)event.getX() - builder.getPage().getPaddingLeft();
+        int y = (int)event.getY() - builder.getPage().getPaddingTop();
+        CYBlock focusBlock = CYBlockUtils.findBlockByPosition(builder.getPage(), x, y);
+        if(focusBlock==null){
+            for(int i =0;i<builder.getPage().getChildren().size();i++){
+                CYLineBlock mCYLineBlock = builder.getPage().getChildren().get(i);
+                int count = mCYLineBlock.getChildren().size();
+                if(mCYLineBlock.getChildren().get(count-1) instanceof BlankBlock){
+                    if(mCYLineBlock.getContentRect().top<=y && mCYLineBlock.getContentRect().bottom>=y){
+                        if(x>mCYLineBlock.getContentRect().right){
+                            if (focusChangeListener != null) {
+                                clearFocus();
+                                mCYLineBlock.getChildren().get(count-1).setFocus(true);
+                                focusChangeListener.onFocusChange(true,( (BlankBlock)mCYLineBlock.getChildren().get(count-1)).getTabId());
+
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+
         return true;
     }
 
@@ -577,17 +624,174 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         }
     }
 
-    private void setLastBlockWidth(){
-        for(int i= 0;i<mDeliveryBlocks.size();i++){
-            if(mDeliveryBlocks.get(i) instanceof BlankBlock){
-              ((BlankBlock) mDeliveryBlocks.get(i)).setDeliveryWidthType("singleCharacter",0);
+
+    public String getAnswer() {
+        String answer = "=";
+        for(int i =0;i<mDeliveryBlocks.size();i++){
+            CYBlock  bk = mDeliveryBlocks.get(i);
+            if(bk instanceof BlankBlock){
+                if(!TextUtils.isEmpty(((BlankBlock) bk).getText())){
+                    answer += ((BlankBlock) bk).getText();
+                }
+
+            }else if(bk instanceof LatexBlock){
+                List<ICYEditable> editableList = ((LatexBlock) bk).findAllEditable();
+                boolean idFlag = false; // true  是 0 大，false 是1 大，谁大谁是分母
+                String fracStr = "";
+                if(editableList.size()==2){
+                    if(editableList.get(0).getTabId() > editableList.get(1).getTabId()){
+                        idFlag = true;
+                    }else{
+                        idFlag = false;
+                    }
+                }else{
+                    continue;
+                }
+                if(idFlag){
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        if(isRegex(editableList.get(1).getText())){
+                            fracStr += editableList.get(1).getText()+"/" ;
+                        }else{
+                            fracStr += "(" +editableList.get(1).getText() +")"+"/";
+                        }
+                    }
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+
+                        if(isRegex(editableList.get(0).getText())){
+                            fracStr += editableList.get(0).getText();
+                        }else{
+                            fracStr +=  "(" +editableList.get(0).getText() +")" ;
+                        }
+                    }
+
+                }else{
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())) {
+                        if (isRegex(editableList.get(0).getText())) {
+                            fracStr += editableList.get(0).getText() + "/";
+                        } else {
+                            fracStr += "(" + editableList.get(0).getText() + ")" + "/";
+                        }
+                    }
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        if(isRegex(editableList.get(1).getText())){
+                            fracStr += editableList.get(1).getText();
+                        }else{
+                            fracStr +=  "(" +editableList.get(1).getText() +")" ;
+                        }
+                    }
+                }
+
+                if(bk.getPrevBlock() instanceof BlankBlock){
+                    char ch = answer.charAt(answer.length()-1);
+                    if(ch >= '0' && ch<= '9'){
+                        String integStr = "";
+                        for(int k = answer.length()-1;k>=0;k--){
+                            char mChar = answer.charAt(k);
+                            if((mChar >= '0' && mChar<= '9')){
+                                integStr+= mChar;
+                            }else{
+                                break;
+                            }
+                        }
+                        int integIndex = answer.lastIndexOf(integStr);
+                        if(integIndex>=0){
+                            answer = answer.substring(0,integIndex) + "(" + integStr + "+" + fracStr +")";
+                        }else{
+                            answer += "+" + fracStr;
+                        }
+
+                    }else{
+                        answer += fracStr;
+                    }
+                }else{
+                    answer += fracStr;
+                }
+            }else if(bk instanceof CYBreakLineBlock){
+                answer += "=";
             }
         }
-        mDeliveryBlocks.get(mDeliveryBlocks.size()-1).setNextBlock(null);
-        int lastLineWidht = builder.getPage().getChildren().get(builder.getPage().getChildren().size()-1).getWidth() - mDeliveryBlocks.get(mDeliveryBlocks.size()-1).getWidth();
-        ((BlankBlock) mDeliveryBlocks.get(mDeliveryBlocks.size()-1)).setDeliveryWidthType("lineWidth",lastLineWidht);
-        builder.reLayout(true);
+        return answer;
+
+       // builder.setEditableValue(DELIVERY_ANSWER_ID, answer);
     }
 
+
+
+   //判断分子是否是完整的整数或小数
+    private boolean isRegex(String number) {
+        String phonePattern = "([1-9]\\d*\\.?\\d*)|(0\\.\\d*[1-9])";
+//    Pattern p = Pattern.compile(phonePattern);
+//    Matcher m = p.matcher(number);
+//    return m.matches();
+        return Pattern.matches(phonePattern, number);
+    }
+
+    public String getProcessingAnswer(){
+        String answer = "=";
+        for(int i =0;i<mDeliveryBlocks.size();i++){
+            CYBlock  bk = mDeliveryBlocks.get(i);
+            if(bk instanceof BlankBlock){
+                if(!TextUtils.isEmpty(((BlankBlock) bk).getText())){
+                    answer += ((BlankBlock) bk).getText();
+                }
+            }else if(bk instanceof LatexBlock){
+                List<ICYEditable> editableList = ((LatexBlock) bk).findAllEditable();
+                boolean idFlag = false; // true  是 0 大，false 是1 大，谁大谁是分母
+                String fracStr = "";
+                if(editableList.size()==2){
+                    if(editableList.get(0).getTabId() > editableList.get(1).getTabId()){
+                        idFlag = true;
+                    }else{
+                        idFlag = false;
+                    }
+                }else{
+                    continue;
+                }
+
+                //分数 分子没有填 默认是 0 分母没有填默认是1
+                if(idFlag){
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(1).getText()+"}{";
+                    }else{
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{0}{";
+                    }
+
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                        fracStr+= editableList.get(0).getText()+"}\"}#";
+                    }else{
+                        fracStr+= "1}\"}#";
+                    }
+
+
+                   // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(1).getText()+"}{"+editableList.get(0).getText()+"}\"}#";
+                }else{
+                    if(!TextUtils.isEmpty(editableList.get(0).getText())){
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{";
+                    }else{
+                        fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{0}{";
+                    }
+
+                    if(!TextUtils.isEmpty(editableList.get(1).getText())){
+                        fracStr+= editableList.get(1).getText()+"}\"}#";
+                    }else{
+                        fracStr+= "1}\"}#";
+                    }
+                   // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{"+editableList.get(1).getText()+"}\"}#";
+                }
+
+                if(bk.getPrevBlock()!=null && bk.getPrevBlock() instanceof BlankBlock){
+                    char ch = answer.charAt(answer.length()-1);
+                    if(ch >= '0' && ch<= '9'){
+                        answer += "+" ;
+                    }
+                }
+                answer+= fracStr;
+            }else if(bk instanceof CYBreakLineBlock){
+                answer += "=";
+            }
+        }
+
+        return answer;
+    }
 
 }

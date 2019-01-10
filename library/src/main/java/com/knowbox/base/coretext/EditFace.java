@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYEditFace;
@@ -41,6 +40,7 @@ public class EditFace extends CYEditFace {
     private int mRoundCorner = Const.DP_1 * 5;
     private ICYEditable editable;
     private List<TextInfo> mTextList = new ArrayList<TextInfo>();
+    private TextInfo mFracTextInfo = new TextInfo();
     private int mVerticalSpacing = Const.DP_1 * 5;//为多行准备的
     private float mTextX = 0;
     private float mFlashX;
@@ -125,7 +125,7 @@ public class EditFace extends CYEditFace {
             mBorderPaint.setColor(0xff44cdfc);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(mRectF, mRoundCorner, mRoundCorner, mBorderPaint);
-        }else if("latex".equals(mSize)){
+        }else if("frac".equals(mSize)){
             mRectF.set(blockRect.left, blockRect.top, blockRect.right, blockRect.bottom - getBorderPaint().getStrokeWidth() / 2);
             mBorderPaint.setStrokeWidth(Const.DP_1);
             mBorderPaint.setColor(0xff44cdfc);
@@ -137,7 +137,7 @@ public class EditFace extends CYEditFace {
     @Override
     protected void drawBackGround(Canvas canvas, Rect blockRect, Rect contentRect) {
         if (!mTextEnv.isEditable() || BlankBlock.CLASS_DELIVERY.equals(mClass) ||
-                "sudoku_blank".equals(mSize) || "24point_blank".equals(mSize) || "latex".equals(mSize))
+                "sudoku_blank".equals(mSize) || "24point_blank".equals(mSize) || "frac".equals(mSize))
             return;
 
         mBackGroundPaint.setStyle(Paint.Style.FILL);
@@ -218,6 +218,7 @@ public class EditFace extends CYEditFace {
             }
         } else {
             if (BlankBlock.CLASS_DELIVERY.equals(mClass)) {
+
                 if (editable.isEditable() && editable.hasFocus()) {
                     float left = 0;
                     int textHeight = PaintManager.getInstance().getHeight(mTextPaint);
@@ -353,6 +354,116 @@ public class EditFace extends CYEditFace {
 
                         canvas.drawLine(left, (float)(contentRect.top + padding), left, (float)(contentRect.bottom - padding), this.mFlashPaint);
                     }
+                }else if("frac".equals(mSize)){
+                    if (editable.isEditable() && editable.hasFocus()) {
+                        float left = 0;
+                        int textHeight = PaintManager.getInstance().getHeight(mTextPaint);
+                        float top = 0;
+                        float textWidth = 0;
+                        float flashLeft = 0;
+                        float flashRight = 0;
+                        float textX = mTextX;
+                        if (!TextUtils.isEmpty(text)) {
+                            textX = 0;
+                            flashLeft = textX + PaintManager.getInstance().getWidth(mTextPaint, text.substring(0, 1)) / 2;
+                            //ontouch时，position等于-1，否则大于等于0，当position大于等于0时候，按照position来判断，否则按照x，y值来判断
+                            if (mFlashPosition >= 0) {
+                                if (mFlashPosition == 0) {
+                                    left = contentRect.left;
+                                    top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
+                                } else {
+
+                                    top = mFracTextInfo.mY;
+                                    if(mFracTextInfo.mText.length() == 1){
+                                        //只有一个字符的时候特殊处理
+                                        left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
+                                    }else{
+                                        if(mFlashPosition<= mFracTextInfo.mText.length()){
+                                            left = contentRect.left +
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos));
+
+                                        }else{
+                                            left = contentRect.left +
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFracTextInfo.mText.length() - mFracTextInfo.mStartPos));
+
+                                        }
+                                    }
+                                }
+                            } else {
+                                top = mFracTextInfo.mY;
+                                textWidth = PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText);
+                                if (textWidth > contentRect.width()) {
+                                    flashRight = textX + contentRect.width();
+                                } else {
+                                    flashRight = textX + textWidth;
+                                }
+
+                                if (mFlashY <= DEFAULT_FLASH_X) {
+                                    if (!TextUtils.isEmpty(mFracTextInfo.mText)) {
+                                        if (textWidth > contentRect.width()) {
+                                            left = contentRect.right;
+                                        } else {
+                                            left = contentRect.left + textWidth;
+                                        }
+                                        mFlashPosition = mFracTextInfo.mText.length();
+                                    } else {
+                                        left = contentRect.left + contentRect.width() / 2;
+                                        mFlashPosition = 0;
+                                    }
+                                } else if (!TextUtils.isEmpty(mFracTextInfo.mText) && mFlashX < flashLeft) {
+                                    mFlashPosition = 0;
+                                    left = contentRect.left + textX;
+                                } else if ((!TextUtils.isEmpty(mFracTextInfo.mText) && mFlashX >= flashRight)) {
+                                    mFlashPosition = mFracTextInfo.mText.length();
+                                    if(mFracTextInfo.mText.length() == 1){
+                                        //只有一个字符的时候特殊处理
+                                        left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
+                                    }else{
+                                        left = contentRect.left + textWidth;
+                                    }
+
+                                } else {
+                                    if (!TextUtils.isEmpty(mFracTextInfo.mText)) {
+                                        for (int i = 1; i < mFracTextInfo.mText.length(); i++) {
+                                            if (mFlashX >= textX +
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)) -
+                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(i - 1, i)) / 2 &&
+                                                    mFlashX < textX
+                                                            + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i + 1)) -
+                                                            +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(i, i + 1)) / 2) {
+                                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)));
+                                                mFlashPosition = i;
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        mFlashPosition = 0;
+                                        left = contentRect.left + contentRect.width() / 2;
+                                    }
+                                }
+                            }
+                        } else {
+                            mFlashPosition = 0;
+                            top = contentRect.top + textHeight - this.mTextPaintMetrics.bottom;
+                            left = (float)(contentRect.left + contentRect.width() / 2);
+                        }
+
+                        //预防光标在分数框 外边，没有在框里 ，待验证
+                        if(mFlashPosition == -1){
+                            LogUtil.v("chenyan", "EdifFace  mFlashPosition: " + mFlashPosition);
+                            mFlashPosition = 0;
+                            left  = Const.DP_1*5;
+                        }
+
+                        left += Const.DP_1;
+                        int padding = (contentRect.height() - textHeight) / 2 - Const.DP_1 * 2;
+                        if (padding <= 0) {
+                            padding = Const.DP_1 * 2;
+                        }
+                        canvas.drawLine(left, top - textHeight + this.mTextPaintMetrics.bottom, left, top + this.mTextPaintMetrics.bottom, mFlashPaint);
+                    }
+
+
                 } else {
                     super.drawFlash(canvas, blockRect, blockRect);
                 }
@@ -508,6 +619,9 @@ public class EditFace extends CYEditFace {
         if (BlankBlock.CLASS_DELIVERY.equals(mClass) || mSize.equals("multiline")) {
             getTextList(contentRect);
         }
+        if(mSize.equals("frac")){
+            getFracTextInfo(contentRect);
+        }
         mPinYinPaint.setColor(getTextPaint().getColor());
         super.onDraw(canvas, blockRect, contentRect);
     }
@@ -625,6 +739,16 @@ public class EditFace extends CYEditFace {
             info.mY = y;
             mTextList.add(info);
         }
+    }
+
+    //分数
+    private void getFracTextInfo(Rect contentRect) {
+        String text = getText();
+        float y = (float) (contentRect.top + PaintManager.getInstance().getHeight(this.mTextPaint)) - this.mTextPaintMetrics.bottom;
+        mFracTextInfo.mStartPos = 0;
+        mFracTextInfo.mEndPos = text.length();
+        mFracTextInfo.mText = text;
+        mFracTextInfo.mY = y;
     }
 
     public List<CYTextBlock.Word> parseWords(String content) {

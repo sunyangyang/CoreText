@@ -61,7 +61,7 @@ public class DeliveryManualAnswerCell {
         answerTextEnv.setTextColor(mColor);
         answerTextEnv.setFontSize(textEnv.getFontSize());
         answerTextEnv.setVerticalSpacing(textEnv.getVerticalSpacing());
-        answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth() -mPaddingLeft*2));
+        answerTextEnv.setSuggestedPageWidth((int)(textEnv.getSuggestedPageWidth()));
         answerTextEnv.setSuggestedPageHeight(textEnv.getSuggestedPageHeight());
 
 
@@ -107,12 +107,10 @@ public class DeliveryManualAnswerCell {
         return  0;
     }
 
-
-
     public void setLineY(int lineY) {
         this.lineY = lineY;
         if(mCellPageBlock!=null)
-            mCellPageBlock.setPadding(mPaddingLeft, lineY, 0, 0);
+            mCellPageBlock.setPadding(0, lineY, 0, 0);
     }
 
 

@@ -130,16 +130,6 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
                         }
                     }
                     DeliveryManualAnswerCell cell = new DeliveryManualAnswerCell(mTextEnv,this,color,text);
-
-//                    if(i == 0){
-//                        cell.setLineY(getContentHeight());
-//                    }else{
-//                        int liney = 0;
-//                        for(int j=0;j<cellManualAnswerList.size();j++){
-//                            liney += cellManualAnswerList.get(j).getCellHeight();
-//                        }
-//                        cell.setLineY(getContentHeight()+liney);
-//                    }
                     cellManualAnswerList.add(cell);
                 }
 
@@ -242,9 +232,15 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
         }else{
             canvas.translate(rect.left, rect.top);
             if (mPageBlock != null) {
+
                 mPageBlock.draw(canvas);
             }
-            int lineY = mPageBlock.getContentHeight() + mMarginTop;;
+            int lineY = 0;
+            if(mPageBlock!=null){
+                lineY = mPageBlock.getContentHeight() + mMarginTop;
+            }else{
+                lineY =  mMarginTop;
+            }
             for(int i=0;i<cellManualAnswerList.size();i++){
                 if(i> 0){
                     cellManualAnswerList.get(i-1).setLineY(0);
@@ -287,18 +283,31 @@ public class DeliveryNewBlock extends CYPlaceHolderBlock implements ICYEditableG
     @Override
     public int getContentHeight() {
         if(!mIsEditable){
-            return mPageBlock.getContentHeight() + mMarginTop  + (int)getInputHeight();
-        }else{
-            return mPageBlock.getContentHeight() + mMarginTop ;
-        }
+            if(mPageBlock!=null){
+                return mPageBlock.getContentHeight() + mMarginTop  + (int)getInputHeight();
+            }else{
+                return  mMarginTop  + (int)getInputHeight();
+            }
 
+        }else{
+            if(mPageBlock!=null){
+                return mPageBlock.getContentHeight() + mMarginTop ;
+            }else{
+                return  mMarginTop ;
+            }
+        }
     }
 
     private float getInputHeight() {
-        float height = mPageBlock.getContentHeight() + mMarginTop ;
+        float height = 0 ;
         for (int i = 0; i < cellManualAnswerList.size(); i++) {
             height += cellManualAnswerList.get(i).getCellHeight();
         }
         return height;
+    }
+
+    @Override
+    public int getLineHeight() {
+        return getContentHeight();
     }
 }

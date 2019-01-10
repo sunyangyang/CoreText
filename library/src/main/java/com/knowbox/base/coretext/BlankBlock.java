@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,8 +36,6 @@ public class BlankBlock extends CYEditBlock {
     public static String CLASS_DELIVERY = "delivery";
 
     public static String DELIVERY_WIDTH_TYPE_SINGLE = "singleCharacter";  // 创建delivery 类型时，宽只有一个字符的宽度
-    public static String DELIVERY_WIDTH_TYPE_MATCH = "match";  // 创建delivery 类型时，宽达到到右边边界
-    public static String DELIVERY_WIDTH_TYPE_INIT = "init";  // 创建delivery 类型时，宽达到到右边边界
     public static int mDeliveryBlankSingleWidth = Const.DP_1 * 6;
     private String mClass = CLASS_CHOICE;
     private String size;
@@ -44,6 +43,8 @@ public class BlankBlock extends CYEditBlock {
     private int mWidth, mHeight;
     private boolean mStrokeble;
     private boolean mStroke = false;
+    private boolean mBorrowPoint = false;
+    private boolean mPoint = false;
 
     private double mOffsetX, mOffsetY;
     private final int mMargin = Const.DP_1 * 3;
@@ -61,7 +62,7 @@ public class BlankBlock extends CYEditBlock {
     public static final int DEFAULT_FLASH_Y = -1000;
     public static final String TWPoint = "=24 ";
     public static int PLACE_HOLDER_WORD = 20;//字母大小为字的0.6倍，但是至少有两个字母，所以按照字母宽度来算，拼音之间应有间距
-    private String mDeliveryWidth="";
+    private String mDeliveryWidthType="";
     private int mDeliveryCurrentLineWidth = 0;
     public BlankBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
@@ -76,7 +77,7 @@ public class BlankBlock extends CYEditBlock {
             this.size = json.optString("size", "line");
             mPreSize = this.size;
             this.mClass = json.optString("class", CLASS_CHOICE);//choose fillin
-            mDeliveryWidth = json.optString("widthType","");
+            mDeliveryWidthType = json.optString("widthType","");
             mDeliveryCurrentLineWidth = json.optInt("lineWidth");
             if (getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE) != null &&
                     TextUtils.equals(getTextEnv().getEditableValue(BaseConstant.BLANK_SIZE).getValue(), BaseConstant.BLANK_PIN_YIN_SIZE)) {
@@ -169,6 +170,7 @@ public class BlankBlock extends CYEditBlock {
         updateSize(getText());
     }
 
+    private Stack<String> mPointList = new Stack<>();
     @Override
     public void setText(String text) {
         if (TextUtils.equals(text, getText()))
@@ -176,9 +178,23 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
-            if ("p".equals(text) || "point".equals(text)) {
-                text = ".";
+            if (text.contains("#")) {
+                text =  text.replaceAll("#",".");
+                mPointList.push("#");
             }
+           char [] chars =  text.toCharArray();
+           int size =  0;
+           for (char c : chars) {
+               if (TextUtils.equals(".",c + "")) {
+                   size++;
+               }
+           }
+            if (text.contains(".") && size > mPointList.size() ) {
+                mPointList.push(".");
+            }
+           if (size < mPointList.size()) {
+               mPointList.pop();
+           }
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() ||
                     "express".equals(size) ||
@@ -403,14 +419,9 @@ public class BlankBlock extends CYEditBlock {
                 this.mHeight = VerticalCalculationBlock.FLAG_RECT_SIZE - mMargin * 2;
             } else if ("delivery".equals(size)) {
                 float width;
-                if(mDeliveryWidth.equals(DELIVERY_WIDTH_TYPE_SINGLE)){
+                if(mDeliveryWidthType.equals(DELIVERY_WIDTH_TYPE_SINGLE)){
                     width = Math.max(mDeliveryBlankSingleWidth, PaintManager.getInstance().getWidth(getTextEnv()
                             .getPaint(), text));
-                }else if(mDeliveryWidth.equals(DELIVERY_WIDTH_TYPE_MATCH)){
-                    width = maxWidth - mDeliveryCurrentLineWidth;
-                    if(width < mDeliveryBlankSingleWidth){
-                        width = maxWidth;
-                    }
                 }else{
                     width = Math.max(Const.DP_1 * 32, PaintManager.getInstance().getWidth(getTextEnv()
                             .getPaint(), text));
@@ -622,6 +633,14 @@ public class BlankBlock extends CYEditBlock {
         return "borrow_flag".equals(size);
     }
 
+    public boolean hasBorrowPoint() {
+        for (String str  : mPointList) {
+            if(TextUtils.equals(".",str)){
+                return true;
+            }
+        }
+        return  false;
+    }
     public void notifyLayoutChange() {
 
     }
@@ -645,7 +664,7 @@ public class BlankBlock extends CYEditBlock {
   }
 
   public void setDeliveryWidthType(String type,int currentLineWidth){
-        mDeliveryWidth = type;
+      mDeliveryWidthType = type;
         mDeliveryCurrentLineWidth = currentLineWidth;
   }
 
