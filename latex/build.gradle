@@ -1,17 +1,13 @@
 configurations.maybeCreate("default")
 artifacts.add("default", file('AndroidLatexModule-release.aar'))
 
-
 apply plugin: 'maven'
 
 afterEvaluate { project ->
     uploadArchives {
         repositories {
             mavenDeployer {
-                //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
                 pom.artifactId = PROJ_ARTIFACTID
-
                 Properties properties = new Properties()
                 properties.load(project.rootProject.file('local.properties').newDataInputStream())
                 repository(url: RELEASE_REPOSITORY_URL) {
@@ -22,12 +18,6 @@ afterEvaluate { project ->
                     name PROJ_NAME
                     groupId PROJ_GROUP
                     version "1.0.0"
-
-//                    scm {
-//                        url POM_SCM_URL
-//                        connection POM_SCM_CONNECTION
-//                        developerConnection POM_SCM_DEV_CONNECTION
-//                    }
 
                     licenses {
                         license {

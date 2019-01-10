@@ -6,7 +6,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 27
         versionCode 153
         versionName "1.1.53"
         manifestPlaceholders = [
@@ -36,11 +36,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.yangzc:AndroidSupport:1.5.4'
-    provided files('extlibs/easemobchat_2.2.3.jar')
     compile 'com.getui:sdk:2.+'
-    compile 'cn.knowbox:coretext:1.0.2'
     compile 'cn.knowbox:latex:1.0.0'
+    compile 'cn.knowbox:coretext:1.0.2'
+    compile 'com.github.yangzc:AndroidSupport:1.6.4'
+    provided files('extlibs/easemobchat_2.2.3.jar')
 }
 
 
@@ -59,9 +59,7 @@ afterEvaluate { project ->
     uploadArchives {
         repositories {
             mavenDeployer {
-                //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                pom.artifactId = PROJ_ARTIFACTID
+                pom.artifactId = 'base'
 
                 Properties properties = new Properties()
                 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -73,13 +71,6 @@ afterEvaluate { project ->
                     name PROJ_NAME
                     groupId PROJ_GROUP
                     version android.defaultConfig.versionName
-
-//                    scm {
-//                        url POM_SCM_URL
-//                        connection POM_SCM_CONNECTION
-//                        developerConnection POM_SCM_DEV_CONNECTION
-//                    }
-
                     licenses {
                         license {
                             name PROJ_LICENCE_NAME
@@ -98,11 +89,6 @@ afterEvaluate { project ->
             }
         }
     }
-
-//    signing {
-//        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-//        sign configurations.archives
-//    }
 
     task androidJavadocs(type: Javadoc) {
         failOnError false
