@@ -37,8 +37,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.getui:sdk:2.+'
-    compile 'cn.knowbox:latex:1.0.0'
-    compile 'cn.knowbox:coretext:1.0.2'
+    compile 'com.knowbox:latex:1.0.0'
+    compile 'com.knowbox:coretext:1.0.3'
     compile 'com.github.yangzc:AndroidSupport:1.6.4'
     provided files('extlibs/easemobchat_2.2.3.jar')
 }
