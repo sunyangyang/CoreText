@@ -18,7 +18,7 @@ afterEvaluate { project ->
                 pom.project {
                     name PROJ_NAME
                     groupId PROJ_GROUP
-                    version "1.0.2"
+                    version "1.0.3"
                     licenses {
                         license {
                             name PROJ_LICENCE_NAME
