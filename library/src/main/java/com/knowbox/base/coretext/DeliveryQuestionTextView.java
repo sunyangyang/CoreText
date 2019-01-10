@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
 import com.hyena.coretext.blocks.CYLineBlock;
-import com.hyena.coretext.blocks.CYPageBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.latex.FillInBox;
 import com.hyena.coretext.event.CYFocusEventListener;
@@ -779,12 +778,12 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                    // fracStr += "#{\"type\":\"latex\",\"content\":\"\\\\frac{"+editableList.get(0).getText()+"}{"+editableList.get(1).getText()+"}\"}#";
                 }
 
-                if(bk.getPrevBlock()!=null && bk.getPrevBlock() instanceof BlankBlock){
-                    char ch = answer.charAt(answer.length()-1);
-                    if(ch >= '0' && ch<= '9'){
-                        answer += "+" ;
-                    }
-                }
+//                if(bk.getPrevBlock()!=null && bk.getPrevBlock() instanceof BlankBlock){
+//                    char ch = answer.charAt(answer.length()-1);
+//                    if(ch >= '0' && ch<= '9'){
+//                        answer += "+" ;
+//                    }
+//                }
                 answer+= fracStr;
             }else if(bk instanceof CYBreakLineBlock){
                 answer += "=";
