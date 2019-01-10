@@ -57,7 +57,7 @@ public class TextBlock extends CYTextBlock {
                 return width;
             }
         }
-        return width;
+        return super.getContentWidth();
     }
 
     @Override
@@ -85,32 +85,13 @@ public class TextBlock extends CYTextBlock {
     }
 
     @Override
-    public int getContentHeight() {
-        return height;
-    }
-
-    @Override
     protected void updateSize() {
-        float textWidth = (float)this.getTextWidth(this.mTextPaint, this.word.word);
-        this.mTextPaint.setTextSize(this.mFontSize);
-        this.mPinYinPaint.setTextSize(this.mFontSize);
-        float textHeight = (float)this.getTextHeight(this.mTextPaint);
+        super.updateSize();
         if (!TextUtils.isEmpty(this.word.pinyin)) {
-            mPinYinPaint.setTextSize(mFontSize * 0.6f);
-            float pinyinWidth = (float)this.getTextWidth(this.mPinYinPaint, this.word.pinyin);
-            float pinyinHeight = (float)this.getTextHeight(this.mPinYinPaint);
-            if (pinyinWidth > textWidth) {
-                textWidth = pinyinWidth;
-            }
-
-            textHeight += pinyinHeight;
             if (getMarginLeft() == 0 && getMarginRight() == 0) {
                 setMargin(Const.DP_1 * 2, Const.DP_1 * 2);
             }
         }
-
-        this.width = (int)textWidth;
-        this.height = (int)textHeight;
     }
 
     @Override
@@ -119,12 +100,6 @@ public class TextBlock extends CYTextBlock {
             return;
         }
         super.drawUnderLine(canvas, rect);
-    }
-
-    @Override
-    public void setTextHeightInLine(int textHeight) {
-        super.setTextHeightInLine(textHeight);
-        this.height = textHeight - this.getPaddingBottom() - this.getPaddingTop();
     }
 
     public static String getPunc(String content) {
