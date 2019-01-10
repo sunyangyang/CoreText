@@ -1,5 +1,5 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('coretext.aar'))
+artifacts.add("default", file('AndroidLatexModule-release.aar'))
 
 apply plugin: 'maven'
 
@@ -8,7 +8,6 @@ afterEvaluate { project ->
         repositories {
             mavenDeployer {
                 pom.artifactId = PROJ_ARTIFACTID
-
                 Properties properties = new Properties()
                 properties.load(project.rootProject.file('local.properties').newDataInputStream())
                 repository(url: RELEASE_REPOSITORY_URL) {
@@ -18,7 +17,8 @@ afterEvaluate { project ->
                 pom.project {
                     name PROJ_NAME
                     groupId PROJ_GROUP
-                    version "1.0.3"
+                    version "1.0.0"
+
                     licenses {
                         license {
                             name PROJ_LICENCE_NAME
@@ -37,4 +37,5 @@ afterEvaluate { project ->
             }
         }
     }
+
 }

@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 public class TextBlock extends CYTextBlock {
     private int mPadding = 0;
     private String mStyle = "";
+    private int width;
+    int height;
     public TextBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
     }
@@ -34,7 +36,7 @@ public class TextBlock extends CYTextBlock {
                 mStyle = getParagraphStyle().getStyle();
             }
             if (TextUtils.equals(mStyle, "chinese_read_pure_pinyin_center")) {
-                this.paint.setTextSize(this.fontSize);
+                this.mTextPaint.setTextSize(this.mFontSize);
                 if (mPadding == 0 && getTextEnv().getEditableValue(BaseConstant.TEXT_PIN_YIN_TYPE_PADDING) != null) {
                     try {
                         mPadding = Integer.valueOf(getTextEnv().getEditableValue(BaseConstant.TEXT_PIN_YIN_TYPE_PADDING).getValue());
@@ -47,10 +49,10 @@ public class TextBlock extends CYTextBlock {
                 }
                 int width = 0;
                 if (!TextUtils.isEmpty(word.pinyin)) {
-                    width = (int) PaintManager.getInstance().getWidth(paint, word.pinyin) + mPadding;
+                    width = (int) PaintManager.getInstance().getWidth(mTextPaint, word.pinyin) + mPadding;
                 } else {
                     String result = getPunc(word.word);
-                    width = (int) PaintManager.getInstance().getWidth(paint, result);
+                    width = (int) PaintManager.getInstance().getWidth(mTextPaint, result);
                 }
                 return width;
             }
@@ -61,21 +63,43 @@ public class TextBlock extends CYTextBlock {
     @Override
     public void draw(Canvas canvas) {
         if (TextUtils.equals(mStyle, "chinese_read_pure_pinyin_center")) {
-            if (this.fontMetrics != null && this.word != null) {
+            if (this.mTextPaint.getFontMetrics() != null && this.word != null) {
                 Rect rect = this.getContentRect();
                 float x = (float)rect.left;
-                float y = (float)rect.bottom - this.fontMetrics.bottom;
+                float y = (float)rect.bottom - this.mTextPaint.getFontMetrics().bottom;
                 String result = getPunc(word.word);
                 if (!TextUtils.isEmpty(result)) {
-                    this.drawText(canvas, result, x, y, this.paint);
+                    this.drawText(canvas, result, x, y, this.mTextPaint);
                 } else {
-                    this.drawText(canvas, this.word.pinyin, x, y, this.paint);
+                    this.drawText(canvas, this.word.pinyin, x, y, this.mTextPaint);
                 }
                 this.drawUnderLine(canvas, rect);
             }
         } else {
             super.draw(canvas);
         }
+    }
+
+    public void setStyle(CYStyle style) {
+        super.setStyle(style);
+    }
+
+    @Override
+    protected void updateSize() {
+        super.updateSize();
+        if (!TextUtils.isEmpty(this.word.pinyin)) {
+            if (getMarginLeft() == 0 && getMarginRight() == 0) {
+                setMargin(Const.DP_1 * 2, Const.DP_1 * 2);
+            }
+        }
+    }
+
+    @Override
+    protected void drawUnderLine(Canvas canvas, Rect rect) {
+        if (TextUtils.isEmpty(word.word) || TextUtils.isEmpty(word.word.trim())) {
+            return;
+        }
+        super.drawUnderLine(canvas, rect);
     }
 
     public static String getPunc(String content) {

@@ -120,7 +120,9 @@ public class QuestionTextView extends CYSinglePageView {
             } else if (mCur instanceof CYBreakLineBlock || mCur instanceof ParagraphBlock) {
                 CYBlock nextBlock = mCur.getNextBlock();
                 if (nextBlock != null) {
-                    nextBlock.setPadding(0, 30 * Const.DP_1, 0, 0);
+                    if (nextBlock.getPaddingTop() < 30 * Const.DP_1) {
+                        nextBlock.setPadding(nextBlock.getPaddingLeft(), nextBlock.getPaddingTop() + 30 * Const.DP_1, nextBlock.getPaddingRight(), nextBlock.getPaddingBottom());
+                    }
                 }
                 isFirstCh = true;
             }

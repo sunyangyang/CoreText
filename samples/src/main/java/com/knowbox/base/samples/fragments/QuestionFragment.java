@@ -28,7 +28,6 @@ import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.coretext.BlankBlock;
-import com.knowbox.base.coretext.DeliveryQuestionTextView;
 import com.knowbox.base.coretext.QuestionTextView;
 import com.knowbox.base.samples.R;
 import com.knowbox.base.utils.BaseConstant;
@@ -49,18 +48,14 @@ import static com.knowbox.base.utils.BaseConstant.MATCH_VALUE_ID;
  */
 public class QuestionFragment extends Fragment {
 
-    private DeliveryQuestionTextView mQtvQuestion ;
-    private QuestionTextView mAnswerQtvQuestion;
-   // private int mFocusTabId;
+    private QuestionTextView mQtvQuestion;
+    private int mFocusTabId;
     private CYSinglePageView.Builder builder;
-    private RelativeLayout equalLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.layout_question, null);
-        mAnswerQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_paraquestion);
-        mQtvQuestion = (DeliveryQuestionTextView) view.findViewById(R.id.qtv_question);
-        equalLayout = (RelativeLayout) view.findViewById(R.id.equalLayout);
+        mQtvQuestion = (QuestionTextView) view.findViewById(R.id.qtv_question);
         view.findViewById(R.id.latex_keyboard_1).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_2).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_3).setOnClickListener(mClickListener);
@@ -73,15 +68,12 @@ public class QuestionFragment extends Fragment {
         view.findViewById(R.id.latex_keyboard_star).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_del).setOnClickListener(mClickListener);
         view.findViewById(R.id.latex_keyboard_w).setOnClickListener(mClickListener);
-        view.findViewById(R.id.latex_keyboard_add).setOnClickListener(mClickListener);
-        view.findViewById(R.id.latex_keyboard_min).setOnClickListener(mClickListener);
-        view.findViewById(R.id.latex_keyboard_multiply).setOnClickListener(mClickListener);
         mQtvQuestion.setFocusEventListener(new CYFocusEventListener() {
             @Override
             public void onFocusChange(boolean focus, final int tabId) {
                 if (focus) {
                     LogUtil.v("yangzc", "tabId: " + tabId);
-                    mQtvQuestion.currentFocusId = tabId;
+                    mFocusTabId = tabId;
                     ICYEditable editable = mQtvQuestion.findEditableByTabId(tabId);
                 }
             }
@@ -246,27 +238,10 @@ public class QuestionFragment extends Fragment {
         question = "#{\"type\":\"para_begin\",\"style\":\"english_guide\"}#听录音，按听到的内容连线。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_audio\"}##{\"type\":\"audio\",\"src\":\"http://tikuqiniu.knowbox.cn/english_pkg_media/SL2BU1L1-12.mp3\"}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"english_matching\"}##{\"left\": [{\"id\": 1, \"content\": \"Amy\"}, {\"id\": 2, \"content\": \"Lingling\"}, {\"id\": 3, \"content\": \"Ms Smart\"}, {\"id\": 4, \"content\": \"Daming\"}, {\"id\": 5, \"content\": \"Sam\"}], \"type\": \"match\", \"right\": [{\"id\": 1, \"content\": \"swim\"}, {\"id\": 2, \"content\": \"play football\"}, {\"id\": 3, \"content\": \"ride a bike\"}, {\"id\": 4, \"content\": \"fly a kite\"}, {\"id\": 5, \"content\": \"make a model plane\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_fill_image\"}##{\"type\":\"fill_img\",\"id\":1,\"size\":\"big_image\",\"src\":\"https://imgqiniu.knowbox.cn/tiku-img/FtmPq81WqCwhhyiI3e4vbNkbcCor\",\"width\":\"680px\",\"height\":\"270px\",\"blanklist\":[{\"type\":\"blank\",\"id\":1,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"10.4\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":2,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"38.1\",\"y_pos\":\"51.5\"},{\"type\":\"blank\",\"id\":3,\"size\":\"small_img_blank\",\"class\":\"fillin\",\"x_pos\":\"77.1\",\"y_pos\":\"51.5\"}]}##{\"type\":\"para_end\"}#";
         question = "#{\"type\":\"para_begin\",\"style\":\"math_text\",\"size\":30,\"align\":\"left\",\"color\":\"#333333\",\"margin\":24}#下列各数中，最大的是(    )。#{\"type\":\"P\"}#0.42#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.4#{\"type\":\"latex\",\"content\":\"\\\\dot{2}\"}##{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.#{\"type\":\"latex\",\"content\":\"\\\\dot{4}\"}#2#{\"type\":\"latex\",\"content\":\"\\\\dot{9}\"}#，0.429#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_text\"}#根(!gēn!)据(!jù!)文(!wén!)章(!zhāng!)，填(!tián!)一(!yi!)填(!tián!)。tián#{\"type\":\"P\"}#(!tài!)(!yáng!)#{\"type\":\"blank\",\"id\":1,\"class\":\"choice\",\"size\":\"letter\"}#，(!dì!)(!qiú!)#{\"type\":\"blank\",\"id\":2,\"class\":\"choice\",\"size\":\"express\"}#；地(!dì!)球(!qiú!)#{\"type\":\"blank\",\"id\":3,\"class\":\"choice\",\"size\":\"letter\"}#，月(!yuè!)亮(!liang!)#{\"type\":\"blank\",\"id\":4,\"class\":\"choice\",\"size\":\"letter\"}#。#{\"type\":\"para_end\"}#";
+        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_paratext\"}#风妈妈有个可爱的风娃娃(gēn)。风娃娃长大了（了），他想像妈妈一样去帮助人。风妈妈说：“到田野里去吧，在那里，你可以帮人们做很多事情。”#{\"type\":\"P\"}#风娃娃来到田野，看见一架大风车正在慢慢转动，抽上来的水断断续续地流着。他深深地吸了一口气，鼓起腮使劲向风车吹去。风车一下子转得飞快！抽上来的水奔跑着，哗啦哗啦地向田里流去。秧苗喝足了水，笑着不住地点头，风娃娃也高兴极了。#{\"type\":\"P\"}#风娃娃又来到河边，看见许多船工正拉着一艘大船。他们弯着腰，流着汗，“嗨哟，嗨哟”喊着号子，可是船却走得很慢很慢。他急忙跑过去，对着船帆用力吹了口气，船飞快地跑了起来。船工们笑了，一边收起纤绳，一边向风娃娃表示感谢。#{\"type\":\"P\"}#风娃娃想：帮助人们做好事，真容易，只要有力气就行。#{\"type\":\"P\"}#他这么想着，来到一个广场上。那里有几个孩子正在放风筝。风娃娃看见了，赶紧过去用力吹。风筝在空中摇摇摆摆，有的还翻起了跟头。不一会儿，风筝被吹得无影无踪，孩子们伤心极了。#{\"type\":\"P\"}#风娃娃却一点儿也不知道，他仍然东吹吹，西吹吹。就这样，风娃娃吹跑了人们晾晒的衣服，折断了路边新栽的小树……人们都生气了，纷纷责怪他。#{\"type\":\"P\"}#风娃娃不敢再去帮忙了，他委屈地在天上转着、想着：我帮人们做事情，为什么他们还责怪我呢？风娃娃回家去问妈妈。妈妈说：“孩子，做事情光有好的愿望还不行，还要看是不是真的对别人有用。”wén#{\"type\":\"para_end\"}#";
 //        question = "#{\"type\":\"para_begin\",\"style\":\"chinese_read_pure_pinyin_center\"}#请(!qǐng!)你(!nǐ!)帮(!bāng!)助(!zhù!)布(!bù!)克(!kè!)给(!gěi!)下(!xià!)列(!liè!)句(!jù!)子(!zǐ!)的(!de!)“着”字(!zì!)注(!zhù!)音(!yīn!)。#{\"type\":\"P\"}#他(!tā!)看(!kàn!)着书(!shū!)，不(!bù!)一(!yī!)会(!huì!)儿(!ér!)就(!jiù!)睡(!shuì!)着(!zhao!)了(!le!)，直(!zhí!)到(!dào!)外(!wài!)面(!miàn!)着(!zhao!)火(!huǒ!)他(!tā!)才(!cái!)醒(!xǐng!)过(!guò!)来(!lái!)。#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#脱式计算。#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"delivery_equation\",\"content\":\"#{\"type\":\"latex\",\"content\":\"\\\\frac{2}{3}\"}#×2\",\"blank_list\":[{\"type\":\"blank\",\"size\":\"delivery_blank\",\"id\":\"1\",\"class\":\"fillin\"}]}##{\"type\":\"para_end\"}#";
-
-        //question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 16}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 17}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"left_column\": 5, \"right_column\": 4, \"divide_pair\": [[\"3\", \"5\", \"3\"], [\"1\", \"2\"]], \"quotient\": [\"#{blank1}#\", \"#{blank6}#\"], \"content\": [{\"method\": \"\", \"members\": [{\"value\": [\"#{blank2}#\", \"#{blank3}#\", \"\"], \"explain\": [\"#{blank4}#\", \"×\", \"#{blank5}#\", \"个十\"]}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank7}#\", \"#{blank8}#\", \"#{blank9}#\"], \"explain\": []}, {\"value\": [\"#{blank10}#\", \"#{blank11}#\", \"#{blank12}#\"], \"explain\": [\"#{blank13}#\", \"×\", \"#{blank14}#\", \"个一\"]}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank15}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 5, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 11, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 12, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 13, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 14, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 15, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#\n" +
-               // "[{\"blank_id\": 1, \"content\": \"2\"}, {\"blank_id\": 2, \"content\": \"2\"}, {\"blank_id\": 3, \"content\": \"4\"}, {\"blank_id\": 4, \"content\": \"2\"}, {\"blank_id\": 5, \"content\": \"12\"}, {\"blank_id\": 6, \"content\": \"9\"}, {\"blank_id\": 7, \"content\": \"1\"}, {\"blank_id\": 8, \"content\": \"1\"}, {\"blank_id\": 9, \"content\": \"3\"}, {\"blank_id\": 10, \"content\": \"1\"}, {\"blank_id\": 11, \"content\": \"0\"}, {\"blank_id\": 12, \"content\": \"8\"}, {\"blank_id\": 13, \"content\": \"9\"}, {\"blank_id\": 14, \"content\": \"12\"}, {\"blank_id\": 15, \"content\": \"5\"}, {\"blank_id\": 16, \"content\": \"29\"}, {\"blank_id\": 17, \"content\": \"5\"}]";
-        //question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#353÷12=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 18}#......#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 19}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"left_column\": 5, \"right_column\": 4, \"divide_pair\": [[\"3\", \"5\", \"3\"], [\"1\", \"2\"]], \"quotient\": [\"#{blank1}#\", \"#{blank8}#\"], \"content\": [{\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank2}#\", \"\"], \"explain\": [\"#{blank4}#\", \"×\", \"#{blank5}#\", \"个十\"]}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank6}#\", \"#{blank7}#\"], \"explain\": []}, {\"value\": [\"#{blank11}#\", \"#{blank10}#\", \"#{blank9}#\"], \"explain\": [\"#{blank12}#\", \"×\", \"#{blank13}#\", \"个一\"]}]}, {\"method\": \"\", \"members\": {\"value\": [\"#{blank17}#\"], \"explain\": []}}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 5, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 11, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 12, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 13, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 14, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 15, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 16, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 17, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-       // question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#45÷7=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 7}#······#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 8}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"0\", \"left_column\": 3, \"right_column\": 4, \"divide_pair\": [[\"4\", \"5\"], [\"7\"]], \"quotient\": [\"#{blank1}#\"], \"content\": [{\"method\": \"\", \"members\": [{\"value\": [\"#{blank3}#\", \"#{blank2}#\"], \"explain\": [\"#{blank4}#\", \"×\", \"#{blank5}#\", \"个一\"]}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank6}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 5, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-       // question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#0.01÷0.8=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 1}#······#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 2}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"0\", \"left_column\": 8, \"right_column\": 8, \"divide_new_pair\": [[{\"num\":\"0\",\"stroke\":\"#{blank3}#\"}, {\"value\":\"point\",\"stroke\":\"#{blank4}#\"},{\"num\":\"0\"},{\"add_point\":\"#{blank6}#\"},{\"num\":\"1\"},{\"num\":\"#{blank5}#\"}], [{\"num\":\"0\",\"stroke\":\"#{blank7}#\"},{\"value\":\"point\",\"stroke\":\"#{blank8}#\"},{\"num\":\"8\"}]], \"quotient\": [\"#{blank13}#\",\"#{blank12}#\",\"#{blank11}#\",\"#{blank10}#\",\"#{blank9}#\"], \"quotient_point\": [\"#{blank30}#\",\"\",\"\",\"\",\"\"], \"content\": [{\"method\": \"\", \"members\": [{\"value\": [\"#{blank14}#\", \"\",\"\"], \"explain\": []}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank16}#\",\"#{blank15}#\",\"\"], \"explain\": []},{\"value\": [\"#{blank18}#\",\"#{blank17}#\", \"\"], \"explain\": []}]},{\"method\": \"\", \"members\": [{\"value\": [\"#{blank19}#\", \"#{blank20}#\"], \"explain\": []},{\"value\": [\"#{blank21}#\", \"#{blank22}#\"], \"explain\": []}]},{\"method\": \"\", \"members\": [{\"value\": [\"#{blank23}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 5, \"class\": \"many\", \"keyboard\": \"shuzi\", \"size\": \"big\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-        //question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#4+1.5=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 13}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"0\",\"left_column\": 3,\"right_column\": 3,\"content\": [{\"method\": \"plus\", \"members\":[{\"value\": [\"\", \"4\",\"#{blank2}#\"],\"point\": [\"\", \"#{blank1}#\",\"\"], \"explain\": []},{\"value\": [\"+\",\"1\", \"5\"],\"point\": [\"\",\"point\", \"\"],\"explain\": []}],\"carry_flag\": [\"\",\"\",\"\"]},{\"method\": \"\",\"members\": [{\"value\": [\"\",\"#{blank5}#\", \"#{blank3}#\"],\"point\": [\"\",\"#{blank4}#\", \"\"],\"explain\": []}]}],\"blank_list\":[{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 4, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},]}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_text\"}#验算：#{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"0\", \"left_column\": 3, \"right_column\": 3, \"content\": [{\"method\": \"minus\", \"members\": [{\"value\": [\"\",\"#{blank6}#\", \"#{blank8}#\"],\"point\": [\"\", \"#{blank7}#\",\"\"],\"explain\": []},{\"value\": [\"-\",\"1\", \"5\"],\"point\": [\"\",\"point\", \"\"],\"explain\": []}],\"borrow_flag\": [\"\",\"\",\"\"]},{\"method\": \"\",\"members\": [{\"value\": [\"\", \"#{blank11}#\",\"#{blank9}#\"],\"point\": [\"\",\"#{blank10}#\", \"\"],\"stroke\": [\"\", \"\", \"#{blank12}#\"],\"explain\": []}]}], \"blank_list\": [{\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 11, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 12, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#1.09-0.1=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 6}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\",\"style_type\":\"0\", \"left_column\": 4,\"right_column\": 4, \"content\": [{\"method\": \"minus\",\"members\": [{\"value\": [\"\",\"1\", \"0\",\"9\"],\"point\": [\"\",\"#{blank1}#\",\"\",\"\"],\"explain\": []},{\"value\": [\"-\",\"0\",\"1\",\"\"],\"point\": [\"\",\"point\",\"\", \"\"],\"explain\": []}],\"borrow_flag\": [\"\",\"#{blank2}#\",\"\",\"\"]},{\"method\": \"\",\"members\": [{\"value\": [\"\",\"#{blank5}#\", \"#{blank3}#\",\"#{blank11}#\"],\"point\": [\"\",\"#{blank4}#\",\"\",\"\"],\"explain\": []}]}],\"blank_list\":[{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 4, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},{\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"},]}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#149×8=#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 7}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"0\", \"left_column\": 5, \"right_column\": 0, \"content\": [{\"method\": \"multiplication\", \"members\": [{\"value\": [\"1\", \"4\", \"9\"], \"explain\": []}, {\"value\": [\"×\", \"\", \"\", \"\", \"8\"], \"explain\": []}], \"carry_flag\": [\"#{blank4}#\", \"#{blank2}#\"]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank6}#\", \"#{blank5}#\", \"#{blank3}#\", \"#{blank1}#\"], \"explain\": []}]}], \"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_shushi_hengshi\"}#0.15÷1.23≈#{\"type\": \"blank\", \"class\": \"fillin\", \"size\": \"express\", \"id\": 21}##{\"type\":\"para_end\"}##{\"type\":\"para_begin\",\"style\":\"math_shushi\"}##{\"type\": \"shushi\", \"style_type\":\"0\",\"left_column\": 8,\"right_column\": 11,\"divide_new_pair\":  [[{\"num\":\"0\",\"stroke\":\"#{blank3}#\"},{\"value\":\"point\",\"stroke\":\"#{blank2}#\"},{\"num\":\"1\"},{\"num\":\"5\"},{\"add_point\":\"#{blank4}#\"},{\"num\":\"#{blank7}#\"}],[{\"num\":\"1\"},{\"value\":\"point\",\"stroke\":\"#{blank1}#\"},{\"num\":\"2\"}, {\"num\":\"3\"}]], \"quotient\": [\"#{blank6}#\", \"#{blank8}#\", \"#{blank15}#\"],\"quotient_point\": [\"#{blank5}#\", \"\", \"\"],\"content\": [{\"method\": \"\",\"members\": [{\"value\": [\"#{blank11}#\", \"#{blank10}#\", \"#{blank9}#\", \"\"],\"explain\": []}]}, {\"method\": \"\", \"members\": [{\"value\": [\"#{blank13}#\", \"#{blank12}#\", \"#{blank14}#\"], \"explain\": []},{\"value\": [\"#{blank18}#\", \"#{blank17}#\", \"#{blank16}#\"], \"explain\": []}]},{\"method\": \"\",\"members\": [{\"value\": [\"#{blank20}#\", \"#{blank19}#\"],\"explain\": []}]}],\"blank_list\": [{\"id\": 1, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 2, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 3, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 4, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 5, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 6, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 7, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 8, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 9, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 10, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 11, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 12, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 13, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 14, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 15, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 16, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 17, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 18, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 19, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}, {\"id\": 20, \"class\": \"single\", \"keyboard\": \"shuzi\", \"size\": \"small\"}]}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\frac{5}{6}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{15}\"}#=(#{\"type\":\"latex\",\"content\":\"\\\\frac{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":1}\\\\#}{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":2}\\\\#}\"}#)#{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#27×#{\"type\":\"latex\",\"content\":\"\\\\frac{10}{27}\"}#x#{\"type\":\"latex\",\"content\":\"\\\\frac{10}{27}\"}#=#{\"type\":\"blank\",\"class\":\"fillin\",\"size\":\"express\",\"id\":1}##{\"type\":\"para_end\"}#";
-     //   question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
-        question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}##{\"type\":\"latex\",\"content\":\"\\\\frac{5}{6}\"}#×#{\"type\":\"latex\",\"content\":\"\\\\frac{8}{15}\"}#=(#{\"type\":\"latex\",\"content\":\"\\\\frac{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":1}\\\\#}{\\\\#{\\\"type\\\":\\\"blank\\\",\\\"class\\\":\\\"fillin\\\",\\\"size\\\":\\\"express\\\",\\\"id\\\":2}\\\\#}\"}#)#{\"type\":\"para_end\"}#";
-     //   question = "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"50+10+30+50+\"}##{\"type\":\"para_end\"}#";
-        question= "#{\"type\":\"para_begin\",\"style\":\"math_text\"}#拖式题#{\"type\":\"para_end\"}##{\"type\":\"para_begin\"}##{\"type\":\"delivery_equation\",\"content\":\"30+58+0+10+58+0+58+0+1010+30+50+0+50+\\\\#{\\\"type\\\":\\\"latex\\\",\\\"content\\\":\\\"\\\\\\\\frac{10}{27}\\\"}\\\\#+\\\\#{\\\"type\\\":\\\"latex\\\",\\\"content\\\":\\\"\\\\\\\\frac{1}{27}\\\"}\\\\#\"}##{\"type\":\"para_end\"}#";
-        builder = mAnswerQtvQuestion.getBuilder(question);
+        builder = mQtvQuestion.getBuilder(question);
 //        builder.setEditableValue(1, "A");
 //        builder.setEditableValue(2, "B");
 //        builder.setEditableValue(3, "C");
@@ -276,18 +251,16 @@ public class QuestionFragment extends Fragment {
 //                "\"width\": 10" +
 //                "}");
 //        builder.setEditableValue(MATCH_VALUE_ID, "");
-       // builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
+        builder.setEditableValue(BaseConstant.BLANK_SIZE, BaseConstant.BLANK_PIN_YIN_SIZE);
         builder.build();
-
-        mQtvQuestion.initDeliveryQtv(equalLayout);
 //        builder.setEditable(false);
 
-//        List<ICYEditable> editableList = mQtvQuestion.findEditableList();
-//        for (int i = 0; i < editableList.size(); i++) {
-//            ICYEditable editable = editableList.get(i);
-//            editable.setFocus(true);
-//        }
-   //     editableList.get(0).setText("a找(!zhao!)");
+        List<ICYEditable> editableList = mQtvQuestion.findEditableList();
+        for (int i = 0; i < editableList.size(); i++) {
+            ICYEditable editable = editableList.get(i);
+            editable.setFocus(true);
+        }
+        //editableList.get(0).setText("a找(!zhao!)");
         return view;
     }
 
@@ -308,7 +281,6 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mAnswerQtvQuestion.pause();
         mQtvQuestion.pause();
     }
 
@@ -317,36 +289,27 @@ public class QuestionFragment extends Fragment {
         public void onClick(View v) {
             if (v != null && v instanceof TextView) {
                 TextView textView = (TextView) v;
-                EditableValue editableValue = mQtvQuestion.getPageBlock().getTextEnv().getEditableValue(mQtvQuestion.currentFocusId);
-                if (mQtvQuestion.currentFocusId >= 0) {
-                    ICYEditable editable = mQtvQuestion.findEditableByTabId(mQtvQuestion.currentFocusId);
+                EditableValue editableValue = mQtvQuestion.getPageBlock().getTextEnv().getEditableValue(mFocusTabId);
+                if (mFocusTabId >= 0) {
+                    ICYEditable editable = mQtvQuestion.findEditableByTabId(mFocusTabId);
                     if (editable != null) {
-                        String currentText = mQtvQuestion.getText(mQtvQuestion.currentFocusId);
+                        String currentText = mQtvQuestion.getText(mFocusTabId);
                         if (currentText == null)
                             currentText = "";
                         String text = textView.getText().toString();
                         if ("删除".equals(text)) {
                             if (!TextUtils.isEmpty(currentText)) {
-                                mQtvQuestion.removeText(mQtvQuestion.currentFocusId,currentText);
-                                   // editable.setText(currentText.substring(0, currentText.length() - 1));
-                            }else{
-                                //删除控件
-                                mQtvQuestion.removeBlock(mQtvQuestion.currentFocusId);
+                                editable.setText(currentText.substring(0, currentText.length() - 1));
                             }
-                        }else if("#".equals(text)){
-                            mQtvQuestion.insertLatexBlock(mQtvQuestion.currentFocusId);
-                        }else if("回车".equals(text)){
-                            mQtvQuestion.breakLine();
-                        }else {
-                            mQtvQuestion.insertText(mQtvQuestion.currentFocusId,text,currentText);
-                           // editable.setText(currentText + text);
+                        } else {
+                            editable.setText(currentText + text);
                         }
 
 //                        if ("删除".equals(text)) {
-//                            editable.setText("");
+//                            editable.setText("a找(!zhao!)");
 //                        }
 //                        else if("#".equals(text)){
-//                            editable.setText("");
+//                            editable.setText("shù shù");
 //                        }
 //                        else {
 //                            editable.setText(text);
@@ -372,13 +335,14 @@ public class QuestionFragment extends Fragment {
 //
 //                            }
 //                        }
+                        editable.setTextColor(0xff5d758b);
                     }
 
                 }
                 if (findFocusEditable(mQtvQuestion.findEditableList()) != null) {
-                    mQtvQuestion.currentFocusId = findFocusEditable(mQtvQuestion.findEditableList()).getTabId();
+                    mFocusTabId = findFocusEditable(mQtvQuestion.findEditableList()).getTabId();
                 }
-                mQtvQuestion.setFocus(mQtvQuestion.currentFocusId);
+                mQtvQuestion.setFocus(mFocusTabId);
             }
         }
     };
@@ -395,9 +359,6 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(mAnswerQtvQuestion.getPageBlock()!=null){
-            mAnswerQtvQuestion.getPageBlock().resume();
-        }
         if (mQtvQuestion.getPageBlock() != null) {
             mQtvQuestion.getPageBlock().resume();
         }

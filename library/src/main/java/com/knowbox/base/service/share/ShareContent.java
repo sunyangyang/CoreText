@@ -31,4 +31,8 @@ public class ShareContent {
     public String mWxUserName = "";
     //微信小程序页面路径
     public String mWxPath = "";
+    //正式版: WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;
+    //测试版: WXMiniProgramObject.MINIPROGRAM_TYPE_TEST;
+    //预览版: WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW
+    public int miniprogramType;
 }
