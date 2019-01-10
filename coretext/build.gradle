@@ -21,7 +21,7 @@ afterEvaluate { project ->
                 pom.project {
                     name PROJ_NAME
                     groupId PROJ_GROUP
-                    version "1.0.1"
+                    version "1.0.2"
 
 //                    scm {
 //                        url POM_SCM_URL
