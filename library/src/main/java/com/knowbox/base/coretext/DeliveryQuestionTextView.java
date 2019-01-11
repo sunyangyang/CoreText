@@ -692,9 +692,11 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                                 break;
                             }
                         }
-                        int integIndex = answer.lastIndexOf(integStr);
+                        //找出来的字符串需要翻转
+                        String reverseStr = new StringBuffer(integStr).reverse().toString();
+                        int integIndex = answer.lastIndexOf(reverseStr);
                         if(integIndex>=0){
-                            answer = answer.substring(0,integIndex) + "(" + integStr + "+" + fracStr +")";
+                            answer = answer.substring(0,integIndex) + "(" + reverseStr + "+" + fracStr +")";
                         }else{
                             answer += "+" + fracStr;
                         }
