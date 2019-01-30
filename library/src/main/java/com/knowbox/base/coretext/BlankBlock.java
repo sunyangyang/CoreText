@@ -183,16 +183,16 @@ public class BlankBlock extends CYEditBlock {
                 mPointList.push("#");
             }
            char [] chars =  text.toCharArray();
-           int size =  0;
+           int length =  0;
            for (char c : chars) {
                if (TextUtils.equals(".",c + "")) {
-                   size++;
+                   length++;
                }
            }
-            if (text.contains(".") && size > mPointList.size() ) {
+            if (text.contains(".") && length > mPointList.size() ) {
                 mPointList.push(".");
             }
-           if (size < mPointList.size()) {
+           if (length < mPointList.size()) {
                mPointList.pop();
            }
             getTextEnv().setEditableValue(getTabId(), text);
