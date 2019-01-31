@@ -382,9 +382,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             //画除号
             int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
             if (arrayLength1 == 1) {
-                mDividerEndX = arrayLength1  * mCellRectWidth - 10 *  Const.DP_1;
+                mDividerEndX = arrayLength1  * mCellRectWidth;
             } else {
-                mDividerEndX = (arrayLength1 - 1) * mCellRectWidth - 10 *  Const.DP_1;
+                mDividerEndX = (arrayLength1 - 1) * mCellRectWidth;
             }
             mLineStartX = mDividerEndX;
             mDividerY = mCellRectWidth - 10 *  Const.DP_1;
