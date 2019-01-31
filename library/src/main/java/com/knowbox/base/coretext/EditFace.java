@@ -379,8 +379,15 @@ public class EditFace extends CYEditFace {
                                         left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
                                     }else{
                                         if(mFlashPosition<= mFracTextInfo.mText.length()){
-                                            left = contentRect.left +
-                                                    PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos));
+                                            if(mFracTextInfo.mText.length() ==2){
+                                                left = contentRect.left +
+                                                        PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos))+Const.DP_1*2;
+
+                                            }else{
+                                                left = contentRect.left +
+                                                        PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos));
+
+                                            }
 
                                         }else{
                                             left = contentRect.left +

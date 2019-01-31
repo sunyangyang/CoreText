@@ -76,7 +76,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
         mDeliveryBlocks = builder.getBlocks();
         if(mDeliveryBlocks!=null && mDeliveryBlocks.size()>0){
             mDeliveryBlocks.get(0).setFocus(true);
-            mDeliveryBlocks.get(0).setMargin(0,0);
+            mDeliveryBlocks.get(0).setMargin(Const.DP_1*3,Const.DP_1*3);
         }
         currentBreakLineNums ++;
         currentFocusId = mId;
@@ -471,6 +471,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 } else if (i == this.mDeliveryBlocks.size() - 1) {
                     prevBlock = (CYBlock)this.mDeliveryBlocks.get(i - 1);
                     curBlock.setPrevBlock(prevBlock);
+                    curBlock.setNextBlock(null);
                 } else {
                     prevBlock = (CYBlock)this.mDeliveryBlocks.get(i + 1);
                     curBlock.setNextBlock(prevBlock);
