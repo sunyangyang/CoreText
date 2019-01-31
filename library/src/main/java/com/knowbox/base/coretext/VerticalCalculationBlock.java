@@ -336,7 +336,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                                 mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1] = valueObject.optString("stroke");
                                 mDefPoints[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("value");
                             } else {
-                                mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("add_point");
+                                if (valueObject.has("value")) {
+                                    mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("value");
+                                } else {
+                                    mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("add_point");
+                                }
                             }
                         }
                     }
@@ -363,7 +367,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                                 mPoint[1][i] = valueObject.optString("stroke");
                                 mDefPoints[1][i] = valueObject.optString("value");
                             } else {
-                                mPoint[1][i] = valueObject.optString("add_point");
+                                if (valueObject.has("value")) {
+                                    mPoint[1][i] = valueObject.optString("value");
+                                } else {
+                                    mPoint[1][i] = valueObject.optString("add_point");
+                                }
                             }
                         }
                     }
@@ -373,7 +381,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             mStyle[0] = CalculationStyle.Divide;
             //画除号
             int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
-            mDividerEndX = (arrayLength1 - 1) * mCellRectWidth - 10 *  Const.DP_1;
+            if (arrayLength1 == 1) {
+                mDividerEndX = arrayLength1  * mCellRectWidth - 10 *  Const.DP_1;
+            } else {
+                mDividerEndX = (arrayLength1 - 1) * mCellRectWidth - 10 *  Const.DP_1;
+            }
             mLineStartX = mDividerEndX;
             mDividerY = mCellRectWidth - 10 *  Const.DP_1;
             mPath.moveTo(mDividerEndX, mCellRectWidth  - 10 *  Const.DP_1);
