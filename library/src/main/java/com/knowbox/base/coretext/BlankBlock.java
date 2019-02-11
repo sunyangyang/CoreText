@@ -178,6 +178,9 @@ public class BlankBlock extends CYEditBlock {
         if (getTextEnv() != null && text != null) {
             if (text.length() > getTextLength())
                 return;
+            //修改结果框混合输入借位点和小数点问题 开始
+            //"#"代表小数点,"."代表借位点
+            mPointList.clear();
             if (text.contains("#")) {
                 text =  text.replaceAll("#",".");
                 mPointList.push("#");
@@ -195,6 +198,10 @@ public class BlankBlock extends CYEditBlock {
            if (length < mPointList.size()) {
                mPointList.pop();
            }
+           //修改结果框混合输入借位点和小数点问题 结束
+            if (!mPointList.isEmpty() && ("flag".equals(size) || "borrow_flag".equals(size) || "point".equals(size))) {
+               text = mPointList.peek();//
+            }
             getTextEnv().setEditableValue(getTabId(), text);
             if (!getTextEnv().isEditable() ||
                     "express".equals(size) ||
@@ -565,7 +572,8 @@ public class BlankBlock extends CYEditBlock {
 
     @Override
     public String getText() {
-        return super.getText();
+        String text = super.getText();
+        return text;
     }
 
     @Override

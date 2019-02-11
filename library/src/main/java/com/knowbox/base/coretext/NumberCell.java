@@ -280,7 +280,7 @@ public class NumberCell {
                     mPointBlock.setX(mPointRect.left);
                     mPointBlock.setLineY(mPointRect.top + mPointRect.height() / 2);
                     if (!TextUtils.isEmpty(mDefPoint) && mPointBlock != null) {
-                        mPointBlock.setText(".");
+                        mPointBlock.setText("#");
                         mPointBlock.setEditable(false);
                     }
                 }

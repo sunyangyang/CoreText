@@ -534,22 +534,7 @@ public class EditFace extends CYEditFace {
             }
         } else if ("point".equals(mSize)) {
             if(!TextUtils.isEmpty(text)) {
-                if (text.equals(".")) {
-                    float x = contentRect.left + this.mTextPaintMetrics.bottom/2;
-                    canvas.save();
-                    canvas.clipRect(contentRect);
-                    float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
-                    this.mTextPaint.setTextSize(NUMBER_PAINT_SIZE);
-                    canvas.drawText(text, x, y, this.mTextPaint);
-                    canvas.restore();
-                } else {
-                    this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
-                    super.drawText(canvas, text, blockRect, contentRect, false);
-                }
-            }
-        } else if ("borrow_flag".equals(mSize)) {
-            if(!TextUtils.isEmpty(text)) {
-                if (text.equals(".")) {
+                if (text.equals(".")) {//输入借位点
                     float x = contentRect.left - this.mTextPaintMetrics.bottom / 3;
                     canvas.save();
                     canvas.clipRect(contentRect);
@@ -558,8 +543,46 @@ public class EditFace extends CYEditFace {
                     canvas.drawText(text, x, y, this.mTextPaint);
                     canvas.restore();
                 } else {
-                    this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
-                    super.drawText(canvas, text, blockRect, contentRect, false);
+                    if ("#".equals(text)) {//输入小数点
+                        text = ".";
+                        float x = contentRect.left + this.mTextPaintMetrics.bottom/2;
+                        canvas.save();
+                        canvas.clipRect(contentRect);
+                        float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                        this.mTextPaint.setTextSize(NUMBER_PAINT_SIZE);
+                        canvas.drawText(text, x, y, this.mTextPaint);
+                        canvas.restore();
+                    } else {
+                        this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
+                        super.drawText(canvas, text, blockRect, contentRect, false);
+                    }
+                }
+            }
+        } else if ("borrow_flag".equals(mSize) || "flag".equals(mSize)) {
+            if(!TextUtils.isEmpty(text)) {
+                if (text.equals(".")) {//输入借位点
+                    float x = contentRect.left - this.mTextPaintMetrics.bottom / 3;
+                    canvas.save();
+                    canvas.clipRect(contentRect);
+                    float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                    this.mTextPaint.setTextSize(BORROW_POINT_PAINT_SIZE);
+                    canvas.drawText(text, x, y, this.mTextPaint);
+                    canvas.restore();
+                } else {
+                    if ("#".equals(text)) {//输入小数点
+                        text = ".";
+                        float x = contentRect.left + this.mTextPaintMetrics.bottom/2;
+                        canvas.save();
+                        canvas.clipRect(contentRect);
+                        float  y = (float)contentRect.bottom - this.mTextPaintMetrics.bottom/2;
+                        this.mTextPaint.setTextSize(NUMBER_PAINT_SIZE);
+                        canvas.drawText(text, x, y, this.mTextPaint);
+                        canvas.restore();
+                    } else {
+                        this.mTextPaint.setTextSize(FLAG_PAINT_SIZE);
+                        super.drawText(canvas, text, blockRect, contentRect, false);
+                    }
+
                 }
             }
         } else if ("pinyin".equals(mSize)) {
