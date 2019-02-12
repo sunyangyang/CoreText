@@ -378,6 +378,7 @@ public class NumberCell {
             } else {
                 String flag = mFlag;
                 if (TextUtils.equals(".",flag)) {
+                    mBorrowPointPaint.setColor(mFlagPaint.getColor());
                     canvas.drawText(flag,
                             mFlagRect.left + mFlagLeftOffset - DP_1 * 3,
                             mFlagRect.bottom - mFlagTopOffset,
@@ -425,23 +426,31 @@ public class NumberCell {
                 }
             } else {
                 String point = mPoint;
-                //装换小数点
-                if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
-                    point = ".";
-                }
-                if (this.mPoint.contains("stroke")) {
-                    String [] values = this.mPoint.split("_");
-                    point = values[1];
-                    if (TextUtils.equals(point, "point")) {//绘制真正小数点
+                if (TextUtils.equals(".",point)) {
+                    mBorrowPointPaint.setColor(mPointPaint.getColor());
+                    canvas.drawText(point,
+                            mPointRect.left + mPointRect.width() / 2 - DP_1 * 5,
+                            mPointRect.bottom - mPointRect.height() / 2,
+                            mBorrowPointPaint);
+                } else {
+                    //装换小数点
+                    if (TextUtils.equals(this.mPoint, "point")) {//绘制真正小数点
                         point = ".";
                     }
-                    canvas.drawLine(mPointRect.left + 3 * DP_1, mPointRect.top + 3 * DP_1,
-                            mPointRect.right - 3 * DP_1, mPointRect.bottom - 3 * DP_1, mStrokePaint);
+                    if (this.mPoint.contains("stroke")) {
+                        String [] values = this.mPoint.split("_");
+                        point = values[1];
+                        if (TextUtils.equals(point, "point")) {//绘制真正小数点
+                            point = ".";
+                        }
+                        canvas.drawLine(mPointRect.left + 3 * DP_1, mPointRect.top + 3 * DP_1,
+                                mPointRect.right - 3 * DP_1, mPointRect.bottom - 3 * DP_1, mStrokePaint);
+                    }
+                    canvas.drawText(point,
+                            mPointRect.left + mPointRect.width() / 2 - DP_1 * 3,
+                            mPointRect.bottom - mPointRect.height() / 2,
+                            mPointPaint);
                 }
-                canvas.drawText(point,
-                        mPointRect.left + mPointRect.width() / 2 - DP_1 * 3,
-                        mPointRect.bottom - mPointRect.height() / 2,
-                        mPointPaint);
             }
         }
     }
