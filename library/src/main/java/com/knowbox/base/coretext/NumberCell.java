@@ -19,6 +19,7 @@ import com.hyena.framework.clientlog.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hyena.coretext.utils.Const.DP_1;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
@@ -132,20 +133,20 @@ public class NumberCell {
                     if (mStyleType == TYPE_DEFAULT) {
                         if (mPointStyle) {//有小数情况
                             mFlagRect = new Rect(rect.left + valueLeftMargin + mSideWidth/2,
-                                    rect.bottom - mFlagSideWidth - Const.DP_1,
+                                    rect.bottom - mFlagSideWidth - DP_1,
                                     (int) (rect.left + valueLeftMargin + mSideWidth/2 + mFlagSideWidth),
-                                    rect.bottom - Const.DP_1);
+                                    rect.bottom - DP_1);
                         } else {
                             mFlagRect = new Rect(rect.left + flagLeftMargin,
-                                    rect.bottom - mFlagSideWidth - Const.DP_1,
+                                    rect.bottom - mFlagSideWidth - DP_1,
                                     rect.left + flagLeftMargin + mFlagSideWidth,
-                                    rect.bottom - Const.DP_1);
+                                    rect.bottom - DP_1);
                         }
                     } else {
                         mFlagRect = new Rect(rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2,
-                                rect.bottom - mFlagSideWidth - Const.DP_1,
+                                rect.bottom - mFlagSideWidth - DP_1,
                                 (int) (rect.left + valueLeftMargin + (mSideWidth + mFlagSideWidth) / 2),
-                                rect.bottom - Const.DP_1);
+                                rect.bottom - DP_1);
                     }
                 } else {
                     mFlagRect = new Rect((int) (rect.left + valueLeftMargin + (mSideWidth - mFlagSideWidth) / 2),
@@ -305,12 +306,12 @@ public class NumberCell {
             if (mValueBlock != null) {
                 mValueBlock.draw(canvas);
                 if (mValueBlock.isStroke()) {
-                    mStrokePaint.setStrokeWidth(Const.DP_1);
+                    mStrokePaint.setStrokeWidth(DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
                     mStrokePaint.setTextSize(NUMBER_PAINT_SIZE);
                     mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1,
-                            mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
+                    canvas.drawLine(mValueRect.left + 5 * DP_1, mValueRect.top + 5 * DP_1,
+                            mValueRect.right - 5 * DP_1, mValueRect.bottom - 5 * DP_1, mStrokePaint);
                 } else {
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText(
@@ -343,8 +344,8 @@ public class NumberCell {
                         if (TextUtils.equals(value, "point")) {//绘制真正小数点
                             value = ".";
                         }
-                        canvas.drawLine(mValueRect.left + 5 * Const.DP_1, mValueRect.top + 5 * Const.DP_1,
-                                mValueRect.right - 5 * Const.DP_1, mValueRect.bottom - 5 * Const.DP_1, mStrokePaint);
+                        canvas.drawLine(mValueRect.left + 5 * DP_1, mValueRect.top + 5 * DP_1,
+                                mValueRect.right - 5 * DP_1, mValueRect.bottom - 5 * DP_1, mStrokePaint);
                     }
                     canvas.drawText(
                             value,
@@ -360,12 +361,12 @@ public class NumberCell {
             if (mFlagBlock != null) {
                 mFlagBlock.draw(canvas);
                 if (mFlagBlock.isStroke()) {
-                    mStrokePaint.setStrokeWidth(Const.DP_1);
+                    mStrokePaint.setStrokeWidth(DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
                     mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
                     mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1,
-                            mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                    canvas.drawLine(mFlagRect.left + 3 * DP_1, mFlagRect.top + 3 * DP_1,
+                            mFlagRect.right - 3 * DP_1, mFlagRect.bottom - 3 * DP_1, mStrokePaint);
                 } else {
                     mStrokePaint.setColor(Color.TRANSPARENT);
                     canvas.drawText(
@@ -376,23 +377,30 @@ public class NumberCell {
                 }
             } else {
                 String flag = mFlag;
-                //装换小数点
-                if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
-                    flag = ".";
-                }
-                if (flag.contains("stroke")) {
-                    String [] values = this.mFlag.split("_");
-                    flag = values[1];
-                    if (TextUtils.equals(flag, "point")) {//绘制真正小数点
+                if (TextUtils.equals(".",flag)) {
+                    canvas.drawText(flag,
+                            mFlagRect.left + mFlagLeftOffset - DP_1 * 3,
+                            mFlagRect.bottom - mFlagTopOffset,
+                            mBorrowPointPaint);
+                } else {
+                    //装换小数点
+                    if (TextUtils.equals(this.mFlag, "point")) {//绘制真正小数点
                         flag = ".";
                     }
-                    canvas.drawLine(mFlagRect.left + 3 * Const.DP_1, mFlagRect.top + 3 * Const.DP_1,
-                            mFlagRect.right - 3 * Const.DP_1, mFlagRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                    if (flag.contains("stroke")) {
+                        String [] values = this.mFlag.split("_");
+                        flag = values[1];
+                        if (TextUtils.equals(flag, "point")) {//绘制真正小数点
+                            flag = ".";
+                        }
+                        canvas.drawLine(mFlagRect.left + 3 * DP_1, mFlagRect.top + 3 * DP_1,
+                                mFlagRect.right - 3 * DP_1, mFlagRect.bottom - 3 * DP_1, mStrokePaint);
+                    }
+                    canvas.drawText(flag,
+                            mFlagRect.left + mFlagLeftOffset,
+                            mFlagRect.bottom - mFlagTopOffset,
+                            mFlagPaint);
                 }
-                canvas.drawText(flag,
-                        mFlagRect.left + mFlagLeftOffset,
-                        mFlagRect.bottom - mFlagTopOffset,
-                        mFlagPaint);
             }
         }
 
@@ -401,12 +409,12 @@ public class NumberCell {
                 mPointBlock.draw(canvas);
                 //绘制划去
                 if (mPointBlock.isStroke()) {
-                    mStrokePaint.setStrokeWidth(Const.DP_1);
+                    mStrokePaint.setStrokeWidth(DP_1);
                     mStrokePaint.setStyle(Paint.Style.FILL);
                     mStrokePaint.setTextSize(FLAG_PAINT_SIZE);
                     mStrokePaint.setColor(0xff333333);
-                    canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
-                            mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                    canvas.drawLine(mPointRect.left + 3 * DP_1, mPointRect.top + 3 * DP_1,
+                            mPointRect.right - 3 * DP_1, mPointRect.bottom - 3 * DP_1, mStrokePaint);
                 } else {
                     //取消划去
                     mStrokePaint.setColor(Color.TRANSPARENT);
@@ -427,11 +435,11 @@ public class NumberCell {
                     if (TextUtils.equals(point, "point")) {//绘制真正小数点
                         point = ".";
                     }
-                    canvas.drawLine(mPointRect.left + 3 * Const.DP_1, mPointRect.top + 3 * Const.DP_1,
-                            mPointRect.right - 3 * Const.DP_1, mPointRect.bottom - 3 * Const.DP_1, mStrokePaint);
+                    canvas.drawLine(mPointRect.left + 3 * DP_1, mPointRect.top + 3 * DP_1,
+                            mPointRect.right - 3 * DP_1, mPointRect.bottom - 3 * DP_1, mStrokePaint);
                 }
                 canvas.drawText(point,
-                        mPointRect.left + mPointRect.width() / 2 - Const.DP_1 * 3,
+                        mPointRect.left + mPointRect.width() / 2 - DP_1 * 3,
                         mPointRect.bottom - mPointRect.height() / 2,
                         mPointPaint);
             }
