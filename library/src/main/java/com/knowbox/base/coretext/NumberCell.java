@@ -321,6 +321,7 @@ public class NumberCell {
                             mStrokePaint);
                 }
             } else {
+                String value = mValue;
                 if ("del0".equals(mValue)) {
                     canvas.drawText(
                             "0",
@@ -332,9 +333,16 @@ public class NumberCell {
                             mValueRect.left + mValueLeftOffset + mDelOffset,
                             mValueRect.bottom - mValueTopOffset,
                             mValuePaint);
+                } else if (TextUtils.equals(".",mValue)) {
+                    mBorrowPointPaint.setColor(mValuePaint.getColor());
+                    canvas.drawText(
+                            value,
+                            mValueRect.left + mValueLeftOffset,
+                            mValueRect.bottom - mValueTopOffset,
+                            mBorrowPointPaint);
                 } else {
                     //装换小数点
-                    String value = mValue;
+
                     if (TextUtils.equals(value, "point")) {//绘制真正小数点
                         value = ".";
                     }
