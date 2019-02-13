@@ -388,7 +388,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             }
             mLineStartX = mDividerEndX;
             mDividerY = mCellRectWidth - 10 *  Const.DP_1;
-            mPath.moveTo(mDividerEndX, mCellRectWidth  - 10 *  Const.DP_1);
+            mPath.moveTo(mDividerEndX, mCellRectWidth  - 10 *  Const.DP_1 + mCellRectWidth/4);
             mPath.quadTo(mDividerEndX, mCellRectWidth * (1 + 3.0f / 4)  + offset / 2, mDividerEndX - offset / 2, 2 * mCellRectWidth   + offset / 2);
 
         }
@@ -685,7 +685,12 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         if (mStyle[0] == CalculationStyle.Divide) {
             canvas.drawPath(mPath, mDividerPaint);
-            canvas.drawLine(mDividerEndX, mDividerY, mLeftColumns * mCellRectWidth, mDividerY, mDividerPaint);
+            if (mPointStyle) {
+                canvas.drawLine(mDividerEndX, mDividerY + mCellRectWidth/4, mLeftColumns * mCellRectWidth, mDividerY+ mCellRectWidth/4, mDividerPaint);
+            } else {
+                canvas.drawLine(mDividerEndX, mDividerY , mLeftColumns * mCellRectWidth, mDividerY, mDividerPaint);
+
+            }
         }
         canvas.restore();
     }
