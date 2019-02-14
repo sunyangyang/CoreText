@@ -109,7 +109,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="9" />
+                android:text="#" />
         </LinearLayout>
 
         <LinearLayout
@@ -124,7 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="*" />
+                android:text="." />
 
             <TextView
                 android:id="@+id/latex_keyboard_del"
@@ -142,18 +142,71 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="#" />
+                android:text="stroke" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/latex_keyboard_add"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="+" />
+
+            <TextView
+                android:id="@+id/latex_keyboard_min"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/latex_keyboard_multiply"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="回车" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/latex_bottom">
-        <RelativeLayout
+        android:orientation="vertical"
+        android:layout_above="@id/latex_bottom"
+        >
+
+
+    <ScrollView
+        android:id="@+id/scrollViewId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             >
+            <com.knowbox.base.coretext.QuestionTextView
+                android:id="@+id/qtv_paraquestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="21dp"
+                android:layout_marginRight="21dp"
+
+                />
             <!--<TextView-->
                 <!--android:layout_alignParentRight="true"-->
                 <!--android:id="@+id/test"-->
@@ -161,13 +214,30 @@
                 <!--android:layout_width="100dp"-->
                 <!--android:layout_height="match_parent"-->
                 <!--/>-->
-            <com.knowbox.base.coretext.QuestionTextView
-                android:id="@+id/qtv_question"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_corner_delivery_blue"
+                >
+                <RelativeLayout
+                    android:id="@+id/equalLayout"
+                    android:layout_width="33dp"
+                    android:layout_height="match_parent">
+                </RelativeLayout>
+                <com.knowbox.base.coretext.DeliveryQuestionTextView
+                    android:id="@+id/qtv_question"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                   />
+            </LinearLayout>
+        </LinearLayout>
 
 
     </ScrollView>
 
+    </LinearLayout>
 </RelativeLayout>
