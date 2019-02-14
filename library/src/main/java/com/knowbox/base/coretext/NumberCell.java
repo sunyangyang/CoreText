@@ -337,7 +337,7 @@ public class NumberCell {
                     mBorrowPointPaint.setColor(mValuePaint.getColor());
                     canvas.drawText(
                             value,
-                            mValueRect.left + mValueLeftOffset,
+                            mValueRect.left + mValueLeftOffset - DP_1 * 5,
                             mValueRect.bottom - mValueTopOffset,
                             mBorrowPointPaint);
                 } else {
@@ -388,7 +388,7 @@ public class NumberCell {
                 if (TextUtils.equals(".",flag)) {
                     mBorrowPointPaint.setColor(mFlagPaint.getColor());
                     canvas.drawText(flag,
-                            mFlagRect.left + mFlagLeftOffset - DP_1 * 3,
+                            mFlagRect.left + mFlagLeftOffset - DP_1 * 1,
                             mFlagRect.bottom - mFlagTopOffset,
                             mBorrowPointPaint);
                 } else {

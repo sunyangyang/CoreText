@@ -35,7 +35,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     public static final int TYPE_DEFAULT = 0;
     public static final int TYPE_HU = 1;//沪教版
 
-    public static final float BORROW_POINT_PAINT_SIZE = Const.DP_1 * 50;
+    public static final float BORROW_POINT_PAINT_SIZE = Const.DP_1 * 42;
     public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;
     public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;
     public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;
