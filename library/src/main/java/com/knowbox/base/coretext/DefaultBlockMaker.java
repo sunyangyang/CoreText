@@ -1,7 +1,5 @@
 package com.knowbox.base.coretext;
 
-import android.util.Log;
-
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYBreakLineBlock;
@@ -71,8 +69,8 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
         } else if ("delivery_equation".equals(type)) {
-            return (T) new DeliveryNewBlock(textEnv, data);
-           // return (T) new DeliveryBlock(textEnv, data);
+//            return (T) new DeliveryNewBlock(textEnv, data);
+            return (T) new DeliveryBlock(textEnv, data);
         } else if ("sudoku".equals(type)) {
             return (T) new SudokuBlock(textEnv, data);
         } else if ("24point".equals(type)) {

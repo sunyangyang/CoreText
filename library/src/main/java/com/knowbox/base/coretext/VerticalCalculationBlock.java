@@ -35,12 +35,10 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     public static final int TYPE_DEFAULT = 0;
     public static final int TYPE_HU = 1;//沪教版
 
-    public static final float BORROW_POINT_PAINT_SIZE = Const.DP_1 * 50;
-    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;
-    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;
-    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;
+    public static final float NUMBER_PAINT_SIZE = Const.DP_1 * 25;//16
+    public static final float FLAG_PAINT_SIZE = Const.DP_1 * 12.5f;//
+    public static final int NUMBER_RECT_SIZE = Const.DP_1 * 32;//20
     public static final int FLAG_RECT_SIZE = Const.DP_1 * 16;
-    public static final int POINT_RECT_SIZE = Const.DP_1 * 16;
     public static final int RECT_PADDING_SIZE = Const.DP_1 * 10;
     private float mScale = 1.0f;
     private float mFlagScale = 1.37f;
@@ -54,12 +52,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mCellRectWidth;
     private int mCellRectHeight;
     private CalculationStyle[] mStyle;
-    private String[][] mValues;//值
-    private String[][] mFlag;//进位、借位
-    private String[][] mPoint;//小数点
-    private String[][] mStroke;//划去空
-    private String[][] mDefValues;//默认大空值
-    private String[][] mDefPoints;//默认小数点值
+    private String[][] mValues;
+    private String[][] mFlag;
     private NumberCell[][] mLeftCells;
     private int[] mHorizontalLines;
     private int[] mHorizontalLinesHeight;
@@ -70,17 +64,14 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private int mDividerY;
     private Paint mDividerPaint;
     private int mContentHeight;
-    private int mContentWidth;
     private float mNumberPaintSize = NUMBER_PAINT_SIZE;//16
     private float mFlagPaintSize = FLAG_PAINT_SIZE;//
     private int mNumberRectSize = NUMBER_RECT_SIZE;//20
     private int mFlagRectSize = FLAG_RECT_SIZE;
-    private int mPointRectSize = POINT_RECT_SIZE;
     private int mRectPaddingSize = RECT_PADDING_SIZE;
     private TextEnv.EditableValueChangeListener mListener;
     private CYHorizontalAlign mAlign;
     private int mStyleType = TYPE_DEFAULT;
-    private boolean mPointStyle = false;
 
     public enum CalculationStyle {
         Plus,
@@ -125,7 +116,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         mFlagPaintSize = FLAG_PAINT_SIZE * mScale * mFlagScale;
         mNumberRectSize = (int) (NUMBER_RECT_SIZE * mScale);
         mFlagRectSize = (int) (FLAG_RECT_SIZE * mScale * mFlagScale);
-        mPointRectSize = (int) (POINT_RECT_SIZE * mScale * mFlagScale);
 
         mNormalTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mNormalTextPaint.setStrokeWidth(Const.DP_1);
@@ -168,10 +158,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         } catch (JSONException e) {
 
         }
-        if (content.contains("point")) {
-            mPointStyle = true;
-            mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;//有小数加大宽度
-        }
         if (object == null) {
             return;
         }
@@ -208,7 +194,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         //除法多了被除数、除数和商两行
         JSONArray quotientArray = object.optJSONArray("quotient");
-        JSONArray quotientPointArray = object.optJSONArray("quotient_point");
         if (quotientArray != null) {
             topLines = 2;
             mRows += topLines;
@@ -216,11 +201,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
         mValues = new String[mRows][mLeftColumns];
         mFlag = new String[mRows][mLeftColumns];
-        mPoint = new String[mRows][mLeftColumns];
-        mStroke = new String[mRows][mLeftColumns];
-        //针对除法有默认0情况
-        mDefValues = new String[mRows][mLeftColumns];
-        mDefPoints = new String[mRows][mLeftColumns];
 
         //单独设置除法
         mLineStartX = PaintManager.getInstance().getHeight(mSmallTextPaint);
@@ -228,13 +208,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             int quotientLength = quotientArray.length();
             for (int i = quotientLength - 1; i >= 0; i--) {
                 mValues[0][mLeftColumns - (quotientLength - i)] = quotientArray.optString(i);
-            }
-        }
-
-        if (quotientPointArray != null) {
-            int quotientPointLength = quotientPointArray.length();
-            for (int i = quotientPointLength - 1; i >= 0; i--) {
-                mPoint[0][mLeftColumns - (quotientPointLength - i)] = quotientPointArray.optString(i);
             }
         }
 
@@ -255,7 +228,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             if (array1 != null) {
                 arrayLength1 = array1.length();
                 int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
-                mDividerEndX = arrayLength1* mCellRectWidth + offset / 2;
+                mDividerEndX = arrayLength1 * mCellRectWidth + offset / 2;
                 mLineStartX = mDividerEndX;
                 mDividerY = mCellRectWidth + mOffsetTop + offset / 2;
                 mPath.moveTo(mDividerEndX, mCellRectWidth + mOffsetTop + offset / 2);
@@ -265,135 +238,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 }
             }
         }
-
-        JSONArray divideNewPairArray = object.optJSONArray("divide_new_pair");
-        if (divideNewPairArray != null) {
-            JSONArray array0 = divideNewPairArray.optJSONArray(0);//被除数
-            JSONArray array1 = divideNewPairArray.optJSONArray(1);//除数
-
-            JSONArray valueArray0 = new JSONArray();//被除数值
-            JSONArray pointArray0 = new JSONArray();//被除数小数点
-
-            JSONArray valueArray1 = new JSONArray();//除数值
-            JSONArray pointArray1 = new JSONArray();//除数小数点
-
-            int arrayLength0 = 0;
-            int arrayLength1 = 0;
-
-            int prePointCount = 0;//被除数 小数 前面的位数
-            int nextPointCount = 0;//除数的小数点位数
-
-            if (array0 != null && array1 != null) {
-                arrayLength0 = array0.length();
-                arrayLength1 = array1.length();
-                //计算被除数中小数点个数
-                for (int i = 0; i < arrayLength0; i++) {
-                    JSONObject valueObject = array0.optJSONObject(i);
-                    if (valueObject != null) {
-                        if (TextUtils.equals(valueObject.optString("value"), "point")) {
-                            prePointCount = i ;
-                        }
-                        if (valueObject.has("num")) {
-                            valueArray0.put(valueObject);
-                        } else {
-                            pointArray0.put(valueObject);
-                        }
-                    }
-                }
-                //计算除数中小数点个数
-                for (int i = 0; i < arrayLength1; i++) {
-                    JSONObject valueObject = array1.optJSONObject(i);
-                    if (valueObject != null) {
-                        if (TextUtils.equals(valueObject.optString("value"), "point")) {
-                            nextPointCount = arrayLength1 - (i + 1);
-                        }
-                        if (valueObject.has("num")) {
-                            valueArray1.put(valueObject);
-                        } else {
-                            pointArray1.put(valueObject);
-                        }
-                    }
-                }
-
-                //给被除数的值赋值
-                for (int i = valueArray0.length() - 1; i >= 0; i--) {
-                    JSONObject valueObject = valueArray0.optJSONObject(i);
-                    if (valueObject != null) {
-                            if (valueObject.has("stroke")) {
-                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
-                                mDefValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
-                            } else {
-                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
-                            }
-                        }
-                    }
-                //给被除数的小数点赋值
-                for (int i = pointArray0.length() - 1; i >= 0; i--) {
-                    JSONObject valueObject = pointArray0.optJSONObject(i);
-                    if (valueObject != null) {
-                        if (!valueObject.has("num")) {
-                            if (valueObject.has("stroke")) {
-                                mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1] = valueObject.optString("stroke");
-                                mDefPoints[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("value");
-                            } else {
-                                if (valueObject.has("value")) {
-                                    mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("value");
-                                } else {
-                                    mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("add_point");
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //给除数的值赋值
-                for (int i = valueArray1.length() - 1; i >= 0; i--) {
-                    JSONObject valueObject = valueArray1.optJSONObject(i);
-                    if (valueObject != null) {
-                        if (valueObject.has("stroke")) {
-                            mValues[1][i] = valueObject.optString("stroke");
-                            mDefValues[1][i] = valueObject.optString("num");
-                        } else {
-                            mValues[1][i] = valueObject.optString("num");
-                        }
-                    }
-                }
-                //给除数的小数点赋值
-                for (int i = pointArray1.length() - 1; i >= 0; i--) {
-                    JSONObject valueObject = pointArray1.optJSONObject(i);
-                    if (valueObject != null) {
-                        if (!valueObject.has("num")) {
-                            if (valueObject.has("stroke")) {
-                                mPoint[1][i] = valueObject.optString("stroke");
-                                mDefPoints[1][i] = valueObject.optString("value");
-                            } else {
-                                if (valueObject.has("value")) {
-                                    mPoint[1][i] = valueObject.optString("value");
-                                } else {
-                                    mPoint[1][i] = valueObject.optString("add_point");
-                                }
-                            }
-                        }
-                    }
-                }
-
-                }
-            mStyle[0] = CalculationStyle.Divide;
-            //画除号
-            int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
-            if (arrayLength1 == 1) {
-                mDividerEndX = arrayLength1  * mCellRectWidth;
-            } else {
-                mDividerEndX = (arrayLength1 - 1) * mCellRectWidth;
-            }
-            mLineStartX = mDividerEndX;
-            mDividerY = mCellRectWidth - 10 *  Const.DP_1;
-            mPath.moveTo(mDividerEndX, mCellRectWidth  - 10 *  Const.DP_1 + mCellRectWidth/4);
-            mPath.quadTo(mDividerEndX, mCellRectWidth * (1 + 3.0f / 4)  + offset / 2, mDividerEndX - offset / 2, 2 * mCellRectWidth   + offset / 2);
-
-        }
-
         mLeftCells = new NumberCell[mRows][mLeftColumns];
+
 
         int leftMargin = Const.DP_1 * 10;
         //加法和乘法中有进位的时候，设置宽度
@@ -441,7 +287,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
             for (int j = 0; j < arrayLength; j++) {
                 JSONObject memberObject = jsonArray.optJSONObject(j);
-                if (memberObject == null) continue;
                 JSONArray valueArray = memberObject.optJSONArray("value");
                 if (valueArray != null) {
                     int valueLength = valueArray.length();
@@ -453,23 +298,16 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             mValues[row + topLines][mLeftColumns - valueLength + k] = valueArray.optString(k);
                         }
                     }
-
-                    JSONArray pointArray = memberObject.optJSONArray("point");
-                    if (pointArray != null) {
-                        int pointLength = pointArray.length();
-                        for (int k = pointLength - 1; k >= 0; k--) {
-                            mPoint[row + topLines][mLeftColumns - pointLength + k] = pointArray.optString(k);
-                        }
-                    }
-
-                    JSONArray strokeArray = memberObject.optJSONArray("stroke");
-                    if (strokeArray != null) {
-                        int strokeLength = strokeArray.length();
-                        for (int k = strokeLength - 1; k >= 0; k--) {
-                            mStroke[row + topLines][mLeftColumns - strokeLength + k] = strokeArray.optString(k);
-                        }
-                    }
                 }
+
+//                JSONArray explainArray = memberObject.optJSONArray("explain");
+//                if (explainArray != null) {
+//                    int explainLength = explainArray.length();
+//                    for (int k = 0; k < explainLength; k++) {
+//                        mExplain[row + topLines][k] = explainArray.optString(k);
+//                    }
+//                }
+
                 row++;
             }
             JSONArray flagArray = jsonObject.optJSONArray("carry_flag");
@@ -526,13 +364,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                 } else {
                     if (mStyleType == TYPE_DEFAULT) {
-                        if (mPointStyle) {
-                            topMargin = Const.DP_1 * 10;
-                            mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
-                        } else {
-                            topMargin = Const.DP_1 * 10;
-                            mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
-                        }
+                        topMargin = Const.DP_1 * 10;
+                        mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
                     } else {
                         if (k == mHorizontalLines[linesPosition - 1] - topLines - 1 &&
                                 mStyleType == TYPE_HU &&
@@ -540,13 +373,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             topMargin = Const.DP_1 * 10;
                             mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
                         } else {
-                            if (mPointStyle) {
-                                topMargin = Const.DP_1 * 10;
-                                mCellRectHeight = mNumberRectSize + mFlagRectSize + RECT_PADDING_SIZE;
-                            } else {
-                                topMargin = Const.DP_1 * 10;
-                                mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
-                            }
+                            topMargin = Const.DP_1 * 10;
+                            mCellRectHeight = mNumberRectSize + Const.DP_1 * 10;
                         }
                     }
                 }
@@ -559,7 +387,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                     mLeftCells[k][j] = new NumberCell(textEnv,
                             new Rect(j * mCellRectWidth, mContentHeight + mOffsetTop, (j + 1) * mCellRectWidth, mContentHeight + mCellRectHeight + mOffsetTop),
-                            mStyle[i], mValues[k][j], mFlag[k][j],mPoint[k][j], mStroke[k][j],mDefValues[k][j],mDefPoints[k][j],mNormalTextPaint, mSmallTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mPointRectSize,mStyleType,mPointStyle);
+                            mStyle[i], mValues[k][j], mFlag[k][j], mNormalTextPaint, mSmallTextPaint, topMargin, leftMargin, mNumberRectSize, mFlagRectSize, mStyleType);
                 }
                 mContentHeight += mCellRectHeight;
                 if (k > 0 && k == mHorizontalLines[linesPosition - 1] - 1) {
@@ -570,12 +398,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         mContentHeight -= Const.DP_1 * 2;
 //        postInvalidate();
-        mContentWidth = mLeftColumns * mCellRectWidth;
     }
 
     @Override
     public int getContentWidth() {
-        return mContentWidth;
+        return getTextEnv().getSuggestedPageWidth();
     }
 
     @Override
@@ -685,12 +512,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         }
         if (mStyle[0] == CalculationStyle.Divide) {
             canvas.drawPath(mPath, mDividerPaint);
-            if (mPointStyle) {
-                canvas.drawLine(mDividerEndX, mDividerY + mCellRectWidth/4, mLeftColumns * mCellRectWidth, mDividerY+ mCellRectWidth/4, mDividerPaint);
-            } else {
-                canvas.drawLine(mDividerEndX, mDividerY , mLeftColumns * mCellRectWidth, mDividerY, mDividerPaint);
-
-            }
+            canvas.drawLine(mDividerEndX, mDividerY, mLeftColumns * mCellRectWidth, mDividerY, mDividerPaint);
         }
         canvas.restore();
     }
