@@ -81,7 +81,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
     private CYHorizontalAlign mAlign;
     private int mStyleType = TYPE_DEFAULT;
     private boolean mPointStyle = false;
-    private boolean mWithoutPoint = false;
 
     public enum CalculationStyle {
         Plus,
@@ -172,9 +171,6 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         if (content.contains("point")) {
             mPointStyle = true;
             mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;//有小数加大宽度
-        }
-        if (!content.contentEquals("point")) {
-            mWithoutPoint = true;
         }
         if (object == null) {
             return;
@@ -385,7 +381,8 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             mStyle[0] = CalculationStyle.Divide;
             //画除号
             int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);
-            if (arrayLength1 == 1 || mWithoutPoint) {//为1就是被除数只有一位，所以相当于整数，如果只有商里面有小数点，那么这个特殊情况一样走整数情况
+            boolean mHasPoint =  array1.toString().contains("point");
+            if (arrayLength1 == 1 || !mHasPoint) {//为1就是被除数只有一位，所以相当于整数，如果只有商里面有小数点，那么这个特殊情况一样走整数情况
                 mDividerEndX = arrayLength1  * mCellRectWidth;
             } else {
                 mDividerEndX = (arrayLength1 - 1) * mCellRectWidth;
