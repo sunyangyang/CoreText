@@ -169,7 +169,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
         } catch (JSONException e) {
 
         }
-        if (content.contains("divide_new_pair")) {
+        if (content.contains("point")) {
             mPointStyle = true;
             mCellRectWidth = mNumberRectSize + Const.DP_1 * 20;//有小数加大宽度
         }
