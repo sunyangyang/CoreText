@@ -3,18 +3,13 @@ package com.knowbox.base.coretext;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
-import com.hyena.coretext.blocks.CYPlaceHolderBlock;
 import com.hyena.coretext.blocks.ICYEditable;
-import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
-import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +18,6 @@ import static com.hyena.coretext.utils.Const.DP_1;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
-import static com.knowbox.base.coretext.VerticalCalculationBlock.RECT_PADDING_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.TYPE_DEFAULT;
 
 /**
@@ -337,7 +331,7 @@ public class NumberCell {
                     mBorrowPointPaint.setColor(mValuePaint.getColor());
                     canvas.drawText(
                             value,
-                            mValueRect.left + mValueLeftOffset - DP_1 * 5,
+                            mValueRect.left + mValueLeftOffset,
                             mValueRect.bottom - mValueTopOffset,
                             mBorrowPointPaint);
                 } else {
@@ -388,7 +382,7 @@ public class NumberCell {
                 if (TextUtils.equals(".",flag)) {
                     mBorrowPointPaint.setColor(mFlagPaint.getColor());
                     canvas.drawText(flag,
-                            mFlagRect.left + mFlagLeftOffset - DP_1 * 1,
+                            mFlagRect.left + mFlagLeftOffset - DP_1 * 3,
                             mFlagRect.bottom - mFlagTopOffset,
                             mBorrowPointPaint);
                 } else {

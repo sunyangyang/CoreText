@@ -319,14 +319,14 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                 for (int i = valueArray0.length() - 1; i >= 0; i--) {
                     JSONObject valueObject = valueArray0.optJSONObject(i);
                     if (valueObject != null) {
-                            if (valueObject.has("stroke")) {
-                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
-                                mDefValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
-                            } else {
-                                mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
-                            }
+                        if (valueObject.has("stroke")) {
+                            mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("stroke");
+                            mDefValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
+                        } else {
+                            mValues[1][i+ (arrayLength1 - pointArray1.length())] = valueObject.optString("num");
                         }
                     }
+                }
                 //给被除数的小数点赋值
                 for (int i = pointArray0.length() - 1; i >= 0; i--) {
                     JSONObject valueObject = pointArray0.optJSONObject(i);
@@ -377,7 +377,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                 }
 
-                }
+            }
             mStyle[0] = CalculationStyle.Divide;
             //画除号
             int offset = PaintManager.getInstance().getHeight(mSmallTextPaint);

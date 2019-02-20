@@ -25,7 +25,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.knowbox.base.coretext.BlankBlock.DEFAULT_FLASH_X;
-import static com.knowbox.base.coretext.BlankBlock.PLACE_HOLDER_WORD;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.BORROW_POINT_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE;
 import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
@@ -381,7 +380,7 @@ public class EditFace extends CYEditFace {
                                         if(mFlashPosition<= mFracTextInfo.mText.length()){
                                             if(mFracTextInfo.mText.length() ==2){
                                                 left = contentRect.left +
-                                                        PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos))+((float)contentRect.width()-PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText))/ 2.0F;
+                                                        PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos))+Const.DP_1*2;
 
                                             }else{
                                                 left = contentRect.left +
@@ -426,12 +425,7 @@ public class EditFace extends CYEditFace {
                                         //只有一个字符的时候特殊处理
                                         left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
                                     }else{
-                                        if(mFracTextInfo.mText.length() == 2){
-                                            left = contentRect.left + textWidth+((float)contentRect.width()-textWidth)/ 2.0F;
-                                        }else{
-                                            left = contentRect.left + textWidth;
-                                        }
-
+                                        left = contentRect.left + textWidth;
                                     }
 
                                 } else {
@@ -443,7 +437,7 @@ public class EditFace extends CYEditFace {
                                                     mFlashX < textX
                                                             + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i + 1)) -
                                                             +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(i, i + 1)) / 2) {
-                                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)))+((float)contentRect.width()-textWidth)/ 2.0F;
+                                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)));
                                                 mFlashPosition = i;
                                                 break;
                                             }
