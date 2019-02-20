@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 156
-        versionName "1.1.56"
+        versionCode 157
+        versionName "1.1.57"
         manifestPlaceholders = [
                 GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
                 GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",
@@ -36,7 +36,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.getui:sdk:2.+'
+    compile 'com.getui:sdk:2.13.0.0'
     compile 'com.knowbox:latex:1.0.0'
     compile 'com.knowbox:coretext:1.0.3'
     compile 'com.github.yangzc:AndroidSupport:1.6.4'
@@ -53,6 +53,10 @@ if (isReleaseBuild()) {
     sonatypeRepositoryUrl = RELEASE_REPOSITORY_URL
 } else {
     sonatypeRepositoryUrl = SNAPSHOT_REPOSITORY_URL
+}
+
+task mavenUploadBase (dependsOn: uploadArchives){
+    group 'upload'
 }
 
 afterEvaluate { project ->

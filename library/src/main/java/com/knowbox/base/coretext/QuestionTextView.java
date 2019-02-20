@@ -110,11 +110,15 @@ public class QuestionTextView extends CYSinglePageView {
 
     private void rebuild(List<CYBlock> blocks) {
         boolean isFirstCh = true;
+        int width = -1;
         for (int i = 0; i < blocks.size(); i++) {
             CYBlock mCur = blocks.get(i);
             if (mCur instanceof CYTextBlock) {
                 if (isFirstCh) {
-                    mCur.setMargin(mCur.getWidth() * 2, 0);
+                    if (width == -1) {
+                        width = mCur.getWidth();
+                    }
+                    mCur.setMargin(width * 2, 0);
                 }
                 isFirstCh = false;
             } else if (mCur instanceof CYBreakLineBlock || mCur instanceof ParagraphBlock) {
