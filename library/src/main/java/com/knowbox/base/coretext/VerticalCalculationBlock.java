@@ -589,7 +589,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
     @Override
     public int getContentWidth() {
-        return mContentWidth;
+        return mContentWidth + Const.DP_1 * 20;
     }
 
     @Override
