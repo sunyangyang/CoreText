@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 159
-        versionName "1.1.59"
+        versionCode 157
+        versionName "1.1.57.82-SNAPSHOT"
         manifestPlaceholders = [
                 GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
                 GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",

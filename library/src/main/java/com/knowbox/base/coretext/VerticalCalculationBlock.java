@@ -476,6 +476,19 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             JSONArray flagArray = jsonObject.optJSONArray("carry_flag");
             if (flagArray == null) {
                 flagArray = jsonObject.optJSONArray("borrow_flag");
+            } else if (mPointStyle && mStyleType == TYPE_HU) {//分数二期，改为矩阵方式，为了兼容，把进位向右移动一位
+                for (int k = 0; k < flagArray.length(); k++){
+                    String b = flagArray.optString(k);
+                    if (!TextUtils.isEmpty(b)) {
+                        try {
+                            flagArray.put(k,"");
+                            flagArray.put(k+1,b);
+                            k++;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
             if (flagArray != null) {
                 int carryLength = flagArray.length();
