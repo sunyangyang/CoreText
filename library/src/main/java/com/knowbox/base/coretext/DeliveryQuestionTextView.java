@@ -647,6 +647,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                 }else{
                     continue;
                 }
+                fracStr += "(";
                 if(idFlag){
                     if(!TextUtils.isEmpty(editableList.get(1).getText())){
                         if(isRegex(editableList.get(1).getText())){
@@ -680,6 +681,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                         }
                     }
                 }
+                fracStr += ")";
 
                 if(bk.getPrevBlock() instanceof BlankBlock){
                     char ch = answer.charAt(answer.length()-1);

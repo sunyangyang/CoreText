@@ -8,7 +8,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 157
-        versionName "1.1.57.82-SNAPSHOT"
+        versionName "1.1.57.83-SNAPSHOT"
         manifestPlaceholders = [
                 GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
                 GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",
@@ -39,7 +39,7 @@ dependencies {
     compile 'com.getui:sdk:2.13.0.0'
     compile 'com.knowbox:latex:1.0.0'
     compile 'com.knowbox:coretext:1.0.3'
-    compile 'com.github.yangzc:AndroidSupport:1.6.4'
+    compile 'com.github.yangzc:AndroidSupport:1.6.7'
     provided files('extlibs/easemobchat_2.2.3.jar')
 }
 
