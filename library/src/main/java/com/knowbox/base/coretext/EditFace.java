@@ -379,8 +379,7 @@ public class EditFace extends CYEditFace {
                                     }else{
                                         if(mFlashPosition<= mFracTextInfo.mText.length()){
                                             if(mFracTextInfo.mText.length() ==2){
-                                                left = contentRect.left +
-                                                        PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos))+Const.DP_1*2;
+                                                left = contentRect.left + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, mFlashPosition - mFracTextInfo.mStartPos))+((float)contentRect.width()-PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText))/ 2.0F;
 
                                             }else{
                                                 left = contentRect.left +
@@ -425,7 +424,11 @@ public class EditFace extends CYEditFace {
                                         //只有一个字符的时候特殊处理
                                         left = (float)contentRect.left + (float)contentRect.width()/ 2.0F +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText)/2;
                                     }else{
-                                        left = contentRect.left + textWidth;
+                                        if(mFracTextInfo.mText.length() == 2){
+                                            left = contentRect.left + textWidth+((float)contentRect.width()-textWidth)/ 2.0F;
+                                        }else{
+                                            left = contentRect.left + textWidth;
+                                        }
                                     }
 
                                 } else {
@@ -437,7 +440,7 @@ public class EditFace extends CYEditFace {
                                                     mFlashX < textX
                                                             + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i + 1)) -
                                                             +PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(i, i + 1)) / 2) {
-                                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)));
+                                                left = contentRect.left + (textX + PaintManager.getInstance().getWidth(mTextPaint, mFracTextInfo.mText.substring(0, i)))+((float)contentRect.width()-textWidth)/ 2.0F;
                                                 mFlashPosition = i;
                                                 break;
                                             }
