@@ -69,8 +69,8 @@ public class DefaultBlockMaker implements IBlockMaker {
         } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
         } else if ("delivery_equation".equals(type)) {
-//            return (T) new DeliveryNewBlock(textEnv, data);
-            return (T) new DeliveryBlock(textEnv, data);
+            return (T) new DeliveryNewBlock(textEnv, data);
+            // return (T) new DeliveryBlock(textEnv, data);
         } else if ("sudoku".equals(type)) {
             return (T) new SudokuBlock(textEnv, data);
         } else if ("24point".equals(type)) {
