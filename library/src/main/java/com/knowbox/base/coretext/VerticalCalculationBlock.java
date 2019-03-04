@@ -281,7 +281,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
             int arrayLength1 = 0;
 
             int prePointCount = 0;//被除数 小数 前面的位数
-            int addPointCount = 0;//被除数 小数空 前面的位数
+            ArrayList<Integer> addPointCount = new ArrayList();//被除数 小数空 前面的位数
             int nextPointCount = 0;//除数的小数点位数
 
             if (array0 != null && array1 != null) {
@@ -295,7 +295,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                             prePointCount = i ;
                         }
                         if (valueObject.has("add_point")) {
-                            addPointCount = i ;
+                            addPointCount.add(i) ;
                         }
                         if (valueObject.has("num")) {
                             valueArray0.put(valueObject);
@@ -343,7 +343,9 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                                 if (valueObject.has("value")) {
                                     mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("value");
                                 } else {
-                                    mPoint[1][(arrayLength1 - pointArray1.length())  + addPointCount - prePointCount - 1 ] = valueObject.optString("add_point");
+                                    for (int k = 0; k < addPointCount.size(); k++){
+                                        mPoint[1][(arrayLength1 - pointArray1.length())  + addPointCount.get(k) - prePointCount - 1 - k] = valueObject.optString("add_point");
+                                        }
                                 }
                             }
                         }
