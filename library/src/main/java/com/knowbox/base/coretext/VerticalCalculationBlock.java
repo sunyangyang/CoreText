@@ -332,7 +332,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                     }
                 }
                 //给被除数的小数点赋值
-                int k = 0;
+                int k = addPointCount.size() - 1;
                 for (int i = pointArray0.length() - 1; i >= 0; i--) {
                     JSONObject valueObject = pointArray0.optJSONObject(i);
                     if (valueObject != null) {
@@ -345,7 +345,7 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
                                     mPoint[1][(arrayLength1 - pointArray1.length()) + prePointCount - 1 + nextPointCount] = valueObject.optString("value");
                                 } else {
                                     mPoint[1][(arrayLength1 - pointArray1.length()) + addPointCount.get(k) - prePointCount - 1 - k] = valueObject.optString("add_point");
-                                    if (k < addPointCount.size()) k++;
+                                    if (k > 0) k--;
                                 }
                             }
                         }
