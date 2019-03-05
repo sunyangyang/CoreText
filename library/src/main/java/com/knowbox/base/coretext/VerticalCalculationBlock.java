@@ -582,7 +582,11 @@ public class VerticalCalculationBlock extends CYPlaceHolderBlock implements ICYE
 
     @Override
     public int getContentWidth() {
-        return mContentWidth + Const.DP_1 * 20;
+        if (mPointStyle) {
+            return mContentWidth + Const.DP_1 * 20;
+        } else {
+            return getTextEnv().getSuggestedPageWidth();
+        }
     }
 
     @Override
