@@ -287,6 +287,16 @@ public abstract class UCUploadServiceImpl implements UploadService {
             UFileSDK fileSDK = new UFileSDK(bucket, proxySuffix, authorServer);
             String http_method = "PUT";
             String content_md5 = UFileUtils.getFileMD5(uploadFile);
+            if(TextUtils.isEmpty(content_md5)){
+                if (listener != null) {
+                    listener.onUploadError(uploadTask, UploadListener.ERROR_CODE_UNKNOWN, "文件错误", "");
+                }
+
+                if (jobListener != null){
+                    jobListener.onJobError("文件错误");
+                }
+                return;
+            }
             String content_type = "text/plain";
             String date = "";
             String key_name = getDate() + "/" + UUID.randomUUID().toString().replaceAll("-", "");
