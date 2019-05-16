@@ -2,11 +2,13 @@ package com.knowbox.base.service.log.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+
 import android.provider.BaseColumns;
 
 import com.hyena.framework.database.BaseTable;
+import com.hyena.framework.database.DataBaseHelper;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 /**
  * Created by yangzc on 17/9/20.
@@ -15,7 +17,7 @@ public class LogTable extends BaseTable<LogItem> {
 
     public static final String LOG_TEXT = "log";
 
-    public LogTable(SQLiteOpenHelper sqlHelper) {
+    public LogTable(DataBaseHelper sqlHelper) {
         super("log", sqlHelper);
     }
 
