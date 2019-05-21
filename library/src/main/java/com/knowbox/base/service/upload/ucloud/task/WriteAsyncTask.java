@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.service.upload.ucloud.UFileRequest;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ public class WriteAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void onWrite(OutputStream outputStream) throws Exception {
-        Log.i(TAG, "onWrite length=" + upload.length() + " " + upload);
+        LogUtil.i(TAG, "onWrite length=" + upload.length() + " " + upload);
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(

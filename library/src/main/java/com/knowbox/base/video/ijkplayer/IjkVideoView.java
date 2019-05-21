@@ -151,7 +151,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
         } catch (Throwable e) {
             mErrorListener.onError(mMediaPlayer, 0, 0);
-            Log.e("GiraffePlayer", "loadLibraries error", e);
+            LogUtil.e("GiraffePlayer", "loadLibraries error", e);
             return;
         }
 
@@ -225,7 +225,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 break;
             }
             default:
-                Log.e(TAG, String.format(Locale.getDefault(), "invalid render %d\n", render));
+                LogUtil.e(TAG, String.format(Locale.getDefault(), "invalid render %d\n", render));
                 break;
         }
     }
@@ -371,13 +371,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             mCurrentState = STATE_PREPARING;
             attachMediaController();
         } catch (IOException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
+            LogUtil.w(TAG, "Unable to open content: " + mUri + ex.toString());
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             return;
         } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
+            LogUtil.w(TAG, "Unable to open content: " + mUri + ex.toString());
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
@@ -500,7 +500,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     switch (arg1) {
                         case IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                             mVideoRotationDegree = arg2;
-                            Log.d(TAG, "MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + arg2);
+                            LogUtil.d(TAG, "MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + arg2);
                             if (mRenderView != null)
                                 mRenderView.setVideoRotation(arg2);
                             break;
@@ -512,7 +512,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private IMediaPlayer.OnErrorListener mErrorListener =
             new IMediaPlayer.OnErrorListener() {
                 public boolean onError(IMediaPlayer mp, int framework_err, int impl_err) {
-                    Log.d(TAG, "Error: " + framework_err + "," + impl_err);
+                    LogUtil.d(TAG, "Error: " + framework_err + "," + impl_err);
                     mCurrentState = STATE_ERROR;
                     mTargetState = STATE_ERROR;
                     if (mMediaController != null) {
@@ -632,7 +632,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceChanged(@NonNull IRenderView.ISurfaceHolder holder, int format, int w, int h) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceChanged: unmatched render callback\n");
+                LogUtil.e(TAG, "onSurfaceChanged: unmatched render callback\n");
                 return;
             }
 
@@ -651,7 +651,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceCreated(@NonNull IRenderView.ISurfaceHolder holder, int width, int height) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
+                LogUtil.e(TAG, "onSurfaceCreated: unmatched render callback\n");
                 return;
             }
 
@@ -665,7 +665,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceDestroyed(@NonNull IRenderView.ISurfaceHolder holder) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceDestroyed: unmatched render callback\n");
+                LogUtil.e(TAG, "onSurfaceDestroyed: unmatched render callback\n");
                 return;
             }
 

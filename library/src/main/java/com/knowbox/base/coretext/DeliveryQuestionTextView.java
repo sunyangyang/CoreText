@@ -19,6 +19,7 @@ import com.hyena.coretext.event.CYFocusEventListener;
 import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
+import com.hyena.framework.clientlog.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +158,7 @@ public class DeliveryQuestionTextView extends QuestionTextView {
                                 return;
                             }
                             String oldText = block.getText();
-                            Log.d("chenyan","oldText = " + oldText + "  flashPosition =  "+flashPosition + "  oldtextlength = "+oldText);
+                            LogUtil.d("chenyan","oldText = " + oldText + "  flashPosition =  "+flashPosition + "  oldtextlength = "+oldText);
                             String preText = oldText.substring(0,flashPosition);
                             String nextText = oldText.substring(flashPosition,oldText.length());
                             block.setText(preText);

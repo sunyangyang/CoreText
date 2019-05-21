@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.service.upload.ucloud.UFileRequest;
 
 import org.json.JSONException;
@@ -57,7 +58,7 @@ public class UploadPartAsyncTask extends HttpAsyncTask {
             }
         }
 
-        Log.i(TAG, "write part " + partNumber + " from " + start + " to " + (start + write) + " write " + write + " " + (blk_size == write));
+        LogUtil.i(TAG, "write part " + partNumber + " from " + start + " to " + (start + write) + " write " + write + " " + (blk_size == write));
         dataOutputStream.flush();
         dataOutputStream.close();
     }
