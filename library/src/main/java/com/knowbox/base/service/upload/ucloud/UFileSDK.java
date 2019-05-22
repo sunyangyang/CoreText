@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.service.upload.ucloud.task.GetFileAsyncTask;
 import com.knowbox.base.service.upload.ucloud.task.HttpAsyncTask;
 import com.knowbox.base.service.upload.ucloud.task.PutFileAsyncTask;
@@ -78,7 +79,7 @@ public class UFileSDK {
      */
     public HttpAsyncTask putFile(final UFileRequest uFileRequest, final File file, String key_name, final Callback callback) {
         String url = this.defaultUrl + "/" + UFileUtils.urlEncode(key_name);
-        Log.i(TAG, url);
+        LogUtil.i(TAG, url);
         HttpAsyncTask httpAsyncTask = new PutFileAsyncTask(url, uFileRequest, file, new HttpAsyncTask.HttpCallback() {
             @Override
             public void onProgressUpdate(Object... progress) {
@@ -138,7 +139,7 @@ public class UFileSDK {
      */
     public HttpAsyncTask getFile(UFileRequest uFileRequest, String file_name, final File saveFile, final Callback callback) {
         String url = this.defaultUrl + "/" + UFileUtils.urlEncode(file_name);
-        Log.i(TAG, url);
+        LogUtil.i(TAG, url);
         HttpAsyncTask httpAsyncTask = new GetFileAsyncTask(url, uFileRequest, saveFile, new HttpAsyncTask.HttpCallback() {
             @Override
             public void onProgressUpdate(Object... progress) {
@@ -278,7 +279,7 @@ public class UFileSDK {
      */
     public HttpAsyncTask uploadPart(UFileRequest uFileRequest, String key_name, String uploadId, final File file, final int partNumber, final long blk_size, final Callback callback) {
         String url = this.defaultUrl + "/" + UFileUtils.urlEncode(key_name) + "?uploadId=" + uploadId + "&partNumber=" + partNumber;
-        Log.i(TAG, url);
+        LogUtil.i(TAG, url);
 
         HttpAsyncTask httpAsyncTask = new UploadPartAsyncTask(url, uFileRequest, new HttpAsyncTask.HttpCallback() {
             @Override
@@ -331,7 +332,7 @@ public class UFileSDK {
                                     final long retryTime,
                                     final Handler handler) {
         String url = this.defaultUrl + "/" + UFileUtils.urlEncode(key_name) + "?uploadId=" + uploadId + "&partNumber=" + partNumber;
-        Log.i(TAG, url);
+        LogUtil.i(TAG, url);
         UploadPartManager uploadPartManager = new UploadPartManager(this);
         uploadPartManager.start(uFileRequest, key_name, uploadId, file, partNumber, blk_size, callback, retryCount, retryTime, handler);
         return uploadPartManager;
@@ -408,7 +409,7 @@ public class UFileSDK {
      */
     public HttpAsyncTask finishMultipartUpload(final UFileRequest uFileRequest, String key_name, final String uploadId, final String etags, String new_key_name, final Callback callback) {
         String url = this.defaultUrl + "/" + UFileUtils.urlEncode(key_name) + "?uploadId=" + uploadId + "&newKey=" + new_key_name;
-        Log.i(TAG, url);
+        LogUtil.i(TAG, url);
 
         HttpAsyncTask httpAsyncTask = new WriteAsyncTask(url, uFileRequest, new HttpAsyncTask.HttpCallback() {
             @Override
@@ -449,8 +450,8 @@ public class UFileSDK {
     }
 
     private HttpAsyncTask getDefaultHttpAsyncTask(String url, UFileRequest uFileRequest, final Callback callback) {
-        Log.i(TAG, "url " + url);
-        Log.i(TAG, "ufile request " + uFileRequest.toString());
+        LogUtil.i(TAG, "url " + url);
+        LogUtil.i(TAG, "ufile request " + uFileRequest.toString());
         return new HttpAsyncTask(url, uFileRequest, new HttpAsyncTask.HttpCallback() {
             @Override
             public void onProgressUpdate(Object... progress) {
@@ -494,7 +495,7 @@ public class UFileSDK {
                 }
                 if (response.has("body"))
                     message.put("message", response.getJSONObject("body"));
-                Log.i(TAG, "cb " + message);
+                LogUtil.i(TAG, "cb " + message);
                 callback.onSuccess(message);
             } else {
                 JSONObject message = new JSONObject();
@@ -509,7 +510,7 @@ public class UFileSDK {
                     message.put("message", response.getJSONObject("body"));
                 if (response.has("message"))
                     message.put("message", response.getString("message"));
-                Log.i(TAG, "cb " + message);
+                LogUtil.i(TAG, "cb " + message);
                 callback.onFail(message);
             }
 

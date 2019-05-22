@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hyena.framework.clientlog.LogUtil;
 import com.knowbox.base.service.upload.ucloud.UFileRequest;
 import com.knowbox.base.service.upload.ucloud.UFileSDK;
 import com.knowbox.base.service.upload.ucloud.UFileUtils;
@@ -45,7 +46,7 @@ public class HttpAsyncTask extends AsyncTask<Object, Object, Object> {
     }
 
     public void cancel() {
-        Log.i(TAG, "user cancel" + this.getStatus());
+        LogUtil.i(TAG, "user cancel" + this.getStatus());
         this.cancel(false);
     }
 
@@ -55,7 +56,7 @@ public class HttpAsyncTask extends AsyncTask<Object, Object, Object> {
         String putPolicy = getPutPolicy();
         if (!TextUtils.isEmpty(putPolicy)) {
             authorization = authorization + ":" + putPolicy;
-            Log.i(TAG, "authorization: " + authorization);
+            LogUtil.i(TAG, "authorization: " + authorization);
         }
         
         HttpURLConnection conn = null;
@@ -95,7 +96,7 @@ public class HttpAsyncTask extends AsyncTask<Object, Object, Object> {
             if (response_length > 0) {
                 onRead(is, response);
             }
-            Log.i(TAG, "response " + response);
+            LogUtil.i(TAG, "response " + response);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,7 +129,7 @@ public class HttpAsyncTask extends AsyncTask<Object, Object, Object> {
                 response.put("body", as);
             }
         } else {
-            Log.e(TAG, "read null!!!");
+            LogUtil.e(TAG, "read null!!!");
         }
     }
 

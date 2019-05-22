@@ -3,6 +3,8 @@ package com.knowbox.base.service.upload.ucloud;
 import android.util.Base64;
 import android.util.Log;
 
+import com.hyena.framework.clientlog.LogUtil;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +68,7 @@ public class UFileUtils {
                 }
                 headers.put(k.getKey().toLowerCase(), arr);
             }else {
-                Log.e(TAG, k.getKey().toLowerCase() + " error no value");
+                LogUtil.e(TAG, k.getKey().toLowerCase() + " error no value");
             }
         }
         return headers;
