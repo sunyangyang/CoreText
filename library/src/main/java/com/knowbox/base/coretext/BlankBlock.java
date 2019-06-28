@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Created by yangzc on 17/2/6.
  */
 public class BlankBlock extends CYEditBlock {
 

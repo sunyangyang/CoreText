@@ -2,8 +2,6 @@
 
 buildscript {
     repositories {
-        maven { url "http://106.75.19.180:8081/nexus/content/repositories/releases"}
-        maven { url "http://106.75.19.180:8081/nexus/content/repositories/snapshots"}
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
         maven {
@@ -21,11 +19,8 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "http://106.75.19.180:8081/nexus/content/repositories/releases"}
-        maven { url "http://106.75.19.180:8081/nexus/content/repositories/snapshots"}
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
-        maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"}
         maven { url "http://dl.bintray.com/hyena/maven" }
         maven {
             url 'https://maven.google.com/'

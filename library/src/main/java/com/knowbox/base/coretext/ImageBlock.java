@@ -17,15 +17,12 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYImageBlock;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.imageloader.ImageLoader;
-import com.hyena.framework.imageloader.base.IDisplayer;
-import com.hyena.framework.imageloader.base.LoadedFrom;
-import com.hyena.framework.utils.ImageFetcher;
-import com.hyena.framework.utils.MathUtils;
 import com.knowbox.base.R;
 import com.knowbox.base.utils.BaseConstant;
 
@@ -33,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by yangzc on 17/2/6.
  */
 public class ImageBlock extends CYImageBlock {
     private String mUrl = "";
@@ -53,16 +49,15 @@ public class ImageBlock extends CYImageBlock {
     private float mScale = 1.0f;
     protected Drawable drawable = null;
     protected Bitmap bitmap = null;
-    protected IDisplayer mDisplayer;
     protected int mLoadingResId, mErrorResId;
     private boolean isSuccess = false;
     private int mScaleType = DEFAULT_SCALE;
     private Path mPath;
+    private Context mContext;
 
     public ImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         setScaleType(getScaleType());
-        ImageFetcher.getImageFetcher();
         init(textEnv.getContext(), content);
     }
 
@@ -75,7 +70,9 @@ public class ImageBlock extends CYImageBlock {
     }
 
     private void init(Context context, String content) {
+        mContext = context;
         try {
+            mDisplayer = new ThisImageAware();
             mPaint.setColor(0xffe9f0f6);
             mPaint.setStrokeWidth(Const.DP_1);
             mPaint.setStyle(Paint.Style.STROKE);
@@ -88,12 +85,13 @@ public class ImageBlock extends CYImageBlock {
             //big_image default 680*270
             String widthPx = json.optString("width", "680px").replace("px", "");
             String heightPx = json.optString("height", "270px").replace("px", "");
-            int width = MathUtils.valueOfInt(widthPx);
-            int height = MathUtils.valueOfInt(heightPx);
+            int width = Integer.valueOf(widthPx);
+            int height = Integer.valueOf(heightPx);
             this.mWidth = (width == 0 ? 680 : width);
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
+//            setAlignStyle(AlignStyle.Style_Round);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (mWidth * mScale));
@@ -124,8 +122,9 @@ public class ImageBlock extends CYImageBlock {
             }
             this.mUrl = url;
             mDisplayer = new ThisImageAware();
-            LogUtil.v("yangzc", url);
-            ImageLoader.getImageLoader().loadImage(context, url, mDisplayer, mLoadingResId, mErrorResId, this);
+            Glide.with(context)
+                    .load(url)
+                    .into(this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -237,13 +236,17 @@ public class ImageBlock extends CYImageBlock {
         if (TextUtils.isEmpty(mUrl) || isSuccess()) {
             return;
         }
-        ImageLoader.getImageLoader().loadImage(getTextEnv().getContext(), mUrl, mDisplayer, mLoadingResId, mErrorResId, this);
+        Glide.with(mContext)
+                .load(mUrl)
+                .into(this);
     }
 
     @Override
     public void restart() {
         super.restart();
-        ImageLoader.getImageLoader().loadImage(getTextEnv().getContext(), mUrl, mDisplayer, mLoadingResId, mErrorResId, this);
+        Glide.with(mContext)
+                .load(mUrl)
+                .into(this);
     }
 
     @Override
@@ -305,6 +308,7 @@ public class ImageBlock extends CYImageBlock {
 
         private void setImageDrawableInfo(Drawable drawable) {
             ImageBlock.this.drawable = drawable;
+            isSuccess = true;
             postInvalidate();
         }
 
@@ -315,20 +319,16 @@ public class ImageBlock extends CYImageBlock {
         }
 
         @Override
-        public void setImageBitmap(Bitmap bitmap, LoadedFrom from) {
+        public void setImageBitmap(Bitmap bitmap) {
             setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
                     .getResources(), bitmap));
         }
     }
 
     @Override
-    public void onLoadComplete(String imageUrl, Bitmap bitmap, Object tag) {
-        super.onLoadComplete(imageUrl, bitmap, tag);
-        isSuccess = (bitmap != null && !bitmap.isRecycled());
-    }
-
-    @Override
     public boolean isSuccess() {
         return isSuccess;
     }
+
+
 }

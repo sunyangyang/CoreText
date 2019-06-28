@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  * 表格块
- * Created by yangzc on 17/6/30.
  */
 public class CYTableBlock extends CYPlaceHolderBlock implements ICYEditableGroup {
 

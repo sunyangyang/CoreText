@@ -7,7 +7,6 @@ package com.hyena.coretext.blocks;
 import android.graphics.Rect;
 
 /**
- * Created by yangzc on 17/2/10.
  */
 public interface ICYFocusable {
 

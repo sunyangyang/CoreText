@@ -9,17 +9,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.SparseArray;
-import android.widget.Scroller;
 
 import com.hyena.coretext.builder.IBlockMaker;
 import com.hyena.coretext.event.CYEventDispatcher;
 import com.hyena.coretext.utils.EditableValue;
-import com.hyena.framework.animation.CLayer;
-import com.hyena.framework.animation.CScrollLayer;
-import com.hyena.framework.animation.Director;
 
 /**
- * Created by yangzc on 17/1/20.
  */
 public class TextEnv {
 
@@ -50,7 +45,7 @@ public class TextEnv {
 
 //    public void set(TextEnv textEnv) {
 //        this.context = textEnv.getContext();
-//        this.fontSize = textEnv.getFontSize();
+//        this.mFontSize = textEnv.getFontSize();
 //        this.textColor = textEnv.getTextColor();
 //        this.typeface = textEnv.getTypeface();
 //        this.verticalSpacing = textEnv.getVerticalSpacing();

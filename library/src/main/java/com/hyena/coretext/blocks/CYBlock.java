@@ -4,8 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
@@ -14,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yangzc on 16/4/8.
+ *   on 16/4/8.
  */
-public abstract class CYBlock<T extends CYBlock> implements ICYFocusable, Cloneable {
+public abstract class CYBlock<T extends CYBlock> extends SimpleTarget<Drawable> implements ICYFocusable, Cloneable {
 
     private static final String TAG = "CYBlock";
     //当前块横坐标
@@ -58,6 +61,11 @@ public abstract class CYBlock<T extends CYBlock> implements ICYFocusable, Clonea
             mPaint.setColor(Color.BLACK);
             mPaint.setStyle(Paint.Style.STROKE);
         }
+    }
+
+    @Override
+    public void onResourceReady(Drawable drawable, Transition<? super Drawable> transition) {
+
     }
 
     public String getContent() {

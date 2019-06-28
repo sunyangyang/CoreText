@@ -9,7 +9,6 @@ import com.hyena.coretext.utils.Const;
 import java.util.List;
 
 /**
- * Created by yangzc on 16/4/8.
  */
 public class CYLineBlock extends CYBlock<CYBlock> {
 

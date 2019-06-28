@@ -17,8 +17,6 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.PaintManager;
-import com.hyena.framework.clientlog.LogUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,7 +28,6 @@ import static com.knowbox.base.coretext.VerticalCalculationBlock.FLAG_PAINT_SIZE
 import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SIZE;
 
 /**
- * Created by yangzc on 17/2/14.
  */
 public class EditFace extends CYEditFace {
 
@@ -459,7 +456,6 @@ public class EditFace extends CYEditFace {
 
                         //预防光标在分数框 外边，没有在框里 ，待验证
                         if(mFlashPosition == -1){
-                            LogUtil.v("chenyan", "EdifFace  mFlashPosition: " + mFlashPosition);
                             mFlashPosition = 0;
                             left  = Const.DP_1*5;
                         }

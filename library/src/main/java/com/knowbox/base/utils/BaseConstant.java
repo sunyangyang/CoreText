@@ -1,7 +1,6 @@
 package com.knowbox.base.utils;
 
 /**
- * Created by sunyangyang on 2018/4/2.
  */
 
 public class BaseConstant {

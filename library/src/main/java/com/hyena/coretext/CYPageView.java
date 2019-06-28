@@ -18,7 +18,6 @@ import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 
 /**
- * Created by yangzc on 16/4/8.
  */
 public abstract class CYPageView extends View implements CYLayoutEventListener {
 

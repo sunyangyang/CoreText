@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/latex_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -200,9 +201,14 @@
             android:orientation="vertical"
             >
             <com.knowbox.base.coretext.QuestionTextView
+                android:id="@+id/qtv_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.knowbox.base.coretext.QuestionTextView
+                android:visibility="gone"
                 android:id="@+id/qtv_paraquestion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
 
@@ -225,14 +231,6 @@
                     android:layout_width="33dp"
                     android:layout_height="match_parent">
                 </RelativeLayout>
-                <com.knowbox.base.coretext.DeliveryQuestionTextView
-                    android:id="@+id/qtv_question"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                   />
             </LinearLayout>
         </LinearLayout>
 

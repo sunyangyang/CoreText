@@ -15,7 +15,7 @@ import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.builder.CYBlockProvider;
 import com.hyena.coretext.layout.CYHorizontalLayout;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.utils.UiThreadHandler;
+import com.knowbox.base.app.MainThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/3/3.
  */
 public class CYSinglePageView extends CYPageView implements IRender {
 
@@ -163,11 +162,12 @@ public class CYSinglePageView extends CYPageView implements IRender {
     public void doLayout(boolean force) {
         super.doLayout(force);
         mBuilder.reLayout(force);
-        UiThreadHandler.post(new Runnable() {
+        requestLayout();
+        postInvalidate();
+        MainThread.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                requestLayout();
-                postInvalidate();
+
             }
         });
     }

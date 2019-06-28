@@ -1,12 +1,20 @@
 package com.hyena.coretext.utils;
 
-import com.hyena.framework.utils.UIUtils;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+
+import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 
 /**
- * Created by yangzc on 17/6/6.
  */
 
 public class Const {
 
-    public static final int DP_1 = UIUtils.dip2px(1);
+    public static final int DP_1 = dip2px(1);
+
+    public static int dip2px(float dp) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(COMPLEX_UNIT_DIP, dp, metrics);
+    }
 }

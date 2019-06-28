@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Created by yangzc on 16/4/8.
  */
 public class CYHorizontalLayout extends CYLayout {
 
@@ -243,7 +242,7 @@ public class CYHorizontalLayout extends CYLayout {
         line = new CYLineBlock(getTextEnv(), getStyle(styleStack));
         lines.add(line);
         linePlaceHolderBlocks = getLinePlaceHolderBlocks(y);
-//        LogUtil.v("yangzc", "new line block cost: " + ts);
+//        LogUtil.v("", "new line block cost: " + ts);
     }
 
     private List<CYPlaceHolderBlock> getLinePlaceHolderBlocks(int y) {

@@ -9,11 +9,6 @@ android {
         targetSdkVersion 27
         versionCode 167
         versionName "1.1.67"
-        manifestPlaceholders = [
-                GETUI_APP_ID    : "cWnB5X9RTq5e3GryJNXoo2",
-                GETUI_APP_KEY   : "RXWo13H1257djfZYjqanK7",
-                GETUI_APP_SECRET: "m57FYRmEdnA9DV5CkLqVk4"
-        ]
     }
 
     lintOptions {
@@ -36,91 +31,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.getui:sdk:2.13.0.0'
-    compile 'com.knowbox:latex:1.0.0'
-    compile 'com.knowbox:coretext:1.0.3'
-    compile 'com.github.yangzc:AndroidSupport:1.7.0'
-    compile 'net.zetetic:android-database-sqlcipher:4.1.3'
-    provided files('extlibs/easemobchat_2.2.3.jar')
-}
-
-
-def isReleaseBuild() {
-    return android.defaultConfig.versionName.contains("SNAPSHOT") == false
-}
-
-def sonatypeRepositoryUrl
-if (isReleaseBuild()) {
-    sonatypeRepositoryUrl = RELEASE_REPOSITORY_URL
-} else {
-    sonatypeRepositoryUrl = SNAPSHOT_REPOSITORY_URL
-}
-
-task mavenUploadBase (dependsOn: uploadArchives){
-    group 'upload'
-}
-
-afterEvaluate { project ->
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                pom.artifactId = 'base'
-
-                Properties properties = new Properties()
-                properties.load(project.rootProject.file('local.properties').newDataInputStream())
-                repository(url: sonatypeRepositoryUrl) {
-                    authentication(userName: properties.getProperty("USERNAME"), password: properties.getProperty("PASSWORD"))
-                }
-
-                pom.project {
-                    name PROJ_NAME
-                    groupId PROJ_GROUP
-                    version android.defaultConfig.versionName
-                    licenses {
-                        license {
-                            name PROJ_LICENCE_NAME
-                            url PROJ_LICENCE_URL
-                            distribution PROJ_LICENCE_DEST
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id DEVELOPER_ID
-                            name DEVELOPER_NAME
-                        }
-                    }
-                }
-            }
-        }
+    compile ('com.github.bumptech.glide:glide:4.7.1') {
+        exclude group: "com.android.support"
     }
-
-    task androidJavadocs(type: Javadoc) {
-        failOnError false
-        source = android.sourceSets.main.java.source
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-        }
-        classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
-        //basename = artifact_id
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-    }
-
-    artifacts {
-        //archives packageReleaseJar
-        archives androidSourcesJar
-        archives androidJavadocsJar
-    }
+    compile 'com.android.support:appcompat-v7:27.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 }
-

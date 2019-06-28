@@ -21,7 +21,6 @@ import com.hyena.coretext.utils.EditableValue;
 import com.hyena.coretext.utils.PaintManager;
 
 /**
- * Created by yangzc on 17/2/9.
  */
 public class CYEditFace implements IEditFace{
 

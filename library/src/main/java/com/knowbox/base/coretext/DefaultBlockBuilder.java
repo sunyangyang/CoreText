@@ -4,59 +4,40 @@
 
 package com.knowbox.base.coretext;
 
-import android.graphics.Point;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.hyena.coretext.AttributedString;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
-import com.hyena.coretext.blocks.CYBreakLineBlock;
-import com.hyena.coretext.blocks.CYStyleEndBlock;
-import com.hyena.coretext.blocks.CYTextBlock;
 import com.hyena.coretext.builder.CYBlockProvider;
 import com.hyena.coretext.builder.IBlockMaker;
-import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.utils.BaseApp;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import maximsblog.blogspot.com.jlatexmath.core.AjLatexMath;
-import maximsblog.blogspot.com.jlatexmath.core.DefaultTeXFont;
-import maximsblog.blogspot.com.jlatexmath.core.Glue;
-import maximsblog.blogspot.com.jlatexmath.core.SymbolAtom;
-import maximsblog.blogspot.com.jlatexmath.core.TeXFormula;
 
 /**
- * Created by yangzc on 17/3/3.
  */
 public class DefaultBlockBuilder extends DefaultBlockMaker implements CYBlockProvider.CYBlockBuilder {
     public final int version = 3;
 
-    static {
-        //init latex
-        AjLatexMath.init(BaseApp.getAppContext());
-        try {
-            SymbolAtom.get("");
-        } catch (Throwable e) {
-        }
-        DefaultTeXFont.getSizeFactor(1);
-        try {
-            Glue.get(1, 1, null);
-        } catch (Throwable e) {
-        }
-        try {
-            TeXFormula.get("");
-        } catch (Throwable e) {
-        }
-    }
+//    static {
+//        //init latex
+//        AjLatexMath.init(BaseApp.getAppContext());
+//        try {
+//            SymbolAtom.get("");
+//        } catch (Throwable e) {
+//        }
+//        DefaultTeXFont.getSizeFactor(1);
+//        try {
+//            Glue.get(1, 1, null);
+//        } catch (Throwable e) {
+//        }
+//        try {
+//            TeXFormula.get("");
+//        } catch (Throwable e) {
+//        }
+//    }
 
     @Override
     public List<CYBlock> build(TextEnv textEnv, String content) {

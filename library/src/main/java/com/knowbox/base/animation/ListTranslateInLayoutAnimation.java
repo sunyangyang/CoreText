@@ -11,7 +11,7 @@ import android.view.animation.TranslateAnimation;
 
 /**
  * View底层飞入布局动画
- * @author yangzc
+ * @author
  *
  */
 public class ListTranslateInLayoutAnimation extends LayoutAnimationController {

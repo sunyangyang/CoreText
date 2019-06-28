@@ -5,7 +5,6 @@
 package com.hyena.coretext.event;
 
 /**
- * Created by yangzc on 17/2/6.
  */
 public interface CYFocusEventListener {
 

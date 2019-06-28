@@ -7,7 +7,7 @@ package com.hyena.coretext.blocks;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/2/8.
+ *   on 17/2/8.
  */
 public interface ICYEditableGroup {
 

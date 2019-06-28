@@ -11,7 +11,6 @@ import com.hyena.coretext.blocks.CYTextBlock;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/3/3.
  */
 public class CYBlockProvider {
 

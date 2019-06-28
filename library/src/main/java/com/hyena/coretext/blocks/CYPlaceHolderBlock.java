@@ -1,13 +1,20 @@
 package com.hyena.coretext.blocks;
 
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 
+import com.bumptech.glide.request.transition.Transition;
 import com.hyena.coretext.TextEnv;
 
 /**
- * Created by yangzc on 16/4/8.
+ *   on 16/4/8.
  */
 public class CYPlaceHolderBlock extends CYBlock {
+
+    @Override
+    public void onResourceReady(Drawable drawable, Transition transition) {
+
+    }
 
     public enum AlignStyle {
         Style_Normal, //顺序平铺

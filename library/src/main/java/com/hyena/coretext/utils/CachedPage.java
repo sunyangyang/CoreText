@@ -6,7 +6,6 @@ import com.hyena.coretext.blocks.CYPageBlock;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/7/31.
  */
 public class CachedPage {
 

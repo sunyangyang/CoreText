@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 /**
- * Created by yangzc on 17/6/28.
  */
 
 public interface IEditFace {

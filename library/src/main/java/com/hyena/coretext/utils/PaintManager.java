@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import java.util.HashMap;
 
 /**
- * Created by yangzc on 17/7/28.
  */
 
 public class PaintManager {

@@ -8,7 +8,6 @@ import com.hyena.coretext.blocks.CYPageBlock;
 import java.util.List;
 
 /**
- * Created by yangzc on 16/4/8.
  */
 public abstract class CYLayout {
 

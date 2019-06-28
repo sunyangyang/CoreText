@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by yangzc on 17/7/25.
  */
 
 public class DefaultBlockMaker implements IBlockMaker {
@@ -52,24 +51,20 @@ public class DefaultBlockMaker implements IBlockMaker {
             };
         } else if ("para_end".equals(type)) {
             return (T) new CYStyleEndBlock(textEnv, data);
-        } else if ("audio".equals(type)) {
-            AudioBlock block = new AudioBlock(textEnv, data);
-            block.init(data);
-            return (T) block;
         } else if ("fill_img".equals(type)) {
             return (T) new ImageHollowBlock(textEnv, data);
         } else if ("under_begin".equals(type)) {
             return (T) new SpanBlock(textEnv, data);
         } else if ("under_end".equals(type)) {
             return (T) new CYStyleEndBlock(textEnv, data);
-        } else if ("latex".equals(type)) {
-            return (T) new LatexBlock(textEnv, data);
+//        } else if ("latex".equals(type)) {
+//            return (T) new LatexBlock(textEnv, data);
         } else if ("shushi".equals(type)) {
             return (T) new VerticalCalculationBlock(textEnv, data);
         } else if ("match".equals(type)) {
             return (T) new MatchBlock(textEnv, data);
-        } else if ("delivery_equation".equals(type)) {
-            return (T) new DeliveryNewBlock(textEnv, data);
+//        } else if ("delivery_equation".equals(type)) {
+//            return (T) new DeliveryNewBlock(textEnv, data);
             // return (T) new DeliveryBlock(textEnv, data);
         } else if ("sudoku".equals(type)) {
             return (T) new SudokuBlock(textEnv, data);

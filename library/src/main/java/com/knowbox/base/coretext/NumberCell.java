@@ -21,7 +21,6 @@ import static com.knowbox.base.coretext.VerticalCalculationBlock.NUMBER_PAINT_SI
 import static com.knowbox.base.coretext.VerticalCalculationBlock.TYPE_DEFAULT;
 
 /**
- * Created by sunyangyang on 2017/10/12.
  */
 
 public class NumberCell {

@@ -5,7 +5,7 @@
 package com.hyena.coretext.blocks;
 
 /**
- * Created by yangzc on 17/2/13.
+ *   on 17/2/13.
  */
 public enum CYHorizontalAlign {
     LEFT,

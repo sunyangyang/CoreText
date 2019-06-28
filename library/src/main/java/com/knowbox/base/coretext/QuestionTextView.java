@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/2/6.
  */
 public class QuestionTextView extends CYSinglePageView {
 

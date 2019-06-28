@@ -3,7 +3,6 @@ package com.hyena.coretext.blocks;
 import com.hyena.coretext.TextEnv;
 
 /**
- * Created by yangzc on 17/7/12.
  */
 public class CYStyleEndBlock extends CYBlock {
 

@@ -10,17 +10,14 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.bumptech.glide.request.transition.Transition;
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.imageloader.base.IDisplayer;
-import com.hyena.framework.imageloader.base.ImageLoaderListener;
-import com.hyena.framework.imageloader.base.LoadedFrom;
-import com.hyena.framework.utils.ImageFetcher;
+import com.knowbox.base.coretext.IDisplayer;
 
 /**
- * Created by yangzc on 16/4/8.
  */
-public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListener {
+public class CYImageBlock extends CYPlaceHolderBlock {
 
     private String mUrl = "";
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -31,7 +28,6 @@ public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListe
 
     public CYImageBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
-        ImageFetcher.getImageFetcher();
         init();
     }
 
@@ -39,12 +35,6 @@ public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListe
         mPaint.setColor(0xffe9f0f6);
         mPaint.setStrokeWidth(Const.DP_1);
         mPaint.setStyle(Paint.Style.STROKE);
-    }
-
-    public void loadImage(String url, int width, int height, int defaultResId) {
-        this.mDefaultResId = defaultResId;
-        mDisplayer = new ThisImageDisplayer(width, height);
-        ImageFetcher.getImageFetcher().loadImage(url, mDisplayer, defaultResId, this);
     }
 
     @Override
@@ -62,7 +52,7 @@ public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListe
 
     @Override
     public void draw(Canvas canvas) {
-        tryLoadFromCache();
+//        tryLoadFromCache();
         if (drawable != null) {
             Rect rect= getContentRect();
             if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
@@ -84,25 +74,24 @@ public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListe
     }
 
     private boolean isSuccess = false;
-    private void tryLoadFromCache() {
-        if (isSuccess || mDisplayer == null)
-            return;
-        String key = mUrl + "_" + mDisplayer.getWidth() + "x" + mDisplayer.getHeight();
-        Bitmap bitmap = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getMemoryCache().get(key);
-        if (bitmap != null && !bitmap.isRecycled()) {
-            isSuccess = true;
-            drawable = new BitmapDrawable(getTextEnv().getContext()
-                    .getResources(), bitmap);
-        } else {
-            isSuccess = false;
-        }
-    }
+//    private void tryLoadFromCache() {
+//        if (isSuccess || mDisplayer == null)
+//            return;
+//        String key = mUrl + "_" + mDisplayer.getWidth() + "x" + mDisplayer.getHeight();
+//        Bitmap bitmap = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getMemoryCache().get(key);
+//        if (bitmap != null && !bitmap.isRecycled()) {
+//            isSuccess = true;
+//            drawable = new BitmapDrawable(getTextEnv().getContext()
+//                    .getResources(), bitmap);
+//        } else {
+//            isSuccess = false;
+//        }
+//    }
 
     public void retry() {
         if (TextUtils.isEmpty(mUrl) || drawable != null || mDisplayer == null) {
             return;
         }
-        ImageFetcher.getImageFetcher().loadImage(mUrl, mDisplayer, mDefaultResId, this);
     }
 
     @Override
@@ -119,85 +108,97 @@ public class CYImageBlock extends CYPlaceHolderBlock implements ImageLoaderListe
     private Rect mImageRect = new Rect();
 
     @Override
-    public void onProgressUpdate(String url, View view, int current, int total) {
+    public void onLoadStarted(Drawable drawable) {
 
     }
 
     @Override
-    public void onLoadComplete(String imageUrl, Bitmap bitmap, Object tag) {
+    public void onLoadFailed(Drawable drawable) {
 
     }
 
-    /* ImageAware实现 */
-    private class ThisImageDisplayer implements IDisplayer {
-        private int width, height;
-        public ThisImageDisplayer(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
+    @Override
+    public void onResourceReady(Drawable drawable, Transition transition) {
+        super.onResourceReady(drawable, transition);
+        mDisplayer.setImageDrawable(drawable);
+        isSuccess = true;
+    }
 
-        @Override
-        public int getWidth() {
-            return (int) (width * getScale());
-        }
+    @Override
+    public void onLoadCleared(Drawable drawable) {
 
-        @Override
-        public int getHeight() {
-            return (int) (height * getScale());
-        }
+    }
 
-        private float getScale() {
-            int screenHeight = getTextEnv().getContext().getResources()
-                    .getDisplayMetrics().heightPixels;
-            float scale = 1.0f;
-            if (height > screenHeight) {
-                scale = screenHeight * 1.0f/height;
-            }
-            return scale;
-        }
 
-        @Override
-        public View getWrappedView() {
-            return null;
-        }
 
-        @Override
-        public boolean isCollected() {
-            return false;
-        }
-
-        @Override
-        public int getId() {
-            return TextUtils.isEmpty(mUrl)?super.hashCode():mUrl.hashCode();
-        }
-
-        @Override
-        public Object getTag() {
-            return null;
-        }
-
-        private void setImageDrawableInfo(Drawable drawable) {
-            CYImageBlock.this.drawable = drawable;
-            postInvalidate();
-        }
-
-        @Override
-        public void setImageDrawable(Drawable drawable) {
-            if (drawable != null)
-                setImageDrawableInfo(drawable);
-        }
-
-        @Override
-        public void setImageBitmap(Bitmap bitmap, LoadedFrom from) {
-            setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
-                    .getResources(), bitmap));
-        }
-
-    };
+//    /* ImageAware实现 */
+//    private class ThisImageDisplayer implements IDisplayer {
+//        private int width, height;
+//        public ThisImageDisplayer(int width, int height) {
+//            this.width = width;
+//            this.height = height;
+//        }
+//
+//        @Override
+//        public int getWidth() {
+//            return (int) (width * getScale());
+//        }
+//
+//        @Override
+//        public int getHeight() {
+//            return (int) (height * getScale());
+//        }
+//
+//        private float getScale() {
+//            int screenHeight = getTextEnv().getContext().getResources()
+//                    .getDisplayMetrics().heightPixels;
+//            float scale = 1.0f;
+//            if (height > screenHeight) {
+//                scale = screenHeight * 1.0f/height;
+//            }
+//            return scale;
+//        }
+//
+//        @Override
+//        public View getWrappedView() {
+//            return null;
+//        }
+//
+//        @Override
+//        public boolean isCollected() {
+//            return false;
+//        }
+//
+//        @Override
+//        public int getId() {
+//            return TextUtils.isEmpty(mUrl)?super.hashCode():mUrl.hashCode();
+//        }
+//
+//        @Override
+//        public Object getTag() {
+//            return null;
+//        }
+//
+//        private void setImageDrawableInfo(Drawable drawable) {
+//            CYImageBlock.this.drawable = drawable;
+//            postInvalidate();
+//        }
+//
+//        @Override
+//        public void setImageDrawable(Drawable drawable) {
+//            if (drawable != null)
+//                setImageDrawableInfo(drawable);
+//        }
+//
+//        @Override
+//        public void setImageBitmap(Bitmap bitmap) {
+//            setImageDrawableInfo(new BitmapDrawable(getTextEnv().getContext()
+//                    .getResources(), bitmap));
+//        }
+//
+//    };
 
     public boolean isSuccess() {
         return isSuccess;
     }
-
-
 }

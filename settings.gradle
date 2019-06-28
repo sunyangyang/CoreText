@@ -1,1 +1,1 @@
-include ':samples', ':library', ':coretext', ':latex'
+include ':samples', ':library'

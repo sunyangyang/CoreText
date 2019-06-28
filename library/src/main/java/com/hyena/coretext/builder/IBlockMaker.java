@@ -5,7 +5,6 @@ import com.hyena.coretext.blocks.CYBlock;
 import com.hyena.coretext.blocks.CYTextBlock;
 
 /**
- * Created by yangzc on 17/7/25.
  */
 public interface IBlockMaker {
 

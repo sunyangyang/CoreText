@@ -2,13 +2,11 @@ package com.knowbox.base.coretext;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.ICYEditable;
 import com.hyena.coretext.blocks.ICYEditableGroup;
 import com.hyena.coretext.utils.Const;
-import com.hyena.framework.clientlog.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yangzc on 17/6/29.
  */
 
 public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
@@ -106,7 +103,6 @@ public class ImageHollowBlock extends ImageBlock implements ICYEditableGroup {
         if (y * getContentHeight() + blankBlock.getHeight() > getContentHeight()) {
             y = (getContentHeight() - blankBlock.getHeight()) * 1.0f / getContentHeight();
         }
-        LogUtil.e("XXXXX", "x = " + x + "， y = " + y);
         blankBlock.setOffset(x, y);
         return blankBlock;
     }

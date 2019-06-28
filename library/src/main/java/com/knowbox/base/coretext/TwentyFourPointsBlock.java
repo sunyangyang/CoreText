@@ -1,5 +1,6 @@
 package com.knowbox.base.coretext;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 
 import com.hyena.coretext.TextEnv;
 import com.hyena.coretext.blocks.CYBlock;
@@ -29,14 +31,7 @@ import com.hyena.coretext.layout.CYHorizontalLayout;
 import com.hyena.coretext.utils.CYBlockUtils;
 import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
-import com.hyena.framework.animation.texture.BitmapManager;
-import com.hyena.framework.clientlog.LogUtil;
-import com.hyena.framework.utils.AnimationUtils;
-import com.hyena.framework.utils.BaseApp;
 import com.knowbox.base.R;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,12 +46,11 @@ import java.util.Random;
 import static com.knowbox.base.coretext.BlankBlock.TWPoint;
 
 /**
- * Created by sunyangyang on 2018/4/24.
  */
 
 public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEditableGroup {
     private ValueAnimator mAnimator;
-    private AnimationUtils.ValueAnimatorListener mListener;
+    private ValueAnimator.AnimatorUpdateListener mListener;
     private int CELL_ID = 1;//保证不和blank的id重复
 
     private int[] mVarietyIds = new int[]{R.drawable.heitao, R.drawable.meihua, R.drawable.hongtao, R.drawable.fangkuai};//前两个黑色，后两个红色，不可更改，init里面有用到
@@ -93,6 +87,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     public TwentyFourPointsBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mContent = content;
+
 //        if (mManager == null) {
 //            mManager = BitmapManager.create();
 //        }
@@ -262,7 +257,7 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
         return getContentHeight();
     }
 
-    protected void setAnimatorListener(AnimationUtils.ValueAnimatorListener listener) {
+    protected void setAnimatorListener(ValueAnimator.AnimatorUpdateListener listener) {
         mListener = listener;
     }
 
@@ -390,36 +385,14 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
                     mAnimator.setDuration(1000);
                 }
                 if (mListener == null) {
-                    mListener = new AnimationUtils.ValueAnimatorListener() {
-
+                    mListener = new ValueAnimator.AnimatorUpdateListener() {
                         @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            postInvalidateSelf((Float) valueAnimator.getAnimatedValue());
-                        }
-
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
+                        public void onAnimationUpdate(ValueAnimator animation) {
 
                         }
                     };
                 }
 
-                mAnimator.addListener(mListener);
                 mAnimator.addUpdateListener(mListener);
                 if (!isResume) {
                     mAnimator.start();

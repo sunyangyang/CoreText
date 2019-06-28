@@ -5,7 +5,6 @@
 package com.hyena.coretext.utils;
 
 /**
- * Created by yangzc on 17/4/6.
  */
 public class EditableValue {
 

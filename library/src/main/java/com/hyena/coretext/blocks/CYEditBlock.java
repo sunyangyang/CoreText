@@ -8,7 +8,6 @@ import com.hyena.coretext.utils.Const;
 import com.hyena.coretext.utils.EditableValue;
 
 /**
- * Created by yangzc on 16/4/12.
  */
 public class CYEditBlock extends CYPlaceHolderBlock implements ICYEditable {
 

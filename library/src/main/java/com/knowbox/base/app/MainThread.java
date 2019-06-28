@@ -5,10 +5,6 @@ import android.os.Looper;
 
 import java.util.concurrent.Executor;
 
-/**
- * Created by zhouyou on 17/2/24.
- */
-
 public class MainThread {
 
     private static volatile MainThread instance;

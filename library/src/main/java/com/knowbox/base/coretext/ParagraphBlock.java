@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by yangzc on 17/2/14.
  */
 public class ParagraphBlock extends CYStyleStartBlock {
 
@@ -63,7 +62,7 @@ public class ParagraphBlock extends CYStyleStartBlock {
         if (style == null) {
             style = new CYStyle(getTextEnv(), getParentStyle());
             init(getContent(), style);
-            style.setSingleBlock(true);
+            style.setSingleBlock(false);
         }
         return style;
     }
