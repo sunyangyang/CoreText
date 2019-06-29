@@ -91,7 +91,6 @@ public class ImageBlock extends CYImageBlock {
             this.mHeight = (height == 0 ? 270 : height);
             mScale = getTextEnv().getSuggestedPageWidth() * 1.0f / mWidth;
             this.size = size;
-//            setAlignStyle(AlignStyle.Style_Round);
             if ("big_image".equals(size)) {
                 setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth((int) (mWidth * mScale));
@@ -99,22 +98,26 @@ public class ImageBlock extends CYImageBlock {
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_big;
             } else if ("small_image".equals(size)) {
+                setAlignStyle(AlignStyle.Style_Normal);
                 setWidth(DP_44);
                 setHeight(DP_44);
                 setPadding(Const.DP_1 * 2, 0, Const.DP_1 * 2, 0);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else if ("small_match_image".equals(size) || "small_category_image".equals(size)) {
+                setAlignStyle(AlignStyle.Style_Normal);
                 setWidth(DP_44);
                 setHeight(DP_44);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else if ("big_match_image".equals(size) || "big_category_image".equals(size) || "order_image".equals(size)) {
+                setAlignStyle(AlignStyle.Style_MONOPOLY);
                 setWidth(DP_110);
                 setHeight(DP_83);
                 this.mLoadingResId = R.drawable.image_loading;
                 this.mErrorResId = R.drawable.block_image_fail_small;
             } else {
+                setAlignStyle(AlignStyle.Style_Round);
                 setWidth((int) (mWidth * mScale / 2));
                 setHeight((int) (mHeight * mScale / 2));
                 this.mLoadingResId = R.drawable.image_loading;
