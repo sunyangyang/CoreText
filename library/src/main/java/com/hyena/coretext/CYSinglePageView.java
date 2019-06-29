@@ -162,12 +162,11 @@ public class CYSinglePageView extends CYPageView implements IRender {
     public void doLayout(boolean force) {
         super.doLayout(force);
         mBuilder.reLayout(force);
-        requestLayout();
-        postInvalidate();
         MainThread.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-
+                requestLayout();
+                postInvalidate();
             }
         });
     }
