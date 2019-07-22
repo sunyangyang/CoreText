@@ -78,7 +78,6 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     private int mPageBlockPaddingRight;
     private Bitmap mCardBitmap;
     private Bitmap mTargetCardBitmap;
-//    private BitmapManager mManager;
     private Resources mRes;
     private String mContent;
     private SparseArray<EditableValue> mEditableValues;
@@ -87,11 +86,6 @@ public class TwentyFourPointsBlock extends CYPlaceHolderBlock implements ICYEdit
     public TwentyFourPointsBlock(TextEnv textEnv, String content) {
         super(textEnv, content);
         mContent = content;
-
-//        if (mManager == null) {
-//            mManager = BitmapManager.create();
-//        }
-
         mRes = textEnv.getContext().getResources();
         textEnv.setEditableValueChangeListener(new TextEnv.EditableValueChangeListener() {
             @Override
